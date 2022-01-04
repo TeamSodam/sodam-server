@@ -1,3 +1,12 @@
+---
+name: Feature request
+about: 기능 추가 템플릿입니다.
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 <!-- ---
 name: Feature Request Template
 about: 기능 추가 템플릿입니다.
