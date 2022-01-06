@@ -1,0 +1,28 @@
+{
+  "name": "sodam-server",
+  "version": "1.0.0",
+  "description": "소담 서버",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamSodam/sodam-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeamSodam/sodam-server/issues"
+  },
+  "homepage": "https://github.com/TeamSodam/sodam-server#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "nodemon": "^2.0.15",
+    "sequelize": "^6.12.5",
+    "sequelize-cli": "^6.3.0",
+    "yamljs": "^0.3.0"
+  }
+}
