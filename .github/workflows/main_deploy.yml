@@ -1,0 +1,72 @@
+name: sodam
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: CD Pipeline
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        node-version: ['16.x']
+
+    steps:
+      - uses: actions/checkout@v2
+      # - name: Create env file
+      #   run: |
+      #     touch .env
+      #     echo PORT=8080 >> .env
+      #     echo NODE_ENV=${{ secrets.TEST_NODE_ENV }} >> .env
+      #     echo PORT=${{ secrets.PORT }} >> .env
+      #     echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+      #     echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+      #     echo DB_DBNAME=${{ secrets.DB_DBNAME }} >> .env
+      #     echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
+      #     echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+      #     echo DB_PORT= ${{ secrets.DB_PORT }} >> .env
+      #     echo JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }} >> .env
+      #     cat .env
+
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+      # - name: Build Swagger API docs
+      #   run: npm run api-docs
+      - name: Run build
+        run: npm run build
+
+      - name: Install AWS CLI 2
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          which aws
+          sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*' './src/*' './img/*' 'README.md' './aws/*' awscliv2.zip
+
+      - name: Test-deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v14
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: kyrics
+          environment_name: Kyrics-env-prod
+          region: ${{ secrets.AWS_REGION }}
+          version_label: ${{ github.SHA }}
+          deployment_package: deploy.zip
