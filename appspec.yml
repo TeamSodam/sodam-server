@@ -7,5 +7,10 @@ files:
 hooks:
   AfterInstall:
     - location: /home/ubuntu/scripts/install_dependencies.sh
-      timeout: 120
-      runas: ec2-user
+      timeout: 300
+      runas: root
+
+	ApplicationStart:
+    - location: /home/ubuntu/scripts/restart_server.sh
+      timeout: 60
+      runas: root
