@@ -10,7 +10,7 @@ hooks:
       timeout: 300
       runas: root
 
-	ApplicationStart:
+  ApplicationStart:
     - location: /home/ubuntu/scripts/restart_server.sh
       timeout: 60
       runas: root
