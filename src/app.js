@@ -21,7 +21,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     status: 404,
     success: false,
-    message: '안녕하세요 404페이지 입니다',
+    message: '404 페이지인데 이거 안되면 안녕하지 않음 :(',
   });
 });
 
