@@ -6,11 +6,11 @@ files:
 
 hooks:
   AfterInstall:
-    - location: /home/ubuntu/scripts/install_dependencies.sh
+    - location: ./scripts/install_dependencies.sh
       timeout: 300
       runas: root
 
   ApplicationStart:
-    - location: /home/ubuntu/scripts/restart_server.sh
+    - location: ./scripts/restart_server.sh
       timeout: 60
       runas: root
