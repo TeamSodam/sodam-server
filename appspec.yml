@@ -3,3 +3,9 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/build/
+
+hooks:
+  AfterInstall:
+    - location: /home/ubuntu/scripts/install_dependencies.sh
+      timeout: 120
+      runas: ec2-user
