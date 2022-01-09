@@ -21,7 +21,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     status: 404,
     success: false,
-    message: '잘못된 경로입니다.',
+    message: '아무 경로로 들어왔습니다.',
   });
 });
 
