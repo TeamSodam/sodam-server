@@ -21,7 +21,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     status: 404,
     success: false,
-    message: '잘 나왔으면 좋겠다 !',
+    message: '잘 나왔으면 좋겠다 ! 제발 !',
   });
 });
 
