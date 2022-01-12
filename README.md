@@ -1,6 +1,6 @@
 ![image](https://user-images.githubusercontent.com/81923229/148949733-70b1d338-cae1-4c7e-a77a-17e912bd93a5.png)
 
-## *🎁 소품샵 여정의 이야기를 담다, Sodam 🎁*
+## *🎁  소품샵 여정의 이야기를 담다, Sodam  🎁*
 
 우리의 소품샵 방문 경험을 더욱 가치있게 만들어 주는 소담입니다!
 
@@ -16,7 +16,7 @@
 
 ## ♟ commit, coding convention, branch 전략
 
-### 📍 commit 전략
+### 📍  commit 전략
 
 ```
  제목 첫 글자를 대문자로
@@ -27,11 +27,11 @@
  본문에 여러줄의 메시지를 작성할 땐 "-"로 구분
 ```
 
-```jsx
+```
  ✨ [FEAT] : 새로운 기능 구현 #이슈번호
  🔨 [FIX] : 버그, 오류 해결 #이슈번호
- 📝 [DOCS] : README나 WIKI 등의 문서 개정 #이슈번
- 💄 [STYLE] :  코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우 #이슈번호호
+ 📝 [DOCS] : README나 WIKI 등의 문서 개정 #이슈번호
+ 💄 [STYLE] :  코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우 #이슈번호
  ♻️ [REFACTOR] : 코드 리펙토링 #이슈번호
  ⚡️ [TEST] : 테스트 코드, 리펙토링 테스트 코드 추가 #이슈번호
  ✅ [CHORE] : 빌드 업무 수정, 패키지 매니저 수정 #이슈번호
@@ -45,7 +45,7 @@
  🔀 [MERGE]: 다른브렌치를 merge 할 때 사용합니다. #이슈번호
 ```
 
-### 📍 coding convention
+### 📍  coding convention
 - .eslintrc.js
 ```javascript
 module.exports = {
@@ -94,7 +94,7 @@ module.exports = {
 
 ```
 
-### 📍 branch 전략
+### 📍  branch 전략
 
 - 배포 브랜치 : `main`
 - 개발 브랜치 : `develop`
@@ -104,8 +104,11 @@ module.exports = {
     - `refact/`
     - `hotfix/`
 
+### 📍  PR, 이슈 관리
 
-### 🏛 프로젝트 폴더 구조
+💡 하나의 이슈를 올리면 거기서의 todo 단위로 pr 날리기
+
+## 🏛  프로젝트 폴더 구조
 ```
 ├── README.md
 ├── appspec.yml
@@ -138,10 +141,12 @@ module.exports = {
             └── userGET.js
 ```
 
-### 🕸 전체 API 로직 구현 진척도
-(추가 예정)
+## 🕸  전체 API 로직 구현 진척도 (수정중)
+[API 명세서](https://scrawny-trust-955.notion.site/API-8dcea38436014055a8890adba05bd8b5) 
 
-### 👨‍👩‍👦 팀별 역할 분담
+각자 할당된 api 개발 진행 중, 완성된 api 없음.
+
+## 👨‍👩‍👦  팀별 역할 분담
 | 박나희 | 이정은 | 최유림 |
 | --- | --- | --- |
 |  🐱 [Nahee-Park](https://github.com/Nahee-Park) | 🐱 [LeeJE20](https://github.com/LeeJE20)  | 🐱 [choiyoorim](https://github.com/choiyoorim) |
