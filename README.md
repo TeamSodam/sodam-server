@@ -13,6 +13,21 @@
 ## ✏️ DB ERD
 ![sodam-db](https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png)
 
+## 📕 Cloud Service
+- AWS EC2 - 클라우드 컴퓨팅 시스템
+- AWS RDS - 클라우드 관계형 데이터베이스
+- AWS S3 - 클라우드 데이터 저장소
+- AWS Route 53 - 클라우드 DNS 웹 서비스
+- AWS CodePipeline - 지속적 통합 및 지속적 전달 서비스
+- AWS CodeDeploy - 애플리케이션 배포를 자동화하는 배포 서비스
+
+## 📚 사용 도구
+- Node.js
+- Express.js
+- NPM - 패키지 매니저
+- PM2
+- PostgresSQL
+- Swagger - API 명세
 
 ## ♟ commit, coding convention, branch 전략
 
@@ -108,7 +123,7 @@ module.exports = {
 
 💡 하나의 이슈를 올리면 거기서의 todo 단위로 pr 날리기
 
-## 🏛  프로젝트 폴더 구조
+## 🏛  프로젝트 폴더 구조 (수정중)
 ```
 ├── README.md
 ├── appspec.yml
@@ -151,7 +166,7 @@ module.exports = {
 | --- | --- | --- |
 |  🐱 [Nahee-Park](https://github.com/Nahee-Park) | 🐱 [LeeJE20](https://github.com/LeeJE20)  | 🐱 [choiyoorim](https://github.com/choiyoorim) |
 | 기록 및 문서화 담당 (리드미, 노션) | 팀 운영 담당 (일정조율, 회의 진행, 공지) | Task managing (칸반보드 관리 담당) |
-| 기술 담당 (코드 리뷰, 기술적인 이슈, 타 파트와의 소통) | 협업 담당 (페어 프로그래밍, 개발 컨벤션 체크, 필요한 소통이 잘 이뤄지는지) | 과제 담당 (과제 제출 기한, 과제 제출 여부 체크) |
+| 기술 담당 (코드 , 기술적인 이슈, 타 파트와의 소통) | 협업 담당 (페어 프로그래밍, 개발 컨벤션 체크, 필요한 소통이 잘 이뤄지는지) | 과제 담당 (과제 제출 기한, 과제 제출 여부 체크) |
 |  |  | 돈기부여 (안 지킨 날에 벌금 기록) |
 
 
