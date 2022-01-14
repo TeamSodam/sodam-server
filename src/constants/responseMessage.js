@@ -41,4 +41,8 @@ module.exports = {
 
   // 인증
   NO_AUTH_HEADER: 'Authorization 헤더가 없습니다.',
+
+  // 소품샵
+  SHOP_BY_AREA_SUCCESS: '지역별 소품샵 가져오기 성공',
+  SHOP_BY_THEME_SUCCESS: '테마별 소품샵 가져오기 성공',
 };

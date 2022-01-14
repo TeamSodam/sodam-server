@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/user', require('./user'));
-router.use('/shop', require('./shop'));
+router.get('/', require('./shopGET'));
 
 module.exports = router;
