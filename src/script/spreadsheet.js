@@ -41,43 +41,121 @@ async function gsrun(client) {
     }
   }
   const client2 = await db.connect();
-
+  /*
+  //<shop 테이블 채우는 코드>
   const sql =
     'INSERT INTO shop (id, shop_name, subway, road_address, land_address, time, close, phone, homepage, instagram, blog, store, area, note) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING * ';
-  const values = [
-    responseArray[7][0],
-    responseArray[7][1],
-    responseArray[7][4],
-    responseArray[7][5],
-    responseArray[7][6],
-    responseArray[7][9],
-    responseArray[7][10],
-    responseArray[7][8],
-    responseArray[7][11],
-    responseArray[7][12],
-    responseArray[7][13],
-    responseArray[7][14],
-    responseArray[7][7],
-    responseArray[7][16],
-  ];
-  //console.log(responseArray[2]);
-  //   client2.query(sql, values, (err, res) => {
-  //     if (err) {
-  //       console.log(err.stack);
-  //     } else {
-  //       console.log(res.rows[0]);
-  //     }
-  //   });
+  for(var i = 1; i<responseArray.length; i++){
+    const values = [
+        responseArray[i][0],
+        responseArray[i][1],
+        responseArray[i][4],
+        responseArray[i][5],
+        responseArray[i][6],
+        responseArray[i][9],
+        responseArray[i][10],
+        responseArray[i][8],
+        responseArray[i][11],
+        responseArray[i][12],
+        responseArray[i][13],
+        responseArray[i][14],
+        responseArray[i][7],
+        responseArray[i][16],
+      ];
+      const { rows } = await client2.query(
+        `
+                INSERT INTO shop 
+                (id, shop_name, subway, road_address, land_address, time, close, phone, homepage, instagram, blog, store, area, note)
+                VALUES
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                RETURNING *
+                `,
+        values,
+      );
+      console.log(rows);
+  }
+    */
 
-  const { rows } = await client2.query(
-    `
-            INSERT INTO shop 
-            (id, shop_name, subway, road_address, land_address, time, close, phone, homepage, instagram, blog, store, area, note)
-            VALUES
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-            RETURNING *
-            `,
-    values,
-  );
-  console.log(rows);
+  /*
+  //<shop_category 테이블 채우는 코드>
+    const sql2 = `
+        INSERT INTO shop_category 
+        (shop_id, category_id)
+        VALUES
+        ($1, $2)
+        RETURNING *
+    `;
+
+    for(var j = 1; j<responseArray.length; j++){
+        let str = responseArray[j][2];
+        let split_str = str.split(",");
+        let category_id;
+        for(var i = 0; i<split_str.length; i++){
+            if(split_str[i] == "문구팬시"){
+                category_id = 1;
+            }
+            else if(split_str[i] == "인테리어소품"){
+                category_id = 2;
+            }
+            else if(split_str[i] == "주방용품"){
+                category_id = 3;
+            }
+            else if(split_str[i] == "패션소품"){
+                category_id = 4;
+            }
+            else if(split_str[i] == "공예품"){
+                category_id = 5;
+            }
+            else if(split_str[i] == "인형장난감"){
+                category_id = 6;
+            }
+
+        
+            const { rows } = await client2.query(
+                sql2,
+                [responseArray[j][0], category_id]
+            );
+            
+            console.log(rows);
+        }
+    }
+    */
+
+  /*
+    //<shop_theme 테이블 채우는 코드>
+    const sql3 = `
+        INSERT INTO shop_theme 
+        (shop_id, theme_id)
+        VALUES
+        ($1, $2)
+        RETURNING *
+    `;
+
+    for(var k = 1; k<responseArray.length; k++){
+        let str = responseArray[k][3];
+        let split_str = str.split(",");
+        let theme_id;
+        for(var i = 0; i<split_str.length; i++){
+            if(split_str[i] == "아기자기"){
+                theme_id = 1;
+            }
+            else if(split_str[i] == "힙함"){
+                theme_id = 2;
+            }
+            else if(split_str[i] == "모던"){
+                theme_id = 3;
+            }
+            else if(split_str[i] == "빈티지"){
+                theme_id = 4;
+            }
+            
+            const { rows } = await client2.query(
+                sql3,
+                [responseArray[k][0], theme_id]
+            );
+            
+            console.log(rows);
+        }
+    }
+    */
 }
