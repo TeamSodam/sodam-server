@@ -8,7 +8,7 @@ const getShopByArea = async (client, area, sort) => {
   // mysave sort 추가적으로 구현해야함.
   const { rows } = await client.query(
     `
-        SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count, s.review_count
+        SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count, s.review_count, s.time
         FROM shop s 
         INNER JOIN shop_category sc
         ON s.id = sc.shop_id
