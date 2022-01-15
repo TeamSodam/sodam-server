@@ -1,10 +1,14 @@
-const _ = require('lodash');
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
-const getShopByArea = async (client, area) => {
+const getShopByArea = async (client, area, sort) => {
+  let sortQuery = '';
+  if (sort === 'popular') {
+    sortQuery = `ORDER BY s.bookmark_count DESC`;
+  }
+  // mysave sort 추가적으로 구현해야함.
   const { rows } = await client.query(
     `
-        SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category
+        SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count
         FROM shop s 
         INNER JOIN shop_category sc
         ON s.id = sc.shop_id
@@ -12,16 +16,29 @@ const getShopByArea = async (client, area) => {
         ON sc.category_id = c.id
         WHERE s.area = $1
             AND s.is_deleted = FALSE
+         ${sortQuery}
         `,
     [area],
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getShopByTheme = async (client, theme) => {
+const getShopByTheme = async (client, theme, sort, offset, limit) => {
+  let sortQuery = '';
+  switch (sort) {
+    case 'review':
+      sortQuery = `ORDER BY s.review_count DESC`;
+      break;
+    case 'popular':
+      sortQuery = `ORDER BY s.bookmark_count DESC`;
+      break;
+    default:
+      sortQuery = `ORDER BY s.bookmark_count DESC`;
+  }
+
   const { rows } = await client.query(
     `
-          SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category
+          SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.bookmark_count, s.review_count
           FROM shop s 
           INNER JOIN shop_category sc
           ON s.id = sc.shop_id
@@ -33,13 +50,15 @@ const getShopByTheme = async (client, theme) => {
           ON st.theme_id = t.id
           WHERE t.name = $1
               AND s.is_deleted = FALSE
+          ${sortQuery}
+          OFFSET ${offset} LIMIT ${limit}
           `,
     [theme],
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getImageByShopId = async (client, shopId) => {
+const getPreviewImageByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
         SELECT DISTINT si.image si.shop_id as shopId
@@ -52,4 +71,4 @@ const getImageByShopId = async (client, shopId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getShopByArea, getShopByTheme, getImageByShopId };
+module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId };
