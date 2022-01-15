@@ -8,7 +8,7 @@ const getShopByArea = async (client, area, sort) => {
   // mysave sort 추가적으로 구현해야함.
   const { rows } = await client.query(
     `
-        SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count, s.review_count, s.time
+        SELECT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.review_count, s.time
         FROM shop s 
         INNER JOIN shop_category sc
         ON s.id = sc.shop_id
@@ -39,7 +39,7 @@ const getShopByTheme = async (client, theme, sort, offset, limit) => {
 
   const { rows } = await client.query(
     `
-          SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.bookmark_count, s.review_count
+          SELECT s.id as shop_id, s.shop_name, c.name as category
           FROM shop s 
           INNER JOIN shop_category sc
           ON s.id = sc.shop_id
@@ -64,7 +64,7 @@ const getShopByTheme = async (client, theme, sort, offset, limit) => {
 const getPreviewImageByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
-        SELECT DISTINT si.image si.shop_id as shopId
+        SELECT si.image si.shop_id as shopId
         FROM shop_image si
         WHERE si.shop_id = $1
             AND is_preview = true
@@ -78,7 +78,7 @@ const getPreviewImageByShopId = async (client, shopId) => {
 const getBookmarkedShopIdByUserIdAndArea = async (client, area, userId) => {
   const { rows } = await client.query(
     `
-            SELECT DISTINCT s.id as shop_id,
+            SELECT s.id as shop_id,
             FROM shop s 
             INNER JOIN shop_bookmark sb
             ON s.id = sb.shop_id
