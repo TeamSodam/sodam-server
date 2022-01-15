@@ -6,10 +6,9 @@ const util = require('../../lib/util');
 const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedData');
 
 module.exports = async (req, res) => {
-  // popular, mysave (지역별에서) , popular, review(테마별에서)
+  //sort쿼리 popular, mysave (지역별에서) , popular, review(테마별에서)
   const { area, theme, offset, limit, sort } = req.query;
-  // TODO 지역별 소품샵 데이터 받기에서 mysave로 sort 구현하기 (토큰 받은 이후)
-  const { token } = req.header;
+
   if (theme && (!offset || !limit)) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
@@ -23,7 +22,7 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     if (area) {
       const areaArr = await shopDB.getShopByArea(client, area, sort);
-      const responseData = duplicatedDataClean(areaArr, 'shopId', 'category');
+      let responseData = duplicatedDataClean(areaArr, 'shopId', 'category');
       const imagePromise = responseData.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
@@ -45,6 +44,24 @@ module.exports = async (req, res) => {
           item.image = null;
         }
       });
+
+      if (sort === 'mysave') {
+        // 로그인 했으면 db에서 데이터 가져오기
+        if (req.user) {
+          // 북마크된 shopId를 가져와서 이미 가져온 responseData에서 해당 shopId에 해당하는 소품샵만 반환
+          const bookmarkedShopId = await shopDB.getBookmarkedShopIdByUserId(client, area, req.user.id);
+          const bookmarkedShopIdArr = bookmarkedShopId.map((obj) => obj.shopId);
+          if (bookmarkedShopIdArr.length === 0) responseData = [];
+          else {
+            responseData = responseData.filter((o) => {
+              return bookmarkedShopIdArr.includes(o.shopId);
+            });
+          }
+        } else {
+          // 로그인 되어있지 않는 경우
+          return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
+        }
+      }
 
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
     }

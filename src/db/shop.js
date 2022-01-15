@@ -75,26 +75,20 @@ const getPreviewImageByShopId = async (client, shopId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getBookmarkedShopByUserId = async (client, area, userId) => {
+const getBookmarkedShopIdByUserId = async (client, area, userId) => {
   const { rows } = await client.query(
     `
-            SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count, s.review_count
+            SELECT DISTINCT s.id as shop_id,
             FROM shop s 
-            INNER JOIN shop_category sc
-            ON s.id = sc.shop_id
-            INNER JOIN category c
-            ON sc.category_id = c.id
             INNER JOIN shop_bookmark sb
             ON s.id = sb.shop_id
             WHERE s.area = $1
                 AND sb.user_id = $2
                 AND s.is_deleted = FALSE
-                AND sc.is_deleted = FALSE
-                AND sb.is_deleted = FALSE
             `,
     [area, userId],
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId, getBookmarkedShopByUserId };
+module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId, getBookmarkedShopIdByUserId };
