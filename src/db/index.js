@@ -1,5 +1,5 @@
 module.exports = {
   userDB: require('./user'),
-  sheetDB: require('./spreadsheet')
+  sheetDB: require('./spreadsheet'),
   shopDB: require('./shop'),
 };
