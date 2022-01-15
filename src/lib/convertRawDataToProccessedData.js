@@ -10,7 +10,7 @@ const duplicatedDataClean = (arr, key, absorptionId) => {
     }
     keyPerAbsorptionItem[item[key]].push(item[absorptionId]);
   });
-  // 중복없는 리스트 만들기 (absorptionId를 빼고 복사해도 될듯)
+  // 중복없는 리스트 만들기
   arr.map((item) => {
     if (!isDuplicated[item[key]]) {
       isDuplicated[item[key]] = true;

@@ -8,7 +8,7 @@ const getShopByArea = async (client, area, sort) => {
   // mysave sort 추가적으로 구현해야함.
   const { rows } = await client.query(
     `
-        SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count
+        SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count, s.review_count
         FROM shop s 
         INNER JOIN shop_category sc
         ON s.id = sc.shop_id
@@ -16,6 +16,7 @@ const getShopByArea = async (client, area, sort) => {
         ON sc.category_id = c.id
         WHERE s.area = $1
             AND s.is_deleted = FALSE
+            AND sc.is_deleted = FALSE
          ${sortQuery}
         `,
     [area],
@@ -50,6 +51,8 @@ const getShopByTheme = async (client, theme, sort, offset, limit) => {
           ON st.theme_id = t.id
           WHERE t.name = $1
               AND s.is_deleted = FALSE
+              AND sc.is_deleted = FALSE
+              AND st.is_deleted = FALSE
           ${sortQuery}
           OFFSET ${offset} LIMIT ${limit}
           `,
@@ -65,10 +68,33 @@ const getPreviewImageByShopId = async (client, shopId) => {
         FROM shop_image si
         WHERE si.shop_id = $1
             AND is_preview = true
+            AND si.is_deleted = FALSE
         `,
     [shopId],
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId };
+const getBookmarkedShopByUserId = async (client, area, userId) => {
+  const { rows } = await client.query(
+    `
+            SELECT DISTINCT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.bookmark_count, s.review_count
+            FROM shop s 
+            INNER JOIN shop_category sc
+            ON s.id = sc.shop_id
+            INNER JOIN category c
+            ON sc.category_id = c.id
+            INNER JOIN shop_bookmark sb
+            ON s.id = sb.shop_id
+            WHERE s.area = $1
+                AND sb.user_id = $2
+                AND s.is_deleted = FALSE
+                AND sc.is_deleted = FALSE
+                AND sb.is_deleted = FALSE
+            `,
+    [area, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId, getBookmarkedShopByUserId };
