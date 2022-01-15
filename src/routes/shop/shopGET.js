@@ -68,7 +68,7 @@ module.exports = async (req, res) => {
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
     }
     if (theme) {
-      const themeArr = await shopDB.getShopByTheme(client, theme, sort, offset, limit);
+      const themeArr = await shopDB.getShopByTheme(client, theme, sort, offset - 1, limit);
       const responseData = duplicatedDataClean(themeArr, 'shopId', 'category');
       const imagePromise = responseData.map((item) => {
         const shopId = item.shopId;

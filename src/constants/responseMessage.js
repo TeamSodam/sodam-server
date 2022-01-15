@@ -50,4 +50,8 @@ module.exports = {
   // 소품샵
   SHOP_BY_AREA_SUCCESS: '지역별 소품샵 가져오기 성공',
   SHOP_BY_THEME_SUCCESS: '테마별 소품샵 가져오기 성공',
+
+  // 저장한 소품샵
+  SAVED_SHOP_SUCCESS: '저장한 소품샵 가져오기 성공',
+  SAVED_SHOP_EMPTY: '저장한 소품샵이 없습니다.',
 };

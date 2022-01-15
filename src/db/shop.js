@@ -129,7 +129,7 @@ const getImageByShopId = async (client, shopId) => {
             FROM shop_image s
             WHERE s.shop_id = $1
                 AND s.is_deleted = FALSE
-            ORDER BY s.is_preview desc
+            ORDER BY s.is_preview DESC
             `,
     [shopId],
   );
@@ -163,4 +163,52 @@ const getShopBookmarkByUserId = async (client, shopId, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId, getBookmarkedShopIdByUserIdAndArea, getCategoryByShopId, getThemeByShopId, getImageByShopId, getShopByShopId, getShopBookmarkByUserId };
+const getSavedShopList = async (client, sort, userId, offset, limit) => {
+  let sortQuery = '';
+  switch (sort) {
+    case 'save':
+      sortQuery = `ORDER BY s.bookmark_count DESC`;
+      break;
+    case 'recent':
+      sortQuery = `ORDER BY s.created_at DESC`;
+      break;
+    case 'review':
+      sortQuery = `ORDER BY s.review_count DESC`;
+      break;
+    default:
+      sortQuery = `ORDER BY s.bookmark_count DESC`;
+  }
+  const { rows } = await client.query(
+    `
+    SELECT s.id as shop_id, s.shop_name, c.name as category
+    FROM shop s 
+    INNER JOIN shop_category sc
+    ON s.id = sc.shop_id
+    INNER JOIN category c
+    ON sc.category_id = c.id
+    INNER JOIN shop_bookmark sb
+    ON s.id = sb.shop_id
+    WHERE sb.user_id = $1
+        AND s.is_deleted = FALSE
+        AND sc.is_deleted = FALSE
+        AND sb.is_deleted = FALSE
+        ${sortQuery}
+        OFFSET ${offset} LIMIT ${limit}
+              `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+module.exports = {
+  getShopByArea,
+  getShopByTheme,
+  getPreviewImageByShopId,
+  getBookmarkedShopIdByUserIdAndArea,
+  getCategoryByShopId,
+  getThemeByShopId,
+  getImageByShopId,
+  getShopByShopId,
+  getShopBookmarkByUserId,
+  getSavedShopList,
+};
