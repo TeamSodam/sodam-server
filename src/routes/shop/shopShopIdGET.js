@@ -53,12 +53,6 @@ module.exports = async (req, res) => {
       image,
     };
 
-    // 필요없는 데이터 삭제
-    delete result.createdAt;
-    delete result.updatedAt;
-    delete result.isDeleted;
-    delete result.note;
-
     // 성공 response 보내기
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_ONE_SHOP_SUCCESS, result));
   } catch (error) {
