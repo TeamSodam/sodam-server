@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/user', require('./user'));
-router.use('/shop', require('./shop'));
+// TODO: auth API 완성되면 checkUser 넣으면 됨
+router.get('/', require('./shopGET'));
 
 module.exports = router;
