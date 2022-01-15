@@ -75,7 +75,7 @@ const getPreviewImageByShopId = async (client, shopId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getBookmarkedShopIdByUserId = async (client, area, userId) => {
+const getBookmarkedShopIdByUserIdAndArea = async (client, area, userId) => {
   const { rows } = await client.query(
     `
             SELECT DISTINCT s.id as shop_id,
@@ -91,4 +91,4 @@ const getBookmarkedShopIdByUserId = async (client, area, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId, getBookmarkedShopIdByUserId };
+module.exports = { getShopByArea, getShopByTheme, getPreviewImageByShopId, getBookmarkedShopIdByUserIdAndArea };
