@@ -158,7 +158,7 @@ const getReviewByShopIdOrderByRecent = async (client, shopId, limit, offset) => 
 const getReviewOrderByRecent = async (client) => {
   const { rows } = await client.query(
     `
-    SELECT r.created_at, r.id AS review_id, r.shop_id, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content, c.name as category
+    SELECT r.id AS review_id, r.shop_id, s.shop_name, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content, c.name as category
     FROM review r
     INNER JOIN review_image ri
     ON r.id = ri.review_id
