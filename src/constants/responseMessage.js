@@ -54,4 +54,8 @@ module.exports = {
   //리뷰
   REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
   REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',
+
+  // 저장한 소품샵
+  SAVED_SHOP_SUCCESS: '저장한 소품샵 가져오기 성공',
+  SAVED_SHOP_EMPTY: '저장한 소품샵이 없습니다.',
 };
