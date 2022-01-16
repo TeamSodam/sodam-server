@@ -4,5 +4,7 @@ const { checkUser } = require('../../middlewares/auth');
 
 // TODO: auth API 완성되면 checkUser 넣으면 됨
 router.post('/:reviewId/like', require('./reviewLikePOST'));
+router.get('/:shopId', require('./reviewShopIdSortPageGET'));
 
 module.exports = router;
+
