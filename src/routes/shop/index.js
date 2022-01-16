@@ -6,5 +6,6 @@ const { checkUser } = require('../../middlewares/auth');
 router.get('/bookmark', require('./bookmarkGET'));
 router.get('/:shopId', require('./shopShopIdGET'));
 router.get('/', require('./shopGET'));
+router.get('/:shopId/location', require('./shopShopIdLocationGET'));
 
 module.exports = router;

@@ -35,6 +35,7 @@ module.exports = {
   // 소품샵
   GET_ONE_SHOP_SUCCESS: '소품샵 상세 정보 조회 성공',
   NO_SHOP: '존재하지 않는 소품샵입니다.',
+  RECOMMEND_BY_SUBWAY_SUCCESS: '소품샵 근처 지하철역 기반 소품샵 추천 성공',
 
   // 서버 내 오류
   INTERNAL_SERVER_ERROR: '서버 내 오류',
