@@ -1,5 +1,17 @@
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
+const getReviewByReviewId = async (client, reviewId) => {
+  const { rows } = await client.query(
+    `
+        SELECT *
+        FROM review r
+        WHERE r.id = $1
+        `,
+    [reviewId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 const getLikeCountByReviewId = async (client, reviewId) => {
   const { rows } = await client.query(
     `
@@ -183,6 +195,19 @@ const updateReviewScrapCount = async (client, reviewId, scrapCount) => {
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
+const getReviewScrapByUserId = async (client, reviewId, userId) => {
+  const { rows } = await client.query(
+    `
+              SELECT id
+              FROM review_scrap rs
+              WHERE rs.review_id = $1
+                AND rs.user_id = $2
+                AND rs.is_deleted = FALSE
+              `,
+    [reviewId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
 
 const getReviewByShopIdOrderByScrap = async (client, shopId, limit, offset) => {
   const { rows } = await client.query(
@@ -234,15 +259,89 @@ const getReviewByShopIdOrderByRecent = async (client, shopId, limit, offset) => 
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getReviewLikeByUserId = async (client, reviewId, userId) => {
+  const { rows } = await client.query(
+    `
+              SELECT rl.review_id
+              FROM review_like rl
+              WHERE rl.review_id = $1
+                AND rl.user_id = $2
+                AND rl.is_deleted = FALSE
+              `,
+    [reviewId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getReviewWriterByUserId = async (client, userId) => {
+  const { rows } = await client.query(
+    `
+    SELECT u.nickname as writer_name, u.image as writer_thumbnail
+    FROM "user" u
+    WHERE u.id = $1
+    AND u.is_deleted = FALSE
+    `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getReviewImagesByReviewId = async (client, reviewId) => {
+  const { rows } = await client.query(
+    `
+    SELECT ri.image
+    FROM review_image ri
+    WHERE ri.review_id = $1
+    AND ri.is_deleted = FALSE
+    `,
+    [reviewId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getReviewItemByReviewId = async (client, reviewId) => {
+  const { rows } = await client.query(
+    `
+    SELECT rtm.item_name, rtm.price
+    FROM review_item rtm
+    WHERE rtm.review_id = $1
+    AND rtm.is_deleted = FALSE
+    `,
+    [reviewId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getReviewTagByReviewId = async (client, reviewId) => {
+  const { rows } = await client.query(
+    `
+    SELECT t.name
+    FROM review_tag rt
+    INNER JOIN tag t
+    ON rt.tag_id = t.id
+    WHERE rt.review_id = $1
+    AND rt.is_deleted = FALSE
+    `,
+    [reviewId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
 
 module.exports = {
-  getReviewByShopIdOrderByLike, 
-  getReviewByShopIdOrderByScrap, 
-  getReviewByShopIdOrderByRecent, 
+  getReviewByReviewId,
   getLikeCountByReviewId,
   getCurrentLikeStatusByReviewIdAndUserId,
   postReviewLikeByReviewId,
   updateReviewLikeCount,
+  getReviewScrapByUserId,
+  getReviewLikeByUserId,
+  getReviewWriterByUserId,
+  getReviewImagesByReviewId,
+  getReviewItemByReviewId,
+  getReviewTagByReviewId,
+  getReviewByShopIdOrderByLike,
+  getReviewByShopIdOrderByScrap,
+  getReviewByShopIdOrderByRecent,
   getScrapCountByReviewId,
   getCurrentScrapStatusByReviewIdAndUserId,
   postReviewScrapByReviewId,
