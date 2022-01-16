@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const app = express();
+const admin = require('firebase-admin');
+const serviceAccount = require('./sodam-server-authentication.json');
 
 dotenv.config();
 
@@ -14,6 +16,16 @@ app.use((req, res, next) => {
 });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+let firebase;
+
+if (admin.apps.length === 0) {
+  firebase = admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+} else {
+  firebase = admin.app();
+}
 
 app.use('/', require('./routes'));
 
