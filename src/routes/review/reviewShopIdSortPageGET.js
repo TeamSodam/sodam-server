@@ -13,19 +13,12 @@ module.exports = async (req, res) => {
   }
 
   // ~~ query 확인
-  let { sort, page } = req.query;
-
-  if (!page) {
-    page = 1;
+  let { sort, offset, limit } = req.query;
+  if (!offset || !limit) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
-  // ~~ DB에 보낼 limit, offset 계산
-
-  // LIMIT: 보여줄 개수 제한 (몇 개의 데이터를 보여줄지)
-  // 한 페이지에 보여줘야 하는 리뷰 개수
-  const limit = 9;
-  // OFFSET: 얼만큼의 데이터를 건너뛸지 (offset이 9라면 10번째 데이터부터 보여줌)
-  const offset = limit * (Number(page) - 1);
+  const pageOffset = offset - 1;
 
   let client;
 
@@ -35,12 +28,12 @@ module.exports = async (req, res) => {
     let result;
     // sort에 따라 db에 요청 보내기
     if (sort === 'save') {
-      result = await reviewDB.getReviewByShopIdOrderByScrap(client, shopId, limit, offset);
+      result = await reviewDB.getReviewByShopIdOrderByScrap(client, shopId, limit, pageOffset);
     } else if (sort === 'recent') {
-      result = await reviewDB.getReviewByShopIdOrderByRecent(client, shopId, limit, offset);
+      result = await reviewDB.getReviewByShopIdOrderByRecent(client, shopId, limit, pageOffset);
     } else {
       // sort === "like"
-      result = await reviewDB.getReviewByShopIdOrderByLike(client, shopId, limit, offset);
+      result = await reviewDB.getReviewByShopIdOrderByLike(client, shopId, limit, pageOffset);
     }
 
     // 성공: 탐색은 잘 했는데 리뷰가 없는 경우
