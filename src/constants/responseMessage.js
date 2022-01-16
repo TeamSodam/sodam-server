@@ -63,4 +63,5 @@ module.exports = {
   // 저장한 소품샵
   SAVED_SHOP_SUCCESS: '저장한 소품샵 가져오기 성공',
   SAVED_SHOP_EMPTY: '저장한 소품샵이 없습니다.',
+  SHOP_SAVE_SUCCESS: '소품샵 저장 성공',
 };
