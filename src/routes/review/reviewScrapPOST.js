@@ -23,6 +23,7 @@ module.exports = async (req, res) => {
       const userId = req.user.id;
 
       const isDeletedBefore = await reviewDB.getCurrentScrapStatusByReviewIdAndUserId(client, reviewId, userId); //true -> 스크랩 안돼있음, false-> 스크랩 눌려있음
+      // 처음으로 scrap요청을 보낸 경우
       if (isDeletedBefore.length === 0) {
         const isDeleted = await reviewDB.postReviewScrapByReviewId(client, userId, reviewId, isScraped);
         // scrap이 true인 경우
@@ -34,9 +35,10 @@ module.exports = async (req, res) => {
         // scrap이 false인 경우
         else {
           const updateScrapCount = await reviewDB.updateReviewScrapCount(client, reviewId, scrapCount[0].scrapCount - 1);
-          responseData['isScraped'] = !isDeleted;
+          responseData['isScraped'] = !isDeleted[0].isDeleted;
           responseData['scrapCount'] = updateScrapCount[0].scrapCount;
         }
+        // 이미 보냈던 scrap요청이 있는 경우
       } else {
         if (isScraped === !isDeletedBefore[0].isDeleted) {
           // 지금 받은 isScraped상태가 기존과 같은 경우
