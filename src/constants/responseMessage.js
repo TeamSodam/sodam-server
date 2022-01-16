@@ -50,4 +50,8 @@ module.exports = {
   // 소품샵
   SHOP_BY_AREA_SUCCESS: '지역별 소품샵 가져오기 성공',
   SHOP_BY_THEME_SUCCESS: '테마별 소품샵 가져오기 성공',
+
+  //리뷰
+  REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
+  REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',
 };
