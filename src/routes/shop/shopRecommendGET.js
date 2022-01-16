@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
       );
 
       console.log(shopArr);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_ONE_SHOP_SUCCESS, shopArr));
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, shopArr));
     } else if (type == 'popular') {
       const rankList = await shopDB.getShopBookmarkByCounts(client);
       let responseRankData = duplicatedDataClean(rankList, 'shopId', 'category');
@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
       });
 
       console.log('responseRankData', responseRankData);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_ONE_SHOP_SUCCESS, responseRankData));
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, responseRankData));
     }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
