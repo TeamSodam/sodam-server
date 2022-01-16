@@ -154,4 +154,28 @@ const getReviewByShopIdOrderByRecent = async (client, shopId, limit, offset) => 
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getReviewByShopIdOrderByLike, getReviewByShopIdOrderByScrap, getReviewByShopIdOrderByRecent, getLikeCountByReviewId, getCurrentLikeStatusByReviewIdAndUserId, postReviewLikeByReviewId, updateReviewLikeCount };
+
+const getReviewOrderByRecent = async (client) => {
+  const { rows } = await client.query(
+    `
+    SELECT r.created_at, r.id AS review_id, r.shop_id, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content, c.name as category
+    FROM review r
+    INNER JOIN review_image ri
+    ON r.id = ri.review_id
+    INNER JOIN shop s
+    on s.id = r.shop_id
+    INNER JOIN shop_category sc
+    ON s.id = sc.shop_id
+    INNER JOIN category c
+    ON sc.category_id = c.id
+    INNER JOIN "user" u
+    ON u.id = r.user_id
+
+    WHERE r.created_at >= (current_timestamp + '-1 days')
+    ORDER BY r.created_at
+    limit 15
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+module.exports = { getReviewByShopIdOrderByLike, getReviewByShopIdOrderByScrap, getReviewByShopIdOrderByRecent, getLikeCountByReviewId, getCurrentLikeStatusByReviewIdAndUserId, postReviewLikeByReviewId, updateReviewLikeCount, getReviewOrderByRecent };
