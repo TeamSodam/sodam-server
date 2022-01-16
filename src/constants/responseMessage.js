@@ -54,6 +54,8 @@ module.exports = {
   //리뷰
   REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
   REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',
+  NO_REVIEW: '존재하지 않는 리뷰입니다',
+  GET_ONE_REVIEW_GET_SUCCESS: '리뷰 상세 정보 조회 성공',
 
   // 저장한 소품샵
   SAVED_SHOP_SUCCESS: '저장한 소품샵 가져오기 성공',
