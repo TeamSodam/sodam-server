@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
-const getUserByid = async (client, userId) => {
+const getUserById = async (client, userId) => {
   const { rows } = await client.query(
     `
         SELECT *
@@ -11,8 +11,8 @@ const getUserByid = async (client, userId) => {
         `,
     [userId],
   );
-  console.log(rows);
+  // console.log(rows);
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getUserByid };
+module.exports = { getUserById };
