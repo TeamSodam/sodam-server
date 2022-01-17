@@ -4,7 +4,7 @@ const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 const getUserByEmail = async (client, email) => {
   const { rows } = await client.query(
     `
-        SELECT u.name, u.email, u.password
+        SELECT *
         FROM "user" u
         WHERE u.email = $1
             AND u.is_deleted = FALSE
