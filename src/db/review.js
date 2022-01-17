@@ -327,6 +327,88 @@ const getReviewTagByReviewId = async (client, reviewId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const createReview = async (client, shopId, userId, content) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO review
+    (shop_id, user_id, content)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *
+    `,
+    [shopId, userId, content],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const createReviewImage = async (client, reviewId, image, isPreview = false) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO review_image
+    (review_id, image, is_preview)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *
+    `,
+    [reviewId, image, isPreview],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const createReviewItem = async (client, reviewId, price, itemName) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO review_item
+    (review_id, price, item_name)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *
+    `,
+    [reviewId, price, itemName],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const createTag = async (client, tagName) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO tag
+    (name)
+    VALUES
+    ($1)
+    RETURNING *
+    `,
+    [tagName],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const createReviewTag = async (client, reviewId, tagId) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO review_tag
+    (review_id, tag_id)
+    VALUES
+    ($1, $2)
+    RETURNING *
+    `,
+    [reviewId, tagId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getTagByName = async (client, tagName) => {
+  const { rows } = await client.query(
+    `
+    SELECT *
+    FROM tag
+    WHERE name = $1
+    `,
+    [tagName],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getReviewByReviewId,
   getLikeCountByReviewId,
@@ -346,4 +428,10 @@ module.exports = {
   getCurrentScrapStatusByReviewIdAndUserId,
   postReviewScrapByReviewId,
   updateReviewScrapCount,
+  createReview,
+  createReviewImage,
+  createReviewItem,
+  createTag,
+  createReviewTag,
+  getTagByName,
 };
