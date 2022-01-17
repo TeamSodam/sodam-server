@@ -30,4 +30,18 @@ const postUserBySignup = async (client, email, name, nickname, password, themePr
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getUserByEmail, postUserBySignup };
+const checkDuplicatedEmailByEmail = async (client, email) => {
+  const { rows } = await client.query(
+    `
+        SELECT u.email
+        FROM "user" u
+        WHERE u.email = $1
+            AND u.is_deleted = FALSE
+        `,
+    [email],
+  );
+
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+module.exports = { getUserByEmail, postUserBySignup, checkDuplicatedEmailByEmail };

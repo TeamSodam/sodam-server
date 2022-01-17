@@ -20,6 +20,10 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
+    const duplicatedEmail = await userDB.checkDuplicatedEmailByEmail(client, email);
+    if (duplicatedEmail.length !== 0) {
+      return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.BAD_REQUEST, responseMessage.ALREADY_EMAIL));
+    }
     const user = await userDB.postUserBySignup(client, email, name, nickname, password, themePreference);
 
     const { accesstoken } = jwtHandlers.sign(user[0]);
