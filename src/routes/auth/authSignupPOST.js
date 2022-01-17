@@ -22,13 +22,13 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     const duplicatedEmail = await userDB.checkDuplicatedEmailByEmail(client, email);
     if (duplicatedEmail.length !== 0) {
-      return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.BAD_REQUEST, responseMessage.ALREADY_EMAIL));
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.ALREADY_EMAIL));
     }
     const user = await userDB.postUserBySignup(client, email, name, nickname, password, themePreference);
 
     const { accesstoken } = jwtHandlers.sign(user[0]);
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, user));
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CREATED_USER, user));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 

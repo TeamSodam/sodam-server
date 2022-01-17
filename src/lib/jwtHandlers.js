@@ -9,7 +9,7 @@ const options = {
   issuer: 'sodam',
 };
 
-// id, email, name, idFirebase가 담긴 JWT를 발급합니다.
+// email, name, password가 담긴 JWT를 발급합니다.
 const sign = (user) => {
   const payload = {
     email: user.email,

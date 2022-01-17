@@ -20,9 +20,9 @@ module.exports = async (req, res) => {
     if (user.length !== 0) {
       const { email, name, password } = user[0];
       const { accesstoken } = jwtHandlers.sign({ email, name, password });
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, accesstoken));
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, accesstoken));
     } else {
-      res.status(statusCode.NOT_FOUND).send(util.success(statusCode.NOT_FOUND, responseMessage.NO_USER));
+      res.status(statusCode.NOT_FOUND).send(util.fail(statusCode.NOT_FOUND, responseMessage.NO_USER));
     }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
