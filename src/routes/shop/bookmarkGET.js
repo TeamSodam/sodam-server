@@ -18,9 +18,11 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
+
     // 로그인 되어있는 경우
     if (req.user) {
       const savedShopList = await shopDB.getSavedShopList(client, sort, req.user.id, offset - 1, limit);
+
       let responseData = duplicatedDataClean(savedShopList, 'shopId', 'category');
       if (responseData.length === 0) {
         responseData = [];

@@ -21,6 +21,7 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     const user = await userDB.postUserBySignup(client, email, name, nickname, password, themePreference);
+
     const { accesstoken } = jwtHandlers.sign(user[0]);
 
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, user));

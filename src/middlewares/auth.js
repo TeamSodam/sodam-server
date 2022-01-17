@@ -25,12 +25,12 @@ const checkUser = async (req, res, next) => {
     if (decodedToken === TOKEN_EXPIRED) return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.TOKEN_EXPIRED));
     if (decodedToken === TOKEN_INVALID) return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.TOKEN_INVALID));
 
-    // 해독된 jwt에 담긴 id 값이 우리가 DB에서 찾고자 하는 user의 id입니다.
+    // 해독된 jwt에 담긴 email값이 우리가 DB에서 찾고자 하는 user의 email입니다.
     const userEmail = decodedToken.email;
-    // 유저id가 없을 시의 에러 처리입니다.
+    // email값이 없을 시의 에러 처리입니다.
     if (!userEmail) return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.TOKEN_INVALID));
 
-    // 위의 id 값으로 유저를 조회합니다.
+    // 위의 email값이 값으로 유저를 조회합니다.
     const user = await userDB.getUserByEmail(client, userEmail);
 
     // 유저가 없을 시의 에러 처리입니다.
