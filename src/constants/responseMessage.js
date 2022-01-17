@@ -38,6 +38,14 @@ module.exports = {
 
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
+  REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
+  REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',
+  NO_REVIEW: '존재하지 않는 리뷰입니다',
+  GET_ONE_REVIEW_GET_SUCCESS: '리뷰 상세 정보 조회 성공',
+  CREATE_REVIEW_SUCCESS: '리뷰 작성 성공',
+
+  // 파일 업로드
+  ONLY_IMAGE_AVAILABLE: '이미지만 업로드 가능합니다',
 
   // 서버 내 오류
   INTERNAL_SERVER_ERROR: '서버 내 오류',
@@ -53,12 +61,6 @@ module.exports = {
   // 소품샵
   SHOP_BY_AREA_SUCCESS: '지역별 소품샵 가져오기 성공',
   SHOP_BY_THEME_SUCCESS: '테마별 소품샵 가져오기 성공',
-
-  //리뷰
-  REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
-  REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',
-  NO_REVIEW: '존재하지 않는 리뷰입니다',
-  GET_ONE_REVIEW_GET_SUCCESS: '리뷰 상세 정보 조회 성공',
 
   // 저장한 소품샵
   SAVED_SHOP_SUCCESS: '저장한 소품샵 가져오기 성공',
