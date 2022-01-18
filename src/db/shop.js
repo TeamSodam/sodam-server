@@ -318,6 +318,61 @@ const getShopBySubwayNotShopIdLimit = async (client, subway, shopId, limit) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getBookmarkByShopIdAndUserId = async (client, shopId, userId) => {
+  const { rows } = await client.query(
+    `
+    SELECT id AS bookmark_id, is_deleted
+    FROM shop_bookmark sb
+    WHERE sb.shop_id = $1
+    AND sb.user_id = $2
+              `,
+    [shopId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const createBookmarkByShopIdAndUserId = async (client, shopId, userId, isDeleted = false) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO shop_bookmark
+    (shop_id, user_id, is_deleted)
+    VALUES
+    ($1, $2, $3)
+    RETURNING id AS bookmark_id, shop_id, user_id, is_deleted
+              `,
+    [shopId, userId, isDeleted],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+// updatedIsDeleted: is_deleted가 이 값으로 업데이트됨
+const updateBookmarkByShopIdAndUserId = async (client, updatedIsDeleted, shopId, userId) => {
+  const { rows } = await client.query(
+    `
+    UPDATE shop_bookmark
+    SET is_deleted = $1, updated_at = now()
+    WHERE shop_id = $2
+    AND user_id = $3
+    RETURNING id AS bookmark_id, shop_id, user_id, is_deleted
+              `,
+    [updatedIsDeleted, shopId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const updateBookmarkCountByShopId = async (client, bookmarkCount, shopId) => {
+  const { rows } = await client.query(
+    `
+    UPDATE shop
+    SET bookmark_count = $1, updated_at = now()
+    WHERE id = $2
+    RETURNING bookmark_count
+              `,
+    [bookmarkCount, shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getShopCounts,
   getShopByArea,
@@ -334,4 +389,8 @@ module.exports = {
   getShopIdByCategory,
   getShopListByShopId,
   getShopBySubwayNotShopIdLimit,
+  getBookmarkByShopIdAndUserId,
+  createBookmarkByShopIdAndUserId,
+  updateBookmarkByShopIdAndUserId,
+  updateBookmarkCountByShopId,
 };

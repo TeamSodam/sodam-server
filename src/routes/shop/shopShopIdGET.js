@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     // shop 데이터 불러오기
-    const shop = await shopDB.getShopByShopId(client, shopId);
+    let shop = await shopDB.getShopByShopId(client, shopId);
 
     // shop 데이터 결과 없으면 실패
     if (shop.length === 0) {
@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
 
     // 로그인 했으면 db에서 데이터 가져오기
     if (req.user) {
-      const bookmark = await shopDB.getShopBookmarkByUserId(client, shopId, req.user[0].id);
+      const bookmark = await shopDB.getShopBookmarkByUserId(client, shopId, req.user.id);
       if (bookmark.length !== 0) isBookmarked = true;
     }
 
@@ -43,12 +43,6 @@ module.exports = async (req, res) => {
     category = category.map((item) => item.name);
     theme = theme.map((item) => item.name);
     image = image.map((item) => item.image);
-
-    // shop의 id키 이름을 shopId로 변경
-    if (shop[0].hasOwnProperty('id')) {
-      shop[0].shopId = Number(shop[0].id);
-      delete shop[0].id;
-    }
 
     // 데이터 합치기
     const result = {

@@ -1,11 +1,4 @@
 // auth 구현할 폴더
-const jwtHandlers = require('../lib/jwtHandlers');
-const db = require('../db/db');
-const util = require('../lib/util');
-const statusCode = require('../constants/statusCode');
-const responseMessage = require('../constants/responseMessage');
-const { userDB } = require('../db');
-const { TOKEN_INVALID, TOKEN_EXPIRED } = require('../constants/jwt');
 
 const checkUser = async (req, res, next) => {
   // request headers에 accesstoken라는 이름으로 담긴 값(jwt)을 가져옵니다.

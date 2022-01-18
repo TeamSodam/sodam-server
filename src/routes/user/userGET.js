@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
-    const user = await userDB.getUserByid(client, userId);
+    const user = await userDB.getUserById(client, userId);
 
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, user));
   } catch (error) {
