@@ -38,6 +38,8 @@ module.exports = {
 
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
+  GET_REVIEW_OF_MINE: '내가 작성한 소품샵 리뷰 목록 가져오기 성공',
+  GET_SCRAP_OF_MINE: '내가 스크랩한 소품샵 리뷰 목록 가져오기 성공',
 
   // 서버 내 오류
   INTERNAL_SERVER_ERROR: '서버 내 오류',
