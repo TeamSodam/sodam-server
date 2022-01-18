@@ -5,10 +5,8 @@ const db = require('../../db/db');
 const util = require('../../lib/util');
 
 module.exports = async (req, res) => {
-  // 개발용 (로그인 없음)
-  const { shopId, isBookmarked, userId } = req.body;
   // 로그인이 구현되어 있는 경우
-  //   const { shopId, isBookmarked } = req.body;
+  const { shopId, isBookmarked } = req.body;
 
   // ~~~ req.body 체크
   // !isBookmarked로 하면 false인 경우에서 fail response가 됨
@@ -16,14 +14,13 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
-  // 로그인이 구현되어 있는 경우
   // ~~~ 로그인 여부 확인
-  //   if (!req.user) {
-  //     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
-  //   }
+  if (!req.user) {
+    return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
+  }
 
   // 로그인이 구현되어 있는 경우
-  //   const userId = req.user.id;
+  const userId = req.user[0].id;
 
   let client;
 
