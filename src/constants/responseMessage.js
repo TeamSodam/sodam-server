@@ -6,6 +6,7 @@ module.exports = {
   CREATED_USER: '회원 가입 성공',
   DELETE_USER: '회원 탈퇴 성공',
   ALREADY_EMAIL: '이미 사용중인 이메일입니다.',
+  DIFFRERENT_PASSWORD: '비밀번호와 비밀번호 확인이 일치하지 않습니다',
 
   // 로그인
   LOGIN_SUCCESS: '로그인 성공',
@@ -33,14 +34,17 @@ module.exports = {
   NO_POST: '존재하지 않는 포스트입니다.',
 
   // 소품샵
+  GET_SHOP_BY_NAME : '소품샵 이름으로 검색 성공',
   GET_ONE_SHOP_SUCCESS: '소품샵 상세 정보 조회 성공',
   NO_SHOP: '존재하지 않는 소품샵입니다.',
+  GET_SHOP_RECOMMEND_SUCCESS: '소품샵 추천 성공',
 
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
   GET_REVIEW_OF_MINE: '내가 작성한 소품샵 리뷰 목록 가져오기 성공',
   GET_SCRAP_OF_MINE: '내가 스크랩한 소품샵 리뷰 목록 가져오기 성공',
-
+  GET_RECENT_REVIEW_SUCCESS:'최근 리뷰 가져오기 성공',
+  
   // 서버 내 오류
   INTERNAL_SERVER_ERROR: '서버 내 오류',
 
@@ -55,7 +59,8 @@ module.exports = {
   // 소품샵
   SHOP_BY_AREA_SUCCESS: '지역별 소품샵 가져오기 성공',
   SHOP_BY_THEME_SUCCESS: '테마별 소품샵 가져오기 성공',
-
+  SHOP_BY_CATEGORY_SUCCESS: '카테고리별 소품샵 가져오기 성공',
+  
   //리뷰
   REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
   REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',

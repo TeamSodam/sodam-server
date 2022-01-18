@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "sodam-server-authentication",
+  "private_key_id": "04b0d02c3e17df85fe2d4710f1e13371ae1e9f1e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCpoFnxrDYqjo2l\n6Z+ez1PO4tSd+LwXpkhl5OHTjZioSoKQvqtzzwDfO5qXPTbilRAPKLwb72LWFhD0\nW6eSba+jN4cjeW3Gwpumb+M+StvilAJLcIUlhdwwXRwxnVTyMKeYucbkdvnFmwU+\nwds+eNswVNmXHnlltO/UkTs8SWEcS9g8hs8oYarjk1ZB53xjpdQmiK35pF1vt9AV\ndUUpKz/zmihLnIO2wyh+/XJFqA2Q/Fif2iKPD1R2b+Pk5tAxQlOyZhB/tD2+cgE8\n6lBUGhKeBIqSvgohqGQcvbE9We/ebQoDw+J+uErzsYoCvRmu03OvRz0dJGSjhAjv\n9tvOTtclAgMBAAECggEAF2BfnOBqi5VfPIL0ij6Q0nVsr0OY6lpyZkZzf8PnCqRQ\nF5ILT1ezC1CrxpV7U6EO2EP5HpFwScg7OG3MK3Ad0SzFHTSuFgL6T+biBpLq+DAF\nG+/rDYeD149xY/4Gd6UQZ8oMeK5T0DGDuMkfBZ5CuMesv/iFauiTV7RXGUEUlsE8\noOjr7LYadpueCO4K1m5b2s5rV3x/wpEaEF2a2ad5tIh1Q9L2cUJhPSTIiFhT32EB\n/Pim9Fn1Lg4SgqGsTTgpW3Wu8nLob2H9dOlQk4oezOJlNDawQ0/v3SISK9IqmbBc\nzTnSWh4q5szKud0VzUbiC4oWS4Pr9PBomWpaOmExMQKBgQDRhSOW+KH1e3uPCYSP\nxAOoQPQs4cJo9K/fNBQT/TWWiSxlztMQpYJB9vdUp2Omb/O6Aq0R/wAcxiD5Czrn\naPoQwJSzhIfeZh2CTdUkAWqoX/9PGM8V3Mr5lgNPhZKJDlIYcx5/5ZwmJJmhy+ZR\nsPm6JRM949+cQ6egcH6laL8iVQKBgQDPQZudjoK6SG/awy4PuMpraXr2M3kv2m9u\nDrgKWo5FtPESNI8NZ1rV8vz2aDmyV58TYSjmcVnIp/JUEPHxeRTy46w8D/mlcJES\njfspDadgdprGcGCWdohrmCP2l9UNO//cWpGDc3X7IR3jFFeRDo+3If2xldmFYROW\nL+TWqfHRkQKBgQColtcCXeIEY24StHfkLrc6pblUe/ww8+KoWYFmbDK4hHwjF38i\nP+tGJPDzPxWiEScun4SfnG58uLhDbNPi7Md6v1tn79ZcEBLijLpalIE8JrKK9M19\nLAJvPlQ/op08hzdr0QXTp/AziPPOCwGy7hKjw71t6XQ+ivnQ0XQ2qMhTWQKBgHdL\n4WHodND6/v9h13KPQFxhY7ixWjE0P22PJVo4U6pGA3kiLbFea4e5DOhch9Fi5BrI\nkz1Jw49fNHo1Ir6GnotMh4gu/di/mZGfjhFMXaqFuoM8jiwtYErmUNURAj5S6eyR\naS7L1/5MSqK5w8moIwsbkqaUhZdjkF2jhcoWGi4xAoGBAKmwJvRMDq3PPmeKcqpZ\nOIhsPuXAalom9b85dPnXMX46n0Y26hb49D0J3SsoEeqE9gX+Lay4d+QB6Cgh2RC2\naJDUVhA2siZmX77+a/TY3mQGAKrKWSJwk1kOIs4tLpTaMqEcAM+7fYOyh4Ax3Pnu\nVW2k4zt0rufc5ByNvPVuNauR\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-634pk@sodam-server-authentication.iam.gserviceaccount.com",
+  "client_id": "104377603942655652933",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-634pk%40sodam-server-authentication.iam.gserviceaccount.com"
+}
