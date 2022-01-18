@@ -170,9 +170,8 @@ const getReviewOrderByRecent = async (client) => {
     ON sc.category_id = c.id
     INNER JOIN "user" u
     ON u.id = r.user_id
-
-    WHERE r.created_at >= (current_timestamp + '-1 days')
-    ORDER BY r.created_at
+    WHERE ri.is_preview = TRUE
+    ORDER BY r.created_at DESC
     limit 15
     `,
   );
