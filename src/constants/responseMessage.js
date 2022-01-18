@@ -6,7 +6,8 @@ module.exports = {
   CREATED_USER: '회원 가입 성공',
   DELETE_USER: '회원 탈퇴 성공',
   ALREADY_EMAIL: '이미 사용중인 이메일입니다.',
-
+  DIFFRERENT_PASSWORD: '비밀번호와 비밀번호 확인이 일치하지 않습니다',
+  
   // 로그인
   LOGIN_SUCCESS: '로그인 성공',
   LOGIN_FAIL: '로그인 실패',
