@@ -6,7 +6,10 @@ const util = require('../../lib/util');
 const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedData');
 
 module.exports = async (req, res) => {
-  const { userId } = req.params;
+    if (!req.user) {
+        return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
+    }
+    const userId = req.user[0].id;
 
   if (!userId) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
