@@ -1,5 +1,13 @@
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
+const getShopCounts = async(client) => {
+  const { rows } = await client.query(
+    `
+      SELECT COUNT(*) FROM shop;
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
 const getShopByArea = async (client, area, sort) => {
   let sortQuery = '';
   if (sort === 'popular') {
@@ -163,6 +171,25 @@ const getShopBookmarkByUserId = async (client, shopId, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getShopBookmarkByCounts = async(client) => {
+  const { rows } = await client.query(
+    `
+      SELECT s.id as shop_id, s.shop_name, c.name as category
+      FROM shop s 
+      INNER JOIN shop_category sc
+      ON s.id = sc.shop_id
+      INNER JOIN category c
+      ON sc.category_id = c.id
+      WHERE 
+        s.is_deleted = FALSE
+        AND sc.is_deleted = FALSE
+      ORDER BY s.bookmark_count DESC
+      LIMIT 20
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
 const getSavedShopList = async (client, sort, userId, offset, limit) => {
   let sortQuery = '';
   switch (sort) {
@@ -201,6 +228,7 @@ const getSavedShopList = async (client, sort, userId, offset, limit) => {
 };
 
 module.exports = {
+  getShopCounts,
   getShopByArea,
   getShopByTheme,
   getPreviewImageByShopId,
@@ -211,4 +239,5 @@ module.exports = {
   getShopByShopId,
   getShopBookmarkByUserId,
   getSavedShopList,
+  getShopBookmarkByCounts,
 };
