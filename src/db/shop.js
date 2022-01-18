@@ -145,7 +145,7 @@ const getShopByName = async(client, shopName) => {
       ON s.id = sc.shop_id
       INNER JOIN category c
       ON sc.category_id = c.id
-      WHERE s.shop_name = $1
+      WHERE s.shop_name LIKE upper('%' || $1 || '%')
     `,
     [shopName],
   );

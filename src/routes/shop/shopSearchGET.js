@@ -24,7 +24,7 @@ module.exports = async(req,res) =>{
                 const shopId = item.shopId;
                 return shopDB.getPreviewImageByShopId(client, shopId);
             });
-    
+            
             // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
             Promise.allSettled(imagePromise).then((image) => {
                 image.forEach((result) => {
@@ -35,13 +35,16 @@ module.exports = async(req,res) =>{
                     }
                 });
             });
+
             shopArr.map((item) => {
                 if(!item.image){
                     item.image = null;
                 }
             })
 
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_BY_NAME, shopArr));
+            const responseData = duplicatedDataClean(shopArr, 'shopId', 'category');
+            console.log(responseData);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_BY_NAME, responseData));
         }
     } catch (error) {
         console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
