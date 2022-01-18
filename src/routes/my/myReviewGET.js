@@ -36,12 +36,15 @@ module.exports = async(req,res) => {
             myReviewArr.map((item) => {
                 if (!item.image) {
                     item.image = null;
-            }
+            }})
 
-            console.log(myReviewArr);
-            });
+            
+            if(myReviewArr.length !== 0)
+                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_MINE, myReviewArr));
+            else{
+                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.NO_REVIEW,myReviewArr));
+            }
         }
-        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_MINE, myReviewArr));
     } catch (error) {
         console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
         res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
