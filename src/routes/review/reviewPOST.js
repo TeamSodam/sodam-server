@@ -81,6 +81,9 @@ module.exports = async (req, res) => {
       const createdReviewTag = await reviewDB.createReviewTag(client, reviewId, targetTag[0].id);
     });
 
+    // review count 업데이트
+    const updatedReviewCount = await shopDB.updateReviewCount(client, shopId, shop[0].reviewCount + 1);
+
     // 소품샵 id에 따라 소품샵 카테고리 가져오기
     let category = await shopDB.getCategoryByShopId(client, shopId);
     // 소품샵 카테고리 객체를 배열로 펼쳐주기

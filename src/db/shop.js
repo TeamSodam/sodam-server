@@ -200,6 +200,18 @@ const getSavedShopList = async (client, sort, userId, offset, limit) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const updateReviewCount = async (client, shopId, reviewCount) => {
+  const { rows } = await client.query(
+    `
+          UPDATE shop
+          SET review_count = $1
+          WHERE  id = $2
+          RETURNING review_count
+            `,
+    [reviewCount, shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
 module.exports = {
   getShopByArea,
   getShopByTheme,
@@ -211,4 +223,5 @@ module.exports = {
   getShopByShopId,
   getShopBookmarkByUserId,
   getSavedShopList,
+  updateReviewCount,
 };
