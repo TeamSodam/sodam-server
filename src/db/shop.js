@@ -72,7 +72,7 @@ const getShopByTheme = async (client, theme, sort, offset, limit) => {
 const getPreviewImageByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
-        SELECT si.image si.shop_id as shopId
+        SELECT si.image, si.shop_id as shopId
         FROM shop_image si
         WHERE si.shop_id = $1
             AND is_preview = true
@@ -163,10 +163,10 @@ const getShopByName = async(client, shopName) => {
 const getShopByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
-              SELECT *
-              FROM shop s
-              WHERE s.id = $1
-                AND s.is_deleted = FALSE
+      SELECT id AS shop_id, shop_name, subway, road_address, land_address, time, close, phone, homepage, instagram, blog, store, area, bookmark_count, review_count, created_at, updated_at
+      FROM shop s
+      WHERE s.id = $1
+        AND s.is_deleted = FALSE
               `,
     [shopId],
   );
@@ -300,6 +300,24 @@ const getShopListByShopId = async (client, shopId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+// 지하철역에 해당하는 샵 정보 limit개 얻기
+// id가 shopId인 소품샵 제외
+const getShopBySubwayNotShopIdLimit = async (client, subway, shopId, limit) => {
+  const { rows } = await client.query(
+    `
+    SELECT s.id AS shop_id, s.shop_name
+    FROM shop s
+    WHERE s.subway = $1
+    AND s.is_deleted = FALSE
+    AND s.id != $2
+    ORDER BY s.bookmark_count DESC, s.id
+    LIMIT $3;
+              `,
+    [subway, shopId, limit],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getShopCounts,
   getShopByArea,
@@ -315,4 +333,5 @@ module.exports = {
   getSavedShopList,
   getShopIdByCategory,
   getShopListByShopId,
+  getShopBySubwayNotShopIdLimit,
 };
