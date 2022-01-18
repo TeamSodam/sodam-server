@@ -35,7 +35,7 @@ const checkUser = async (req, res, next) => {
     const user = await userDB.getUserByEmail(client, userEmail);
 
     // 유저가 없을 시의 에러 처리입니다.
-    if (!user) return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NO_USER));
+    if (user.length === 0) return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NO_USER));
 
     // 유저를 찾았으면, req.user에 유저 객체를 담아서 next()를 이용해 다음 middleware로 보냅니다.
     // 다음 middleware는 req.user에 담긴 유저 정보를 활용할 수 있습니다. (req.user가 생긴 상태이므로 )
