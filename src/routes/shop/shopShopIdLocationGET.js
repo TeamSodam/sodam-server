@@ -45,15 +45,9 @@ module.exports = async (req, res) => {
         // 객체를 배열로 펼쳐주기
         category = category.map((item) => item.name);
 
-        // // TODO: DB에 소품샵 이미지 들어가면 로직 고치기
-        // // 이미지가 없는 경우는 DB가 잘못된 것임.
-        // if (image.length === 0) {
-        //   // 어떻게 처리할지 고민해보기
-        // }
-
-        // 이미지가 없는 경우 (DB에 소품샵 이미지 넣기 전)
+        // 이미지가 없는 경우
         if (image.length === 0) {
-          image = [{ image: 'noImage', shopid: -1 }];
+          image = null;
         }
 
         // 데이터 모양 맞춰주기
