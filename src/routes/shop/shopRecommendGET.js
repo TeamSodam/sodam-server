@@ -9,7 +9,6 @@ const router = require('../user');
 module.exports = async (req, res) => {
   const { type } = req.query;
 
-  console.log(type);
   if (!type) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
@@ -19,13 +18,13 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     const numArr = [];
-    if (type == 'random') {
+    const num = await shopDB.getShopCounts(client);
+    if (type === 'random') {
       //랜덤 숫자 20개 골라서 getShopById 이용해서 정보 불러오기
       for (i = 0; i < 20; i++) {
-        randomNum = Math.floor(Math.random() * 433);
+        randomNum = Math.floor(Math.random() * num[0].count);
         numArr.push(randomNum);
       }
-      console.log(numArr);
       shopArr = await Promise.all(
         numArr.map(async (value) => {
           let shop = await shopDB.getShopByShopId(client, value);
@@ -40,21 +39,19 @@ module.exports = async (req, res) => {
           category = category.map((item) => item.name);
           theme = theme.map((item) => item.name);
           image = image.map((item) => item.image);
-
+        
           const result = {
             ...shop[0],
             category,
             theme,
             image,
           };
-          console.log(result);
           return result;
+        
         }),
       );
-
-      console.log(shopArr);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, shopArr));
-    } else if (type == 'popular') {
+    } else if (type === 'popular') {
       const rankList = await shopDB.getShopBookmarkByCounts(client);
       let responseRankData = duplicatedDataClean(rankList, 'shopId', 'category');
       const imagePromise = responseRankData.map((item) => {
@@ -79,7 +76,6 @@ module.exports = async (req, res) => {
         }
       });
 
-      console.log('responseRankData', responseRankData);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, responseRankData));
     }
   } catch (error) {

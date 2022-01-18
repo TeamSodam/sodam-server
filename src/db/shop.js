@@ -1,5 +1,13 @@
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
+const getShopCounts = async(client) => {
+  const { rows } = await client.query(
+    `
+      SELECT COUNT(*) FROM shop;
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
 const getShopByArea = async (client, area, sort) => {
   let sortQuery = '';
   if (sort === 'popular') {
@@ -220,6 +228,7 @@ const getSavedShopList = async (client, sort, userId, offset, limit) => {
 };
 
 module.exports = {
+  getShopCounts,
   getShopByArea,
   getShopByTheme,
   getPreviewImageByShopId,
@@ -230,5 +239,5 @@ module.exports = {
   getShopByShopId,
   getShopBookmarkByUserId,
   getSavedShopList,
-  getShopBookmarkByCounts
+  getShopBookmarkByCounts,
 };
