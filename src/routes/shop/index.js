@@ -7,6 +7,7 @@ router.get('/bookmark', require('./bookmarkGET'));
 router.get('/category',require('./shopCategoryGET'));
 router.get('/recommend', require('./shopRecommendGET'));
 router.get('/:shopId', checkUser, require('./shopShopIdGET'));
+router.get('/search', require('./shopSearchGET'));
 router.get('/:shopId/review/:reviewId', require('./shopReviewIdGET'));
 router.get('/', require('./shopGET'));
 module.exports = router;
