@@ -21,14 +21,12 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
-  // 로그인 부분 나중에 구현
-  //   // 로그인 안 했으면 fail
-  //   if (!req.user) {
-  //     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
-  //   }
-  //   const userEmail = req.user.email;
-  //   console.log(userEmail);
-  let userId = 3;
+  // 로그인 안 했으면 fail
+  if (!req.user) {
+    return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
+  }
+
+  const userId = req.user[0].id;
 
   // string을 JSON 배열로 파싱
   const parsedItem = JSON.parse(item);
