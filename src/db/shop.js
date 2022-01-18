@@ -200,7 +200,7 @@ const getSavedShopList = async (client, sort, userId, offset, limit) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getShopByCategory = async (client, type) => {
+const getShopIdByCategory = async (client, type) => {
   let categoryQuery = '';
   switch (type) {
     case '문구팬시':
@@ -224,7 +224,7 @@ const getShopByCategory = async (client, type) => {
   }
   const { rows } = await client.query(
     `
-    SELECT s.id as shop_id, s.shop_name, c.name as category
+    SELECT s.id as shop_id
     FROM shop s 
     INNER JOIN shop_category sc
     ON s.id = sc.shop_id
@@ -239,10 +239,27 @@ const getShopByCategory = async (client, type) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getShopListByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+          SELECT s.id as shop_id, s.shop_name, c.name as category
+          FROM shop s 
+          INNER JOIN shop_category sc
+          ON s.id = sc.shop_id
+          INNER JOIN category c
+          ON sc.category_id = c.id
+          WHERE s.id = $1
+              AND s.is_deleted = FALSE
+              AND sc.is_deleted = FALSE
+          `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getShopByArea,
   getShopByTheme,
-  getShopByCategory,
   getPreviewImageByShopId,
   getBookmarkedShopIdByUserIdAndArea,
   getCategoryByShopId,
@@ -251,4 +268,6 @@ module.exports = {
   getShopByShopId,
   getShopBookmarkByUserId,
   getSavedShopList,
+  getShopIdByCategory,
+  getShopListByShopId,
 };

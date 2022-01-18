@@ -6,6 +6,7 @@ const util = require('../../lib/util');
 const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedData');
 
 const typeArray = ['문구팬시', '인테리어소품', '주방용품', '패션소품', '공예품', '인형장난감'];
+
 function randomItem(a) {
   return a[Math.floor(Math.random() * a.length)];
 }
@@ -19,16 +20,30 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
-    let shopArr;
+    let shopIdArr;
     if (type == 'random') {
-      const randomType = randomItem(typeArray);
-      shopArr = await shopDB.getShopByCategory(client, randomType);
+        const randomType = randomItem(typeArray);
+        //해당 타입을 가지는 shop들의 리스트를 가져옴
+        shopIdArr = await shopDB.getShopIdByCategory(client, randomType);
     } else {
-      shopArr = await shopDB.getShopByCategory(client, type);
+        shopIdArr = await shopDB.getShopIdByCategory(client, type);
     }
 
-    const categoryList = duplicatedDataClean(shopArr, 'shopId', 'category');
-    const imagePromise = categoryList.map((item) => {
+    // console.log('shopIdArr', shopIdArr);
+
+    const shopAllList = await Promise.all(
+        //소품샵 아이디 리스트가 있으면 해당 리스트들을 돌면서 shop정보를 가져옴
+    shopIdArr.map(async (item) => {
+            let shopArr = await shopDB.getShopListByShopId(client, item.shopId);
+            //console.log('shopArr', shopArr);
+            let cleanData = duplicatedDataClean(shopArr, 'shopId', 'category');
+            return cleanData[0];
+        }),
+    );
+
+    // console.log('shopAllList', shopAllList);
+
+    const imagePromise = shopAllList.map((item) => {
       const shopId = item.shopId;
       return shopDB.getPreviewImageByShopId(client, shopId);
     });
@@ -44,14 +59,14 @@ module.exports = async (req, res) => {
       });
     });
 
-    categoryList.map((item) => {
+    shopAllList.map((item) => {
       if (!item.image) {
         item.image = null;
       }
     });
 
-    console.log(categoryList);
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_CATEGORY_SUCCESS, categoryList));
+    // console.log(shopAllList);
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_CATEGORY_SUCCESS, shopAllList));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
     res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
