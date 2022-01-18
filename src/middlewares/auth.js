@@ -12,7 +12,8 @@ const checkUser = async (req, res, next) => {
   const { accesstoken } = req.headers;
 
   // accesstoken이 없을 시의 에러 처리입니다.
-  if (!accesstoken) return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.TOKEN_EMPTY));
+  // if (!accesstoken) return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.TOKEN_EMPTY));
+  if (!accesstoken) return next();
 
   let client;
   try {
