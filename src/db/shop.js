@@ -227,6 +227,63 @@ const getSavedShopList = async (client, sort, userId, offset, limit) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getShopIdByCategory = async (client, type) => {
+  let categoryQuery = '';
+  switch (type) {
+    case '문구팬시':
+      categoryQuery = `c.name = '문구팬시'`;
+      break;
+    case '인테리어소품':
+      categoryQuery = `c.name = '인테리어소품'`;
+      break;
+    case '주방용품':
+      categoryQuery = `c.name = '주방용품'`;
+      break;
+    case '패션소품':
+      categoryQuery = `c.name = '패션소품'`;
+      break;
+    case '공예품':
+      categoryQuery = `c.name = '공예품'`;
+      break;
+    case '인형장난감':
+      categoryQuery = `c.name = '인형장난감'`;
+      break;
+  }
+  const { rows } = await client.query(
+    `
+    SELECT s.id as shop_id
+    FROM shop s 
+    INNER JOIN shop_category sc
+    ON s.id = sc.shop_id
+    INNER JOIN category c
+    ON sc.category_id = c.id
+    WHERE s.is_deleted = FALSE
+        AND sc.is_deleted = FALSE
+        AND ${categoryQuery}
+    LIMIT 20
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getShopListByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+          SELECT s.id as shop_id, s.shop_name, c.name as category
+          FROM shop s 
+          INNER JOIN shop_category sc
+          ON s.id = sc.shop_id
+          INNER JOIN category c
+          ON sc.category_id = c.id
+          WHERE s.id = $1
+              AND s.is_deleted = FALSE
+              AND sc.is_deleted = FALSE
+          `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getShopCounts,
   getShopByArea,
@@ -239,5 +296,6 @@ module.exports = {
   getShopByShopId,
   getShopBookmarkByUserId,
   getSavedShopList,
-  getShopBookmarkByCounts,
+  getShopIdByCategory,
+  getShopListByShopId,
 };
