@@ -410,7 +410,7 @@ module.exports = {
   postReviewScrapByReviewId,
   updateReviewScrapCount,
   getScrapedReviewByUserId,
-  getPreviewImageByReviewId
+  getPreviewImageByReviewId,
   getReviewOrderByRecent, 
 };
 
