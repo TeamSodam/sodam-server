@@ -1,24 +1,36 @@
 const responseMessage = require('../../constants/responseMessage');
 const statusCode = require('../../constants/statusCode');
-const { userDB } = require('../../db');
+const { reviewDB } = require('../../db');
 const db = require('../../db/db');
 const util = require('../../lib/util');
+const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedData');
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
-  const { id: userId } = req.params;
-
-  if (!userId) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+  if (!req.user) {
+    return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
   }
-
   let client;
-
+  const userId = req.user[0].id;
   try {
     client = await db.connect(req);
-    const user = await userDB.getUserById(client, userId);
+    let responseData = [];
+    if (userId) {
+      responseData = await reviewDB.getScrapedReviewByUserId(client, userId);
+      responseData.map((item) => {
+        if (!item.image) {
+          item.image = null;
+        }
+      });
+      responseData = duplicatedDataClean(responseData, 'shopId', 'category');
+      responseData = duplicatedDataClean(responseData, 'reviewId', 'writerThumbnail');
+      responseData = duplicatedDataClean(responseData, 'reviewId', 'image');
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, user));
+      if (responseData.length !== 0) res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SCRAP_OF_MINE, responseData));
+      else {
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.NO_REVIEW, responseData));
+      }
+    }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 

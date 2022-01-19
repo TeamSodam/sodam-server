@@ -3,12 +3,13 @@ const statusCode = require('../../constants/statusCode');
 const { userDB } = require('../../db');
 const db = require('../../db/db');
 const util = require('../../lib/util');
+const jwtHandlers = require('../../lib/jwtHandlers');
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
-  const { id: userId } = req.params;
+  const { email, password } = req.body;
 
-  if (!userId) {
+  if (!email || !password) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
@@ -16,9 +17,14 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
-    const user = await userDB.getUserById(client, userId);
-
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, user));
+    const user = await userDB.getUserByEmail(client, email);
+    if (user.length !== 0) {
+      const { email, name, password } = user[0];
+      const { accesstoken } = jwtHandlers.sign({ email, name, password });
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, accesstoken));
+    } else {
+      res.status(statusCode.NOT_FOUND).send(util.fail(statusCode.NOT_FOUND, responseMessage.NO_USER));
+    }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 

@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Google APIs service key JSON files
+keystoGoogleApis.json
