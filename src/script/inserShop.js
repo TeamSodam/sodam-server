@@ -32,6 +32,7 @@ async function gsrun(client) {
 
   const response = (await sheets.spreadsheets.values.get(request)).data;
   const responseArray = response.values;
+  console.log('responseArray', responseArray);
 
   for (var value of responseArray) {
     for (data of value) {

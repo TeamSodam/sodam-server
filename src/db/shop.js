@@ -1,13 +1,13 @@
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
-const getShopCounts = async(client) => {
+const getShopCounts = async (client) => {
   const { rows } = await client.query(
     `
       SELECT COUNT(*) FROM shop;
     `,
   );
   return convertSnakeToCamel.keysToCamel(rows);
-}
+};
 const getShopByArea = async (client, area, sort) => {
   let sortQuery = '';
   if (sort === 'popular') {
@@ -86,7 +86,7 @@ const getPreviewImageByShopId = async (client, shopId) => {
 const getBookmarkedShopIdByUserIdAndArea = async (client, area, userId) => {
   const { rows } = await client.query(
     `
-            SELECT s.id as shop_id,
+            SELECT s.id as shop_id
             FROM shop s 
             INNER JOIN shop_bookmark sb
             ON s.id = sb.shop_id
@@ -144,8 +144,8 @@ const getImageByShopId = async (client, shopId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getShopByName = async(client, shopName) => {
-  const {rows} = await client.query(
+const getShopByName = async (client, shopName) => {
+  const { rows } = await client.query(
     `
       SELECT s.id as shop_id, s.shop_name, c.name as category
       FROM shop s
@@ -187,7 +187,7 @@ const getShopBookmarkByUserId = async (client, shopId, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getShopBookmarkByCounts = async(client) => {
+const getShopBookmarkByCounts = async (client) => {
   const { rows } = await client.query(
     `
       SELECT s.id as shop_id, s.shop_name, c.name as category
@@ -204,7 +204,7 @@ const getShopBookmarkByCounts = async(client) => {
     `,
   );
   return convertSnakeToCamel.keysToCamel(rows);
-}
+};
 
 const getSavedShopList = async (client, sort, userId, offset, limit) => {
   let sortQuery = '';
