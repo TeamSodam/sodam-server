@@ -209,8 +209,8 @@ const getReviewScrapByUserId = async (client, reviewId, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getScrapedReviewByUserId = async(client,userId) =>{
-  const {rows} = await client.query(
+const getScrapedReviewByUserId = async (client, userId) => {
+  const { rows } = await client.query(
     `
     SELECT r.id AS review_id, ri.image, r.shop_id, s.shop_name, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content, c.name as category
     FROM review r
@@ -229,10 +229,10 @@ const getScrapedReviewByUserId = async(client,userId) =>{
 
     WHERE rs.user_id = $1 AND rs.is_deleted = FALSE
     `,
-    [userId]
+    [userId],
   );
   return convertSnakeToCamel.keysToCamel(rows);
-}
+};
 const getReviewByShopIdOrderByScrap = async (client, shopId, limit, offset) => {
   const { rows } = await client.query(
     `
@@ -326,7 +326,7 @@ const getReviewImagesByReviewId = async (client, reviewId) => {
 const getPreviewImageByReviewId = async (client, reviewId) => {
   const { rows } = await client.query(
     `
-    SELECT ri.image
+    SELECT ri.image, ri.review_id as reviewId
     FROM review_image ri
     WHERE ri.review_id = $1
       AND ri.is_preview = TRUE
@@ -364,8 +364,6 @@ const getReviewTagByReviewId = async (client, reviewId) => {
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
-
-
 
 const getReviewOrderByRecent = async (client) => {
   const { rows } = await client.query(
@@ -493,7 +491,7 @@ module.exports = {
   updateReviewScrapCount,
   getScrapedReviewByUserId,
   getPreviewImageByReviewId,
-  getReviewOrderByRecent, 
+  getReviewOrderByRecent,
   createReview,
   createReviewImage,
   createReviewItem,
@@ -501,4 +499,3 @@ module.exports = {
   createReviewTag,
   getTagByName,
 };
-

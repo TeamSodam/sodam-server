@@ -23,24 +23,33 @@ module.exports = async (req, res) => {
       const myReviewArr = await reviewDB.getReviewByReviewId(client, userId);
       const imagePromise = myReviewArr.map((item) => {
         const reviewId = item.id;
-        return reviewDB.getReviewImagesByReviewId(client, reviewId);
+        return reviewDB.getPreviewImageByReviewId(client, reviewId);
       });
 
-      Promise.allSettled(imagePromise).then((image) => {
-        image.forEach((result) => {
+      const previewImageObj = {};
+      await Promise.allSettled(imagePromise).then((image) => {
+        image.map((result) => {
+          console.log(result);
+          console.log(result.value[0]?.reviewid);
           if (result.status === 'fulfilled') {
-            console.log('성공함');
-          } else if (result.status === 'rejected') {
-            // console.log('[IMAGE PROMISE REJECTED]');
+            if (result.value.length >= 1) {
+              previewImageObj[Number(result.value[0]?.reviewid)] = result.value[0];
+              return result.value[0];
+            }
           }
         });
       });
 
       myReviewArr.map((item) => {
+        if (previewImageObj[item.shopId]) {
+          item.image = previewImageObj[item.shopId].image;
+        }
         if (!item.image) {
           item.image = null;
         }
       });
+     
+      console.log(myReviewArr);
 
       if (myReviewArr.length !== 0) res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_MINE, myReviewArr));
       else {
