@@ -12,6 +12,9 @@ module.exports = async (req, res) => {
   if (!reviewId || isScraped === undefined) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
+  if (typeof isScraped === 'string') {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
 
   let client;
 
@@ -21,7 +24,7 @@ module.exports = async (req, res) => {
     const responseData = {};
 
     if (req.user) {
-      const userId = req.user.id;
+      const userId = req.user[0].id;
 
       const isDeletedBefore = await reviewDB.getCurrentScrapStatusByReviewIdAndUserId(client, reviewId, userId); //true -> 스크랩 안돼있음, false-> 스크랩 눌려있음
       // 처음으로 scrap요청을 보낸 경우

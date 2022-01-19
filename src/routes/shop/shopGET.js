@@ -9,9 +9,17 @@ const slackAPI = require('../../middlewares/slackAPI');
 module.exports = async (req, res) => {
   //sort쿼리 popular, mysave (지역별에서) , popular, review(테마별에서)
   const { area, theme, offset, limit, sort } = req.query;
-  if (theme && (!offset || !limit)) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+  let pageOffset;
+  let pageLimit;
+
+  if (theme && !offset) {
+    pageOffset = 0;
   }
+  if (theme && !limit) {
+    pageLimit = 20;
+  }
+  pageOffset = Number((offset - 1) * limit);
+  pageLimit = limit;
   if (!area && !theme) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
@@ -56,7 +64,7 @@ module.exports = async (req, res) => {
           const bookmarkedShopId = await shopDB.getBookmarkedShopIdByUserIdAndArea(client, area, req.user.id);
           if (bookmarkedShopId.length === 0) {
             responseData = [];
-            return res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.SAVED_SHOP_EMPTY, responseData));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SAVED_SHOP_EMPTY, responseData));
           }
           const bookmarkedShopIdArr = bookmarkedShopId.map((obj) => obj.shopId);
           if (bookmarkedShopIdArr.length === 0) {
@@ -76,8 +84,7 @@ module.exports = async (req, res) => {
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
     }
     if (theme) {
-      // 빈티지 이외에 안나오는데 이유 로깅해보기
-      const themeArr = await shopDB.getShopByTheme(client, theme, sort, offset - 1, limit);
+      const themeArr = await shopDB.getShopByTheme(client, theme, sort, pageOffset, pageLimit);
       responseData = duplicatedDataClean(themeArr, 'shopId', 'category');
       // console.log('responseData',responseData);
       const imagePromise = responseData.map((item) => {

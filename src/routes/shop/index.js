@@ -3,7 +3,7 @@ const router = express.Router();
 const { checkUser } = require('../../middlewares/auth');
 
 // TODO: auth API 완성되면 checkUser 넣으면 됨
-router.get('/bookmark', require('./bookmarkGET'));
+router.get('/bookmark', checkUser, require('./bookmarkGET'));
 router.post('/bookmark', checkUser, require('./bookmarkPOST'));
 router.get('/category', require('./shopCategoryGET'));
 router.get('/recommend', require('./shopRecommendGET'));
