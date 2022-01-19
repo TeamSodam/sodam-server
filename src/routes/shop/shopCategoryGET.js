@@ -32,6 +32,7 @@ module.exports = async (req, res) => {
 
     // console.log('shopIdArr', shopIdArr);
 
+
     const shopAllList = await Promise.all(
       //소품샵 아이디 리스트가 있으면 해당 리스트들을 돌면서 shop정보를 가져옴
       shopIdArr.map(async (item) => {
@@ -41,30 +42,55 @@ module.exports = async (req, res) => {
         return cleanData[0];
       }),
     );
-
-    // console.log('shopAllList', shopAllList);
+    
 
     const imagePromise = shopAllList.map((item) => {
       const shopId = item.shopId;
       return shopDB.getPreviewImageByShopId(client, shopId);
     });
-
-    // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
-    Promise.allSettled(imagePromise).then((image) => {
-      image.forEach((result) => {
-        if (result.status === 'fulfilled') {
-          console.log('성공함');
-        } else if (result.status === 'rejected') {
-          //     console.log('리젝티드됨');
+    // console.log('shopAllList', shopAllList);
+    const previewImageObj = {};
+      // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
+      await Promise.allSettled(imagePromise).then((image) => {
+        image.map((result) => {
+          if (result.status === 'fulfilled') {
+            if (result.value.length >= 1) {
+              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              return result.value[0];
+            }
+          }
+        });
+      });
+      shopAllList.map((item) => {
+        if (previewImageObj[item.shopId]) {
+          item.image = previewImageObj[item.shopId].image;
+        }
+        if (!item.image) {
+          item.image = null;
         }
       });
-    });
 
-    shopAllList.map((item) => {
-      if (!item.image) {
-        item.image = null;
-      }
-    });
+      let responseData = shopAllList;
+      responseData = duplicatedDataClean(responseData, 'shopId', 'image');
+      console.log(responseData);
+
+    // // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
+    // Promise.allSettled(imagePromise).then((image) => {
+    //   image.forEach((result) => {
+    //     if (result.status === 'fulfilled') {
+    //       console.log('성공함');
+    //     } else if (result.status === 'rejected') {
+    //       //     console.log('리젝티드됨');
+    //     }
+    //   });
+    // });
+
+    // shopAllList.map((item) => {
+    //   if (!item.image) {
+    //     item.image = null;
+    //   }
+    // });
+
 
     // console.log(shopAllList);
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_CATEGORY_SUCCESS, shopAllList));
