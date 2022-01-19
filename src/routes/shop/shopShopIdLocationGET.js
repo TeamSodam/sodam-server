@@ -1,3 +1,4 @@
+const e = require('express');
 const responseMessage = require('../../constants/responseMessage');
 const statusCode = require('../../constants/statusCode');
 const { shopDB } = require('../../db');
@@ -48,7 +49,9 @@ module.exports = async (req, res) => {
 
         // 이미지가 없는 경우
         if (image.length === 0) {
-          image = null;
+          image = [];
+        } else {
+          image = [image[0].image];
         }
 
         // 데이터 모양 맞춰주기
@@ -56,7 +59,7 @@ module.exports = async (req, res) => {
           shopId: Number(shop.shopId),
           shopName: shop.shopName,
           category,
-          image: image[0].image,
+          image,
         };
 
         return shopData;

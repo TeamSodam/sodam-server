@@ -5,6 +5,7 @@ const db = require('../../db/db');
 const util = require('../../lib/util');
 const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedData');
 const { response } = require('express');
+const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
   const { keyword } = req.query;
