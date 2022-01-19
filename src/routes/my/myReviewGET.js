@@ -29,8 +29,6 @@ module.exports = async (req, res) => {
       const previewImageObj = {};
       await Promise.allSettled(imagePromise).then((image) => {
         image.map((result) => {
-          console.log(result);
-          console.log(result.value[0]?.reviewid);
           if (result.status === 'fulfilled') {
             if (result.value.length >= 1) {
               previewImageObj[Number(result.value[0]?.reviewid)] = result.value[0];
@@ -48,8 +46,10 @@ module.exports = async (req, res) => {
           item.image = null;
         }
       });
-     
-      console.log(myReviewArr);
+
+      let responseData = [];
+      responseData = myReviewArr;
+      responseData = duplicatedDataClean(responseData, 'reviewId', 'image');
 
       if (myReviewArr.length !== 0) res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_MINE, myReviewArr));
       else {
