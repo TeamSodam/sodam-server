@@ -32,7 +32,7 @@ AWS.config.update({
 const fileFilter = (req, file, cb) => {
   let ext = path.extname(file.originalname);
   // 이미지 확장자가 아니라면
-  if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+  if (ext !== '.PNG' && ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
     // 이 파일을 거부
     cb(null, false);
     // 이미지가 아닌 경우에 대한 에러 전달
@@ -50,7 +50,7 @@ const upload = multer({
     bucket: bucketname,
     key: (req, file, cb) => {
       // 파일 이름
-      const imgname = `original/${dayjs().format('YYYYMMDD-HHmmss-SSS-')}${path.basename(file.originalname)}`;
+      const imgname = `reviewImage/${dayjs().format('YYYYMMDD-HHmmss-SSS-')}${path.basename(file.originalname)}`;
       cb(null, imgname);
       console.log(`upload ${imgname}`);
     },
