@@ -7,7 +7,7 @@ module.exports = {
   DELETE_USER: '회원 탈퇴 성공',
   ALREADY_EMAIL: '이미 사용중인 이메일입니다.',
   DIFFRERENT_PASSWORD: '비밀번호와 비밀번호 확인이 일치하지 않습니다',
-  
+
   // 로그인
   LOGIN_SUCCESS: '로그인 성공',
   LOGIN_FAIL: '로그인 실패',
@@ -34,7 +34,7 @@ module.exports = {
   NO_POST: '존재하지 않는 포스트입니다.',
 
   // 소품샵
-  GET_SHOP_BY_NAME : '소품샵 이름으로 검색 성공',
+  GET_SHOP_BY_NAME: '소품샵 이름으로 검색 성공',
   GET_ONE_SHOP_SUCCESS: '소품샵 상세 정보 조회 성공',
   NO_SHOP: '존재하지 않는 소품샵입니다.',
   GET_SHOP_RECOMMEND_SUCCESS: '소품샵 추천 성공',
@@ -47,6 +47,7 @@ module.exports = {
   NO_REVIEW: '존재하지 않는 리뷰입니다',
   GET_ONE_REVIEW_GET_SUCCESS: '리뷰 상세 정보 조회 성공',
   CREATE_REVIEW_SUCCESS: '리뷰 작성 성공',
+  NOT_MATCH_WITH_SHOP: '소품샵 아이디와 리뷰 아이디가 일치하지 않습니다',
 
   // 파일 업로드
   ONLY_IMAGE_AVAILABLE: '이미지만 업로드 가능합니다',

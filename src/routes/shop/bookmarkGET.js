@@ -9,11 +9,19 @@ const slackAPI = require('../../middlewares/slackAPI');
 module.exports = async (req, res) => {
   //sort쿼리 save, recent, review
   const { sort, offset, limit } = req.query;
-  console.log('>>>', req.query);
 
-  if (!offset || !limit) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+  let pageOffset;
+  let pageLimit;
+
+  if (!offset) {
+    pageOffset = 0;
   }
+  if (!limit) {
+    pageLimit = 20;
+  }
+
+  pageOffset = Number((offset - 1) * limit);
+  pageLimit = limit;
 
   let client;
 
@@ -21,7 +29,7 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     // 로그인 되어있는 경우
     if (req.user) {
-      const savedShopList = await shopDB.getSavedShopList(client, sort, req.user.id, offset - 1, limit);
+      const savedShopList = await shopDB.getSavedShopList(client, sort, req.user[0].id, pageOffset, pageLimit);
       let responseData = duplicatedDataClean(savedShopList, 'shopId', 'category');
       if (responseData.length === 0) {
         responseData = [];
@@ -31,20 +39,22 @@ module.exports = async (req, res) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
-
+      const previewImageObj = {};
       // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
-      Promise.allSettled(imagePromise).then((image) => {
-        image.forEach((result) => {
+      await Promise.allSettled(imagePromise).then((image) => {
+        image.map((result) => {
           if (result.status === 'fulfilled') {
-            console.log('성공함');
-          } else if (result.status === 'rejected') {
-            // console.log('[IMAGE PROMISE REJECTED]');
+            if (result.value.length >= 1) {
+              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              return result.value[0];
+            }
           }
         });
       });
-
-      // image값이 없으면 null로 채워보내기
       responseData.map((item) => {
+        if (previewImageObj[item.shopId]) {
+          item.image = [previewImageObj[item.shopId].image];
+        }
         if (!item.image) {
           item.image = null;
         }

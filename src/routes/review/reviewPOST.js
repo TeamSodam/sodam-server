@@ -8,6 +8,13 @@ const JSON = require('JSON');
 module.exports = async (req, res) => {
   const { shopId, shopName, item, content, tag } = req.body;
 
+  // 로그인 안 했으면 fail
+  if (!req.user) {
+    return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
+  }
+
+  const userId = req.user[0].id;
+
   // 업로드된 이미지의 url이 들어있음
   const imageUrls = req.imageUrls;
 
@@ -21,13 +28,6 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
-  // 로그인 안 했으면 fail
-  if (!req.user) {
-    return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
-  }
-
-  const userId = req.user[0].id;
-
   // string을 JSON 배열로 파싱
   const parsedItem = JSON.parse(item);
   const parsedTag = JSON.parse(tag);
@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
 
     // userId가 적절한지 확인, 아니면 fail
     // 동시에 writer 정보도 가져오기 (nickname, 썸네일)
-    const writer = await userDB.getReviewWriterByUserId(client, userId);
+    const writer = await reviewDB.getReviewWriterByUserId(client, userId);
     if (writer.length === 0) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
     }
