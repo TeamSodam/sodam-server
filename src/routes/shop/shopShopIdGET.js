@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
 
     // 로그인 했으면 db에서 데이터 가져오기
     if (req.user) {
-      const bookmark = await shopDB.getShopBookmarkByUserId(client, shopId, req.user.id);
+      const bookmark = await shopDB.getShopBookmarkByUserId(client, shopId, req.user[0].id);
       if (bookmark.length !== 0) isBookmarked = true;
     }
 
