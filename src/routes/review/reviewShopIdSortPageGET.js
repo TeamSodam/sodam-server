@@ -16,10 +16,18 @@ module.exports = async (req, res) => {
   // ~~ query 확인
   let { sort, offset, limit } = req.query;
   if (!offset || !limit) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    // return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    offset = 1;
+    limit = 9;
   }
 
-  const pageOffset = offset - 1;
+  // offset과 limit 범위 확인
+  if (Number(offset) <= 0 || Number(limit) <= 0) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
+  // offset: 페이지
+  const pageOffset = Number(offset - 1) * limit;
 
   let client;
 
@@ -41,6 +49,11 @@ module.exports = async (req, res) => {
     if (result.length === 0) {
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, result));
     }
+
+    // 이미지 배열로 만들기
+    result.map((item) => {
+      item.image = [item.image];
+    });
 
     // 성공: 리뷰 있음
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, result));

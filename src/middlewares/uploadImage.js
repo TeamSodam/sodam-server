@@ -30,7 +30,8 @@ AWS.config.update({
 
 // 이 함수는 boolean 값과 함께 `cb`를 호출함으로써 해당 파일을 업로드 할지 여부를 나타낼 수 있음
 const fileFilter = (req, file, cb) => {
-  let ext = path.extname(file.originalname);
+  let ext = path.extname(file.originalname).toLowerCase();
+
   // 이미지 확장자가 아니라면
   if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
     // 이 파일을 거부

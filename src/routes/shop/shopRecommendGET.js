@@ -98,8 +98,8 @@ module.exports = async (req, res) => {
       });
 
       responseData = duplicatedDataClean(responseRankData, 'shopId', 'image');
-      console.log(responseRankData);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, responseRankData));
+      console.log(responseData);
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, responseData));
     }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
