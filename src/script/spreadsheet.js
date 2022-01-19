@@ -158,4 +158,126 @@ async function gsrun(client) {
         }
     }
     */
+
+  // // 소품샵 대표 이미지 넣는 스크립트
+  // // 이미지 경로는 포스트맨으로 manage/upload에 해서 url 반환받음
+  // const cute = [
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-363-cute%20%281%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-371-cute%20%282%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-400-cute%20%283%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-406-cute%20%284%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-410-cute%20%285%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-414-cute%20%286%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-419-cute%20%287%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-424-cute%20%288%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-428-cute%20%289%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-431-cute%20%2810%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-437-cute%20%2811%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-440-cute%20%2812%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-444-cute%20%2813%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-447-cute%20%2814%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-453-cute%20%2815%29.jpeg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/cute/20220119-091706-456-cute%20%2816%29.jpeg',
+  // ];
+
+  // const hip = [
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-724-hip%20%281%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-732-hip%20%282%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-768-hip%20%283%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-777-hip%20%284%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-783-hip%20%285%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-793-hip%20%286%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-800-hip%20%287%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-807-hip%20%288%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-812-hip%20%289%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-818-hip%20%2810%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-826-hip%20%2811%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-836-hip%20%2812%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-844-hip%20%2813%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-851-hip%20%2814%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-860-hip%20%2815%29.png',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/hip/20220119-092147-872-hip%20%2816%29.png',
+  // ];
+  // const modern = [
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-579-modern%20%281%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-586-modern%20%282%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-617-modern%20%283%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-624-modern%20%284%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-630-modern%20%285%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-636-modern%20%286%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-641-modern%20%287%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-646-modern%20%288%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-652-modern%20%289%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-658-modern%20%2810%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-663-modern%20%2811%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-670-modern%20%2812%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-674-modern%20%2813%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-679-modern%20%2814%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-685-modern%20%2815%29.jpg',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/modern/20220119-092439-688-modern%20%2816%29.jpg',
+  // ];
+  // const vintage = [
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-011-vintage%20%281%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-017-vintage%20%282%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-042-vintage%20%283%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-048-vintage%20%284%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-055-vintage%20%285%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-059-vintage%20%286%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-063-vintage%20%287%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-068-vintage%20%288%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-073-vintage%20%289%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-076-vintage%20%2810%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-081-vintage%20%2811%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-087-vintage%20%2812%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-091-vintage%20%2813%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-095-vintage%20%2814%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-099-vintage%20%2815%29.PNG',
+  //   'https://sodam-bucket.s3.ap-northeast-2.amazonaws.com/theme/vintage/20220119-092556-105-vintage%20%2816%29.PNG',
+  // ];
+  // // 테마 배열 (2차원 배열)
+  // let theme = [cute, hip, modern, vintage];
+  // // 테마별 이미지 길이
+  // let imageThemeLen = [cute.length, hip.length, modern.length, vintage.length];
+
+  // // 현재 저장될 이미지 번호
+  // let imageThemeCount = [0, 0, 0, 0];
+
+  // // 모든 소품샵 테마 정보 가져오기
+  // const { rows: allShopTheme } = await client2.query(
+  //   `
+  //   SELECT *
+  //   FROM shop_theme
+  //   WHERE is_deleted = FALSE
+  //       ORDER BY shop_id
+
+  //     `,
+  // );
+
+  // // 이미 처리한 적이 있는 소품샵 id인지 확인용도
+  // let beforeShopId = 0;
+  // await Promise.all(
+  //   allShopTheme.map(async (item) => {
+  //     const shopId = item.shop_id;
+  //     // 인덱스로 처리하기 때문에 -1이 붙음
+  //     let themeId = Number(item.theme_id) - 1;
+
+  //     // 방금전에 처리한 shopId와 다르다면
+  //     if (beforeShopId !== shopId) {
+  //       const { rows } = await client2.query(
+  //         `
+  //       INSERT INTO shop_image
+  //       (id, shop_id, image, is_preview)
+  //       VALUES
+  //       ( $1 , $2, $3, true);
+
+  //         `,
+  //         // 테마[현재테마][현재 저장될 이미지번호]
+  //         [shopId, shopId, theme[themeId][imageThemeCount[themeId]]],
+  //       );
+  //       // 환형구조: 이미지번호가 이미지 개수만큼 커지면 다시 0부터 시작
+  //       imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
+  //     }
+  //     beforeShopId = shopId;
+  //   }),
+  // );
 }
