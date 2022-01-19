@@ -75,7 +75,7 @@ const getPreviewImageByShopId = async (client, shopId) => {
         SELECT si.image, si.shop_id as shopId
         FROM shop_image si
         WHERE si.shop_id = $1
-            AND is_preview = true
+            AND si.is_preview = true
             AND si.is_deleted = FALSE
         `,
     [shopId],
@@ -406,4 +406,5 @@ module.exports = {
   updateBookmarkByShopIdAndUserId,
   updateBookmarkCountByShopId,
   updateReviewCount,
+  getShopBookmarkByCounts,
 };

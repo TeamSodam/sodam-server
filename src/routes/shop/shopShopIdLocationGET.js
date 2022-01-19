@@ -35,7 +35,13 @@ module.exports = async (req, res) => {
 
     // 지하철역에 해당하는 샵이 0개임
     if (nearShop.length === 0) {
-      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RECOMMEND_BY_SUBWAY_SUCCESS, nearShop));
+      // response 데이터 합치기
+      const result = {
+        subway: targetShop[0].subway,
+        shopList: nearShop,
+      };
+
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RECOMMEND_BY_SUBWAY_SUCCESS, result));
     }
 
     // 지하철역에 해당하는 소품샵 정보 배열 만들기 (최소 1개, 최대 20개)
@@ -69,7 +75,7 @@ module.exports = async (req, res) => {
     // response 데이터 합치기
     const result = {
       subway: targetShop[0].subway,
-      nearSubwayShopList,
+      shopList: nearSubwayShopList,
     };
 
     // 성공 response 보내기
