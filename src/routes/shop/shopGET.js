@@ -20,41 +20,49 @@ module.exports = async (req, res) => {
   let client;
 
   try {
+    let responseData;
     client = await db.connect(req);
     if (area) {
       const areaArr = await shopDB.getShopByArea(client, area, sort);
-      let responseData = duplicatedDataClean(areaArr, 'shopId', 'category');
+      responseData = duplicatedDataClean(areaArr, 'shopId', 'category');
       const imagePromise = responseData.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
-
+      const previewImageObj = {};
       // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
-      Promise.allSettled(imagePromise).then((image) => {
-        image.forEach((result) => {
+      await Promise.allSettled(imagePromise).then((image) => {
+        image.map((result) => {
           if (result.status === 'fulfilled') {
-            console.log('성공함');
-          } else if (result.status === 'rejected') {
-            // console.log('[IMAGE PROMISE REJECTED]');
+            if (result.value.length >= 1) {
+              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              return result.value[0];
+            }
           }
         });
       });
-
       responseData.map((item) => {
+        if (previewImageObj[item.shopId]) {
+          item.image = previewImageObj[item.shopId].image;
+        }
         if (!item.image) {
           item.image = null;
         }
       });
-
       if (sort === 'mysave') {
         // 로그인 했으면 db에서 데이터 가져오기
         if (req.user) {
+          console.log('req.user', req.user);
           // 북마크된 shopId를 가져와서 이미 가져온 responseData에서 해당 shopId에 해당하는 소품샵만 반환
           const bookmarkedShopId = await shopDB.getBookmarkedShopIdByUserIdAndArea(client, area, req.user.id);
+          if (bookmarkedShopId.length === 0) {
+            responseData = [];
+            return res.status(statusCode.NO_CONTENT).send(util.success(statusCode.NO_CONTENT, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
+          }
           const bookmarkedShopIdArr = bookmarkedShopId.map((obj) => obj.shopId);
           if (bookmarkedShopIdArr.length === 0) {
-            responseData = [];
-            res.status(statusCode.NO_CONTENT).send(util.success(statusCode.NO_CONTENT, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
+            const responseData = [];
+            return res.status(statusCode.NO_CONTENT).send(util.success(statusCode.NO_CONTENT, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
           } else {
             responseData = responseData.filter((o) => {
               return bookmarkedShopIdArr.includes(o.shopId);
