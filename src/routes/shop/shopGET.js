@@ -76,7 +76,7 @@ module.exports = async (req, res) => {
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
     }
     if (theme) {
-      // 빈티지 이외에 안나오는데 이유 로깅해보기
+
       const themeArr = await shopDB.getShopByTheme(client, theme, sort, offset - 1, limit);
       responseData = duplicatedDataClean(themeArr, 'shopId', 'category');
       // console.log('responseData',responseData);

@@ -13,6 +13,10 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
+  if (typeof isScraped === 'string') {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
   let client;
 
   try {
@@ -21,7 +25,7 @@ module.exports = async (req, res) => {
     const responseData = {};
 
     if (req.user) {
-      const userId = req.user.id;
+      const userId = req.user[0].id;
       const isDeletedBefore = await reviewDB.getCurrentLikeStatusByReviewIdAndUserId(client, reviewId, userId); //true -> 좋아요 안돼있음, false-> 좋아요 눌려있음
 
       if (isDeletedBefore.length === 0) {
