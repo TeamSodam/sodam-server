@@ -368,10 +368,8 @@ const getReviewTagByReviewId = async (client, reviewId) => {
 const getReviewOrderByRecent = async (client) => {
   const { rows } = await client.query(
     `
-    SELECT r.id AS review_id, r.shop_id, s.shop_name, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content, c.name as category
+    SELECT r.id AS review_id, r.shop_id, s.shop_name, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content, c.name as category
     FROM review r
-    INNER JOIN review_image ri
-    ON r.id = ri.review_id
     INNER JOIN shop s
     on s.id = r.shop_id
     INNER JOIN shop_category sc
@@ -380,7 +378,6 @@ const getReviewOrderByRecent = async (client) => {
     ON sc.category_id = c.id
     INNER JOIN "user" u
     ON u.id = r.user_id
-    WHERE ri.is_preview = TRUE
     ORDER BY r.created_at DESC
     limit 15
     `,
