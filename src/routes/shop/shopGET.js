@@ -9,7 +9,6 @@ const slackAPI = require('../../middlewares/slackAPI');
 module.exports = async (req, res) => {
   //sort쿼리 popular, mysave (지역별에서) , popular, review(테마별에서)
   const { area, theme, offset, limit, sort } = req.query;
-
   if (theme && (!offset || !limit)) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
@@ -43,26 +42,26 @@ module.exports = async (req, res) => {
       });
       responseData.map((item) => {
         if (previewImageObj[item.shopId]) {
-          item.image = previewImageObj[item.shopId].image;
+          item.image = [previewImageObj[item.shopId].image];
         }
         if (!item.image) {
           item.image = null;
         }
       });
+
       if (sort === 'mysave') {
         // 로그인 했으면 db에서 데이터 가져오기
         if (req.user) {
-          console.log('req.user', req.user);
           // 북마크된 shopId를 가져와서 이미 가져온 responseData에서 해당 shopId에 해당하는 소품샵만 반환
           const bookmarkedShopId = await shopDB.getBookmarkedShopIdByUserIdAndArea(client, area, req.user.id);
           if (bookmarkedShopId.length === 0) {
             responseData = [];
-            return res.status(statusCode.NO_CONTENT).send(util.success(statusCode.NO_CONTENT, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.SAVED_SHOP_EMPTY, responseData));
           }
           const bookmarkedShopIdArr = bookmarkedShopId.map((obj) => obj.shopId);
           if (bookmarkedShopIdArr.length === 0) {
             const responseData = [];
-            return res.status(statusCode.NO_CONTENT).send(util.success(statusCode.NO_CONTENT, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SAVED_SHOP_EMPTY, responseData));
           } else {
             responseData = responseData.filter((o) => {
               return bookmarkedShopIdArr.includes(o.shopId);
@@ -77,29 +76,36 @@ module.exports = async (req, res) => {
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
     }
     if (theme) {
+      // 빈티지 이외에 안나오는데 이유 로깅해보기
       const themeArr = await shopDB.getShopByTheme(client, theme, sort, offset - 1, limit);
-      const responseData = duplicatedDataClean(themeArr, 'shopId', 'category');
+      responseData = duplicatedDataClean(themeArr, 'shopId', 'category');
+      // console.log('responseData',responseData);
       const imagePromise = responseData.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
 
+      const previewImageObj = {};
       // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
-      Promise.allSettled(imagePromise).then((image) => {
-        image.forEach((result) => {
+      await Promise.allSettled(imagePromise).then((image) => {
+        image.map((result) => {
           if (result.status === 'fulfilled') {
-            console.log('성공함');
-          } else if (result.status === 'rejected') {
-            // console.log('[IMAGE PROMISE REJECTED]');
+            if (result.value.length >= 1) {
+              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              return result.value[0];
+            }
           }
         });
       });
-
       responseData.map((item) => {
+        if (previewImageObj[item.shopId]) {
+          item.image = [previewImageObj[item.shopId].image];
+        }
         if (!item.image) {
           item.image = null;
         }
       });
+
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_THEME_SUCCESS, responseData));
     }
   } catch (error) {
