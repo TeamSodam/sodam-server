@@ -33,11 +33,17 @@ module.exports = async (req, res) => {
     if (review.length === 0) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_REVIEW));
     }
-    const { userId, createdAt, likeCount, scrapCount, content } = review[0];
+
+    const { shopId: reviewShopId, userId, createdAt, likeCount, scrapCount, content } = review[0];
+
+    if (Number(shopId) !== Number(reviewShopId)) {
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NOT_MATCH_WITH_SHOP));
+    }
 
     // liked여부, scrap여부
     let isLiked = false;
     let isScraped = false;
+    console.log('req.user', req.user);
 
     // 로그인 했으면 db에서 데이터 가져오기
     if (req.user) {
