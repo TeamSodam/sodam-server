@@ -59,23 +59,46 @@ module.exports = async (req, res) => {
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
 
+      // // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
+      // Promise.allSettled(imagePromise).then((image) => {
+      //   image.forEach((result) => {
+      //     if (result.status === 'fulfilled') {
+      //       console.log('성공함');
+      //     } else if (result.status === 'rejected') {
+      //       //     console.log('리젝티드됨');
+      //     }
+      //   });
+      // });
+
+      // responseRankData.map((item) => {
+      //   if (!item.image) {
+      //     item.image = null;
+      //   }
+      // });
+
+      const previewImageObj = {};
       // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
-      Promise.allSettled(imagePromise).then((image) => {
-        image.forEach((result) => {
+      await Promise.allSettled(imagePromise).then((image) => {
+        image.map((result) => {
           if (result.status === 'fulfilled') {
-            console.log('성공함');
-          } else if (result.status === 'rejected') {
-            //     console.log('리젝티드됨');
+            if (result.value.length >= 1) {
+              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              return result.value[0];
+            }
           }
         });
       });
-
       responseRankData.map((item) => {
+        if (previewImageObj[item.shopId]) {
+          item.image = previewImageObj[item.shopId].image;
+        }
         if (!item.image) {
           item.image = null;
         }
       });
 
+      responseData = duplicatedDataClean(responseRankData, 'shopId', 'image');
+      console.log(responseRankData);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, responseRankData));
     }
   } catch (error) {
