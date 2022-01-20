@@ -21,6 +21,7 @@ const getLikeCountByReviewId = async (client, reviewId) => {
         `,
     [reviewId],
   );
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>rows', rows);
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
