@@ -34,42 +34,43 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
 
-    let result;
-
+    // 리뷰 총 개수
     const reviewCount = await shopDB.getReviewCountByShopId(client, shopId);
+
+    // 리뷰 목록
+    let reviewList;
+
     // sort에 따라 db에 요청 보내기
     if (sort === 'save') {
-      result = await reviewDB.getReviewByShopIdOrderByScrap(client, shopId, limit, pageOffset);
+      reviewList = await reviewDB.getReviewByShopIdOrderByScrap(client, shopId, limit, pageOffset);
     } else if (sort === 'recent') {
-      result = await reviewDB.getReviewByShopIdOrderByRecent(client, shopId, limit, pageOffset);
+      reviewList = await reviewDB.getReviewByShopIdOrderByRecent(client, shopId, limit, pageOffset);
     } else {
       // sort === "like"
-      result = await reviewDB.getReviewByShopIdOrderByLike(client, shopId, limit, pageOffset);
+      reviewList = await reviewDB.getReviewByShopIdOrderByLike(client, shopId, limit, pageOffset);
     }
 
+    // 결과 모양 만들어주기
+    let result = {
+      reviewCount: reviewCount[0].reviewCount,
+      data: reviewList,
+    };
+
     // 성공: 탐색은 잘 했는데 리뷰가 없는 경우
-    if (result.length === 0) {
+    if (reviewList.length === 0) {
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, result));
     }
 
     // 이미지 배열로 만들기
-    result.map((item) => {
-      item.writerThumbnail = [item.writerThumbnail];
+    reviewList.map((review) => {
+      review.image = [review.image];
     });
 
-    result.map((item) => {
-      item.image = [item.image];
-    });
-
-    console.log(result);
-
-    const resultObj = {
-      reviewCount: reviewCount[0].reviewCount,
-      data: result,
-    };
+    // 리뷰 있는 경우 결과 만들어주기
+    result.data = reviewList;
 
     // 성공: 리뷰 있음
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, resultObj));
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, result));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
