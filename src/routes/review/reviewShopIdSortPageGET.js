@@ -54,8 +54,14 @@ module.exports = async (req, res) => {
 
     // 이미지 배열로 만들기
     result.map((item) => {
+      item.writerThumbnail = [item.writerThumbnail];
+    });
+
+    result.map((item) => {
       item.image = [item.image];
     });
+
+    console.log(result);
 
     const resultObj = {
       reviewCount: reviewCount[0].reviewCount,
