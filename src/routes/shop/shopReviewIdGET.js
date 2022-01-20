@@ -56,6 +56,8 @@ module.exports = async (req, res) => {
     // writer 정보
     const writer = await reviewDB.getReviewWriterByUserId(client, userId);
 
+    console.log('>>>>>>>>>>>>>>>>>>.Testwriter>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', writer);
+
     // 리뷰 이미지
     let image = [];
     const reviewImages = await reviewDB.getReviewImagesByReviewId(client, reviewId);
