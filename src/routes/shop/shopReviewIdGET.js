@@ -35,7 +35,6 @@ module.exports = async (req, res) => {
     }
 
     const { shopId: reviewShopId, userId, createdAt, likeCount, scrapCount, content } = review[0];
-
     if (Number(shopId) !== Number(reviewShopId)) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NOT_MATCH_WITH_SHOP));
     }
