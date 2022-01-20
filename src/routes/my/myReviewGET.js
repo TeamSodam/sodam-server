@@ -40,8 +40,8 @@ module.exports = async (req, res) => {
       });
 
       myReviewArr.map((item) => {
-        if (previewImageObj[item.shopId]) {
-          item.image = previewImageObj[item.shopId].image;
+        if (previewImageObj[item.reviewId]) {
+          item.image = previewImageObj[item.reviewId].image;
         }
         if (!item.image) {
           item.image = null;
