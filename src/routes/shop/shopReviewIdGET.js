@@ -53,6 +53,8 @@ module.exports = async (req, res) => {
       if (scrap?.length !== 0) isScraped = true;
     }
 
+    console.log('******************userId********************************', userId);
+
     // writer 정보
     const writer = await reviewDB.getReviewWriterByUserId(client, userId);
 
