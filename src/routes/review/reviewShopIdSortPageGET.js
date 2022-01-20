@@ -35,6 +35,8 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
 
     let result;
+
+    const reviewCount = await shopDB.getReviewCountByShopId(client, shopId);
     // sort에 따라 db에 요청 보내기
     if (sort === 'save') {
       result = await reviewDB.getReviewByShopIdOrderByScrap(client, shopId, limit, pageOffset);
@@ -55,8 +57,13 @@ module.exports = async (req, res) => {
       item.image = [item.image];
     });
 
+    const resultObj = {
+      reviewCount: reviewCount[0].reviewCount,
+      data: result,
+    };
+
     // 성공: 리뷰 있음
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, result));
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, resultObj));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
