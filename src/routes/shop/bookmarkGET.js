@@ -10,18 +10,17 @@ module.exports = async (req, res) => {
   //sort쿼리 save, recent, review
   const { sort, offset, limit } = req.query;
 
-  let pageOffset;
-  let pageLimit;
+  // offset, limit 설정
+  let pageOffset = 0;
+  let pageLimit = 20;
 
-  if (!offset) {
-    pageOffset = 0;
-  }
-  if (!limit) {
-    pageLimit = 20;
+  if (offset) {
+    pageOffset = Number((offset - 1) * limit);
   }
 
-  pageOffset = Number((offset - 1) * limit);
-  pageLimit = limit;
+  if (limit) {
+    pageLimit = limit;
+  }
 
   let client;
 

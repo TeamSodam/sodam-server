@@ -20,36 +20,30 @@ module.exports = async (req, res) => {
     }
 
     const imagePromise = responseData.map((item) => {
-        console.log(item);
-        const reviewId = item.reviewId;
-        return reviewDB.getPreviewImageByReviewId(client, reviewId);
-      });
+      const reviewId = item.reviewId;
+      return reviewDB.getPreviewImageByReviewId(client, reviewId);
+    });
 
-      const previewImageObj = {};
-      await Promise.allSettled(imagePromise).then((image) => {
-        image.map((result) => {
-            console.log("result", result);
-
-          if (result.status === 'fulfilled') {
-            if (result.value.length >= 1) {
-              previewImageObj[Number(result.value[0]?.reviewid)] = result.value[0];
-              return result.value[0];
-            }
+    const previewImageObj = {};
+    await Promise.allSettled(imagePromise).then((image) => {
+      image.map((result) => {
+        if (result.status === 'fulfilled') {
+          if (result.value.length >= 1) {
+            previewImageObj[Number(result.value[0]?.reviewid)] = result.value[0];
+            return result.value[0];
           }
-        });
-      });
-
-      responseData.map((item) => {
-        if (previewImageObj[item.shopId]) {
-          item.image = previewImageObj[item.shopId].image;
-        }
-        if (!item.image) {
-          item.image = null;
         }
       });
+    });
 
-      responseData = duplicatedDataClean(responseData, 'reviewId', 'image');
-      console.log(responseData);
+    responseData.map((item) => {
+      if (previewImageObj[Number(item.reviewId)]) {
+        item.image = [previewImageObj[Number(item.reviewId)].image];
+      }
+      if (!item.image) {
+        item.image = null;
+      }
+    });
 
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_RECENT_REVIEW_SUCCESS, responseData));
   } catch (error) {

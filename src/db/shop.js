@@ -1,5 +1,17 @@
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
+const getReviewCountByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+      SELECT s.review_count
+      FROM shop s
+      WHERE s.id = $1
+    `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 const getShopCounts = async (client) => {
   const { rows } = await client.query(
     `
@@ -13,7 +25,7 @@ const getShopByArea = async (client, area, sort) => {
   if (sort === 'popular') {
     sortQuery = `ORDER BY s.bookmark_count DESC`;
   }
-  // mysave sort 추가적으로 구현해야함.
+
   const { rows } = await client.query(
     `
         SELECT s.id as shop_id, s.shop_name, c.name as category, s.road_address, s.land_address, s.review_count, s.time
@@ -386,6 +398,7 @@ const updateReviewCount = async (client, shopId, reviewCount) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 module.exports = {
+  getReviewCountByShopId,
   getShopCounts,
   getShopByArea,
   getShopByTheme,

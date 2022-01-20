@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
         // 로그인 했으면 db에서 데이터 가져오기
         if (req.user) {
           // 북마크된 shopId를 가져와서 이미 가져온 responseData에서 해당 shopId에 해당하는 소품샵만 반환
-          const bookmarkedShopId = await shopDB.getBookmarkedShopIdByUserIdAndArea(client, area, req.user.id);
+          const bookmarkedShopId = await shopDB.getBookmarkedShopIdByUserIdAndArea(client, area, req.user[0].id);
           if (bookmarkedShopId.length === 0) {
             responseData = [];
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SAVED_SHOP_EMPTY, responseData));
