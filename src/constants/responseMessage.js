@@ -48,6 +48,7 @@ module.exports = {
   GET_ONE_REVIEW_GET_SUCCESS: '리뷰 상세 정보 조회 성공',
   CREATE_REVIEW_SUCCESS: '리뷰 작성 성공',
   NOT_MATCH_WITH_SHOP: '소품샵 아이디와 리뷰 아이디가 일치하지 않습니다',
+  GET_REVIEW_OF_MINE: '내가 작성한 리뷰 가져오기 성공',
 
   // 파일 업로드
   ONLY_IMAGE_AVAILABLE: '이미지만 업로드 가능합니다',
