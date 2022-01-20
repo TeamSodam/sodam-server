@@ -10,7 +10,7 @@ router.get('/recommend', require('./shopRecommendGET'));
 router.get('/search', require('./shopSearchGET'));
 router.get('/', checkUser, require('./shopGET'));
 router.get('/:shopId/location', require('./shopShopIdLocationGET'));
-router.get('/:shopId/review/:reviewId', require('./shopReviewIdGET'));
+router.get('/:shopId/review/:reviewId', checkUser, require('./shopReviewIdGET'));
 router.get('/:shopId', checkUser, require('./shopShopIdGET'));
 
 module.exports = router;
