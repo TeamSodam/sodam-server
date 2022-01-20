@@ -16,11 +16,12 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
   let client;
-  //getReviewImagesByReviewId
+
   try {
     client = await db.connect(req);
     if (userId) {
-      const myReviewArr = await reviewDB.getReviewByReviewId(client, userId);
+      const myReviewArr = await reviewDB.getReviewByUserId(client, userId);
+
       const imagePromise = myReviewArr.map((item) => {
         const reviewId = item.reviewId;
         return reviewDB.getPreviewImageByReviewId(client, reviewId);
