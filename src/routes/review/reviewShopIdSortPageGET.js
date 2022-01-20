@@ -52,11 +52,6 @@ module.exports = async (req, res) => {
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_SHOP_SUCCESS, result));
     }
 
-    // 이미지 배열로 만들기
-    result.map((item) => {
-      item.writerThumbnail = [item.writerThumbnail];
-    });
-
     result.map((item) => {
       item.image = [item.image];
     });
