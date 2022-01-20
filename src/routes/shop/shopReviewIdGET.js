@@ -47,8 +47,8 @@ module.exports = async (req, res) => {
 
     // 로그인 했으면 db에서 데이터 가져오기
     if (req.user) {
-      const like = await reviewDB.getReviewLikeByUserId(client, userId, reviewId);
-      const scrap = await reviewDB.getReviewScrapByUserId(client, userId, reviewId);
+      const like = await reviewDB.getReviewLikeByUserId(client, reviewId, userId);
+      const scrap = await reviewDB.getReviewScrapByUserId(client, reviewId, userId);
       if (like?.length !== 0) isLiked = true;
       if (scrap?.length !== 0) isScraped = true;
     }
