@@ -3,7 +3,7 @@ const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 const getReviewByReviewId = async (client, reviewId) => {
   const { rows } = await client.query(
     `
-        SELECT *
+        SELECT r.id AS review_id, r.shop_id, r.like_count, r.scrap_count, r.content, r.created_at as date
         FROM review r
         WHERE r.id = $1
         `,
