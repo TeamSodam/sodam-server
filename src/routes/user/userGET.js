@@ -17,8 +17,12 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     const user = await userDB.getUserById(client, userId);
+    const test = {
+      test: '안녕하세요 시험용 테스트 입니다',
+      user: user,
+    };
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, user));
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.RENT_HISTORY_SUCCESS, test));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
