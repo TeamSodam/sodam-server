@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     const user = await userDB.getUserById(client, userId);
     const test = {
-      test: 'pm2 restart',
+      test: '스크립트야 제발 돌아라!',
       user: user,
     };
 
