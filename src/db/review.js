@@ -3,7 +3,7 @@ const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 const getReviewByReviewId = async (client, reviewId) => {
   const { rows } = await client.query(
     `
-        SELECT r.id AS review_id, r.user_id, r.shop_id, r.like_count, r.scrap_count, r.content, r.created_at AS date
+        SELECT r.id AS review_id, r.shop_id, r.like_count, r.scrap_count, r.content, r.created_at AS date, r.user_id
         FROM review r
         WHERE r.id = $1
         AND is_deleted = FALSE
@@ -22,6 +22,7 @@ const getLikeCountByReviewId = async (client, reviewId) => {
         `,
     [reviewId],
   );
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>rows', rows);
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
