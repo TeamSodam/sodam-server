@@ -6,6 +6,7 @@ const getReviewByReviewId = async (client, reviewId) => {
         SELECT r.id AS review_id, r.shop_id, r.like_count, r.scrap_count, r.content, r.created_at AS date, r.user_id
         FROM review r
         WHERE r.id = $1
+        AND is_deleted = FALSE
         `,
     [reviewId],
   );
@@ -468,6 +469,19 @@ const getTagByName = async (client, tagName) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getReviewByUserId = async (client, userId) => {
+  const { rows } = await client.query(
+    `
+        SELECT r.id AS review_id, r.shop_id, r.like_count, r.scrap_count, r.content, r.created_at AS date
+        FROM review r
+        WHERE r.user_id = $1
+        AND is_deleted = FALSE
+        `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getReviewByReviewId,
   getLikeCountByReviewId,
@@ -496,4 +510,5 @@ module.exports = {
   createTag,
   createReviewTag,
   getTagByName,
+  getReviewByUserId,
 };
