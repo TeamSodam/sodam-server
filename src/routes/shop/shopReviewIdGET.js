@@ -35,7 +35,6 @@ module.exports = async (req, res) => {
     }
 
     const { shopId: reviewShopId, userId, createdAt, likeCount, scrapCount, content } = review[0];
-    console.log('******************review[0]********************************', review[0]);
     if (Number(shopId) !== Number(reviewShopId)) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NOT_MATCH_WITH_SHOP));
     }
@@ -53,12 +52,8 @@ module.exports = async (req, res) => {
       if (scrap?.length !== 0) isScraped = true;
     }
 
-    console.log('******************userId********************************', userId);
-
     // writer 정보
     const writer = await reviewDB.getReviewWriterByUserId(client, userId);
-
-    console.log('>>>>>>>>>>>>>>>>>>.Testwriter>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', writer);
 
     // 리뷰 이미지
     let image = [];
