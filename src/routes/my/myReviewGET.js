@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     if (userId) {
       const myReviewArr = await reviewDB.getReviewByReviewId(client, userId);
       const imagePromise = myReviewArr.map((item) => {
-        const reviewId = item.id;
+        const reviewId = item.reviewId;
         return reviewDB.getPreviewImageByReviewId(client, reviewId);
       });
 

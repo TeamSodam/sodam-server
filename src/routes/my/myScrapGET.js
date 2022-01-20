@@ -23,7 +23,6 @@ module.exports = async (req, res) => {
         }
       });
       responseData = duplicatedDataClean(responseData, 'shopId', 'category');
-      responseData = duplicatedDataClean(responseData, 'reviewId', 'writerThumbnail');
       responseData = duplicatedDataClean(responseData, 'reviewId', 'image');
 
       if (responseData.length !== 0) res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SCRAP_OF_MINE, responseData));
