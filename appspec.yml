@@ -3,19 +3,14 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/build/
-version: 0.0
-os: linux
-files:
-  - source: /
-    destination: /home/ubuntu/build/
 
 hooks:
   AfterInstall:
-    - location: /home/ubuntu/scripts/install_dependencies.sh
+    - location: ./scripts/install_dependencies.sh
       timeout: 300
       runas: root
 
   ApplicationStart:
-    - location: /home/ubuntu/scripts/restart_server.sh
+    - location: ./scripts/restart_server.sh
       timeout: 300
       runas: root
