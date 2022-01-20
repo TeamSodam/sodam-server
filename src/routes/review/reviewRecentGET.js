@@ -45,12 +45,6 @@ module.exports = async (req, res) => {
       }
     });
 
-    responseData.map((item) => {
-      item.writerThumbnail = [item.writerThumbnail];
-    });
-
-    console.log(responseData);
-
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_RECENT_REVIEW_SUCCESS, responseData));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
