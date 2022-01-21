@@ -79,8 +79,7 @@
 
 ## 🕸 API DOCS
 
-↗️ [API 명세서](https://www.notion.so/API-8dcea38436014055a8890adba05bd8b5)</br>
-
+↗️ [API 명세서](https://www.notion.so/API-8dcea38436014055a8890adba05bd8b5)
 
 ## ♟ commit, coding convention, branch 전략
 
