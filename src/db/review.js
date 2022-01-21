@@ -229,7 +229,7 @@ const getScrapedReviewByUserId = async (client, userId) => {
     INNER JOIN review_scrap rs
     ON r.id = rs.review_id
 
-    WHERE rs.user_id = $1 AND rs.is_deleted = FALSE
+    WHERE rs.user_id = $1 AND rs.is_deleted = FALSE AND r.is_deleted = FALSE
     `,
     [userId],
   );
@@ -478,6 +478,7 @@ const getReviewByUserId = async (client, userId) => {
         FROM review r
         WHERE r.user_id = $1
         AND is_deleted = FALSE
+        ORDER BY r.created_at DESC
         `,
     [userId],
   );

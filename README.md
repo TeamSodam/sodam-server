@@ -1,19 +1,49 @@
-![image](https://user-images.githubusercontent.com/81923229/148949733-70b1d338-cae1-4c7e-a77a-17e912bd93a5.png)
+![https://user-images.githubusercontent.com/81923229/148949733-70b1d338-cae1-4c7e-a77a-17e912bd93a5.png](https://user-images.githubusercontent.com/81923229/148949733-70b1d338-cae1-4c7e-a77a-17e912bd93a5.png)
 
-## *🎁  소품샵 여정의 이야기를 담다, Sodam  🎁*
+## *🎁* **소품샵 여정의 이야기를 담다, Sodam** *🎁*
 
-우리의 소품샵 방문 경험을 더욱 가치있게 만들어 주는 소담입니다!
+우리의 소품샵 방문 경험을 더욱 가치있게 만들어 주는 **소담**입니다!
 
-소담과 함께 우리의 소품샵 추억을 간직해 보는건 어떠세요?
+소담과 함께 우리의 **소품샵 추억**을 간직해 보는건 어떠세요?
 
-## 📋 IA 
-![IA](https://user-images.githubusercontent.com/81923229/149041451-96cdc9bb-7a0a-4176-b2f0-c4fad5db0fc5.png)
+## ✨ **OUR SERVICE**
 
+![image](https://user-images.githubusercontent.com/65010481/150520368-e9fa9c58-fcda-4cde-aa51-11633650fa88.png)
+![image](https://user-images.githubusercontent.com/65010481/150520326-74c13f6c-5276-42fc-bf9c-de01363e0a35.png)
+
+
+---
+### VALUE OF OUR SERVICE
+
+**1. 새로운 소품샵 추천**
+    
+    → 요즘 뜨는 소품샵 및 사용자 취향에 맞는 소품샵을 추천
+    → 최근 업데이트된 리뷰 추천
+    
+**2. 목적별 소품샵 탐색**
+    
+    → 테마별 소품샵 탐색
+    → 지역별 소품샵 탐색
+    
+**3. 소품샵 여정 아카이빙**
+    
+    → 가고싶은 소품샵 저장 ⇒ 소품샵 스크랩
+    → 다녀온 소품샵 후기 기록 ⇒ 내가 작성한 리뷰
+    → 다른 유저들의 소품샵 후기 스크랩 ⇒ 스크랩한 리뷰
+
+## 👨‍👩‍👦 역할 분담
+
+![리드미에 올릴것](https://user-images.githubusercontent.com/65010481/150528566-310f46b9-1a47-4f09-9af5-009e496c2f77.png)
+
+</br>
 
 ## ✏️ DB ERD
-![sodam-db](https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png)
+
+![https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png](https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png)
 
 ## 📕 Cloud Service
+<img alt="Amazon AWS" src ="https://img.shields.io/badge/Amazon AWS-232F3E.svg?&style=for-the-badge&logo=Amazon AWS&logoColor=white"/>
+
 - AWS EC2 - 클라우드 컴퓨팅 시스템
 - AWS RDS - 클라우드 관계형 데이터베이스
 - AWS S3 - 클라우드 데이터 저장소
@@ -22,16 +52,81 @@
 - AWS CodeDeploy - 애플리케이션 배포를 자동화하는 배포 서비스
 
 ## 📚 사용 도구
+<img alt="Node.js" src ="https://img.shields.io/badge/Node.js-339933.svg?&style=for-the-badge&logo=Node.js&logoColor=white"/>  <img alt="Express" src ="https://img.shields.io/badge/Express-000000.svg?&style=for-the-badge&logo=Express&logoColor=white"/>
+<img alt="npm" src ="https://img.shields.io/badge/npm-CB3837.svg?&style=for-the-badge&logo=npm&logoColor=white"/>
+<img alt="PM2" src ="https://img.shields.io/badge/PM2-2B037A.svg?&style=for-the-badge&logo=PM2&logoColor=white"/>
+<img alt="PostgreSQL" src ="https://img.shields.io/badge/PostgreSQL-4169E1.svg?&style=for-the-badge&logo=PostgreSQL&logoColor=white"/>
+
 - Node.js
 - Express.js
 - NPM - 패키지 매니저
 - PM2
-- PostgresSQL
-- Swagger - API 명세
+- PostgreSQL
+
+## 🔔 Dependencies
+
+```json
+ "dependencies": {
+    "aws-sdk": "^2.1058.0",
+    "axios": "^0.25.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.10.7",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "google-spreadsheet": "^3.2.0",
+    "googleapis": "^39.2.0",
+    "JSON": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.4",
+    "multer-s3": "^2.10.0",
+    "nodemon": "^2.0.15",
+    "path": "^0.12.7",
+    "pg": "^8.7.1",
+    "sequelize": "^6.12.5",
+    "sequelize-cli": "^6.3.0",
+    "yamljs": "^0.3.0"
+  }
+```
+
+## 🕸 API DOCS
+
+↗️ [API 명세서](https://www.notion.so/API-8dcea38436014055a8890adba05bd8b5)
+
+</br>
+
+
+## 담당 기능 및 API
+
+| 기능 | 담당자 | 완료 |
+| --- | --- | --- |
+| 랜덤 소품샵 추천 | 최유림 | ✅ |
+| 주간 HOT 소품샵 추천 | 최유림 | ✅ |
+| 종류별 소품샵 리스트 | 최유림 | ✅ |
+| 최근 소품샵 리뷰 제공 | 최유림 | ✅ |
+| 소품샵 검색 기능 | 최유림 | ✅ |
+| 위치별 소품샵 제공 | 박나희 | ✅ |
+| 구별 소품샵 제공 | 박나희 | ✅ |
+| 테마별 소품샵 제공 | 박나희 | ✅ |
+| 북마크한 소품샵 제공 | 박나희 | ✅ |
+| 소품샵 상세 정보 제공 | 이정은 | ✅ |
+| 해당 소품샵 관련 리뷰 목록 제공 | 이정은 | ✅ |
+| 소품샵 북마크 기능 | 이정은 | ✅ |
+| 지하철역 기반 소품샵 추천 | 이정은 | ✅ |
+| 소품샵별 리뷰 제공 | 박나희 | ✅ |
+| 리뷰 하트 기능 | 박나희 | ✅ |
+| 리뷰 스크랩 기능 | 박나희 | ✅ |
+| 회원가입 기능 | 박나희 | ✅ |
+| 로그인 기능 | 박나희 | ✅ |
+| 내가 작성한 리뷰 목록 제공 | 최유림 | ✅ |
+| 내가 스크랩한 리뷰 목록 제공 | 최유림 | ✅ |
+| 리뷰 작성 기능 | 이정은 | ✅ |
+
+</br>
+
 
 ## ♟ commit, coding convention, branch 전략
 
-### 📍  commit 전략
+### 📍 commit 전략
 
 ```
  제목 첫 글자를 대문자로
@@ -40,6 +135,7 @@
  제목과 본문을 한 줄 띄워 분리하기
  본문은 "어떻게" 보다 "무엇을", "왜"를 설명한다.
  본문에 여러줄의 메시지를 작성할 땐 "-"로 구분
+
 ```
 
 ```
@@ -58,11 +154,14 @@
  🚚 [MOVE] : 프로젝트 내 파일이나 코드의 이동 #이슈번호
  ⏪️ [RENAME] : 파일 이름 변경이 있을 때 사용합니다. #이슈번호
  🔀 [MERGE]: 다른브렌치를 merge 할 때 사용합니다. #이슈번호
+
 ```
 
-### 📍  coding convention
+### 📍 coding convention
+
 - .eslintrc.js
-```javascript
+
+```
 module.exports = {
   env: {
     node: true,
@@ -96,7 +195,8 @@ module.exports = {
 ```
 
 - .prettierrc.js
-```javascript
+
+```
 module.exports = {
   bracketSpacing: true,
   jsxBracketSameLine: true,
@@ -106,10 +206,9 @@ module.exports = {
   printWidth: 200,
   tabWidth: 2,
 };
-
 ```
 
-### 📍  branch 전략
+### 📍 Branch 전략
 
 - 배포 브랜치 : `main`
 - 개발 브랜치 : `develop`
@@ -119,54 +218,87 @@ module.exports = {
     - `refact/`
     - `hotfix/`
 
-### 📍  PR, 이슈 관리
 
-💡 하나의 이슈를 올리면 거기서의 todo 단위로 pr 날리기
+### 📍 PR, 이슈 관리
 
-## 🏛  프로젝트 폴더 구조 (수정중)
+💡 하나의 이슈를 올리면 거기서 todo 단위로 pr 날리기
+
+
+## 🏛 프로젝트 폴더 구조
+
 ```
-├── README.md
-├── appspec.yml
-├── image
-│   ├── IA.png
-│   └── sodam-db.png
-├── package-lock.json
-├── package.json
-└── src
-    ├── app.js
-    ├── config
-    │   └── dbConfig.js
-    ├── constants
-    │   ├── jwt.js
-    │   ├── responseMessage.js
-    │   └── statusCode.js
-    ├── db
-    │   ├── db.js
-    │   ├── index.js
-    │   └── user.js
-    ├── lib
-    │   ├── convertSnakeToCamel.js
-    │   └── util.js
-    ├── middlewares
-    │   └── auth.js
-    └── routes
-        ├── index.js
-        └── user
-            ├── index.js
-            └── userGET.js
+📦sodam-server
+ ┣ 📂.git
+ ┣ 📂src
+ ┃ ┣ 📂config
+ ┃ ┃ ┗ 📜dbConfig.js
+ ┃ ┣ 📂constants
+ ┃ ┃ ┣ 📜jwt.js
+ ┃ ┃ ┣ 📜responseMessage.js
+ ┃ ┃ ┗ 📜statusCode.js
+ ┃ ┣ 📂db
+ ┃ ┃ ┣ 📜db.js
+ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┣ 📜review.js
+ ┃ ┃ ┣ 📜shop.js
+ ┃ ┃ ┣ 📜spreadsheet.js
+ ┃ ┃ ┗ 📜user.js
+ ┃ ┣ 📂lib
+ ┃ ┃ ┣ 📜convertRawDataToProccessedData.js
+ ┃ ┃ ┣ 📜convertSnakeToCamel.js
+ ┃ ┃ ┣ 📜jwtHandlers.js
+ ┃ ┃ ┗ 📜util.js
+ ┃ ┣ 📂middlewares
+ ┃ ┃ ┣ 📜auth.js
+ ┃ ┃ ┣ 📜slackAPI.js
+ ┃ ┃ ┗ 📜uploadImage.js
+ ┃ ┣ 📂routes
+ ┃ ┃ ┣ 📂auth
+ ┃ ┃ ┃ ┣ 📜authLoginPOST.js
+ ┃ ┃ ┃ ┣ 📜authSignupPOST.js
+ ┃ ┃ ┃ ┗ 📜index.js
+ ┃ ┃ ┣ 📂my
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┣ 📜myReviewGET.js
+ ┃ ┃ ┃ ┗ 📜myScrapGET.js
+ ┃ ┃ ┣ 📂review
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┣ 📜reviewLikePOST.js
+ ┃ ┃ ┃ ┣ 📜reviewPOST.js
+ ┃ ┃ ┃ ┣ 📜reviewRecentGET.js
+ ┃ ┃ ┃ ┣ 📜reviewScrapPOST.js
+ ┃ ┃ ┃ ┗ 📜reviewShopIdSortPageGET.js
+ ┃ ┃ ┣ 📂shop
+ ┃ ┃ ┃ ┣ 📜bookmarkGET.js
+ ┃ ┃ ┃ ┣ 📜bookmarkPOST.js
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┣ 📜shopCategoryGET.js
+ ┃ ┃ ┃ ┣ 📜shopGET.js
+ ┃ ┃ ┃ ┣ 📜shopRecommendGET.js
+ ┃ ┃ ┃ ┣ 📜shopReviewIdGET.js
+ ┃ ┃ ┃ ┣ 📜shopSearchGET.js
+ ┃ ┃ ┃ ┣ 📜shopShopIdGET.js
+ ┃ ┃ ┃ ┗ 📜shopShopIdLocationGET.js
+ ┃ ┃ ┣ 📂user
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┗ 📜userGET.js
+ ┃ ┃ ┗ 📜index.js
+ ┃ ┣ 📂script
+ ┃ ┃ ┣ 📜insertReviewData.js
+ ┃ ┃ ┣ 📜insertReviewImage.js
+ ┃ ┃ ┣ 📜insertReviewItem.js
+ ┃ ┃ ┣ 📜insertReviewTag.js
+ ┃ ┃ ┣ 📜insertShop.js
+ ┃ ┃ ┣ 📜insertTag.js
+ ┃ ┃ ┗ 📜insertUser.js
+ ┃ ┗ 📜app.js
+ ┣ 📜.env
+ ┣ 📜.eslintrc.js
+ ┣ 📜.gitignore
+ ┣ 📜.prettierrc.js
+ ┣ 📜package-lock.json
+ ┣ 📜package.json
+ ┗ 📜README.md
 ```
-
-## 🕸  전체 API 로직 구현 진척도 (수정중)
-[API 명세서](https://scrawny-trust-955.notion.site/API-8dcea38436014055a8890adba05bd8b5) 
-
-각자 할당된 api 개발 진행 중, 완성된 api 없음.
-
-## 👨‍👩‍👦  팀별 역할 분담
-| 박나희 | 이정은 | 최유림 |
-| --- | --- | --- |
-|  🐱 [Nahee-Park](https://github.com/Nahee-Park) | 🐱 [LeeJE20](https://github.com/LeeJE20)  | 🐱 [choiyoorim](https://github.com/choiyoorim) |
-| 기록 및 문서화 담당 (리드미, 노션) | 팀 운영 담당 (일정조율, 회의 진행, 공지) | Task managing (칸반보드 관리 담당) |
-| 기술 담당 (코드 퀄리티, 기술적인 이슈, 타 파트와의 소통) | 협업 담당 (페어 프로그래밍, 개발 컨벤션 체크, 필요한 소통이 잘 이뤄지는지) | 과제 담당 (과제 제출 기한, 과제 제출 여부 체크) |
-|  |  | 돈기부여 (안 지킨 날에 벌금 기록) |
 
 
