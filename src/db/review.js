@@ -229,7 +229,7 @@ const getScrapedReviewByUserId = async (client, userId) => {
     INNER JOIN review_scrap rs
     ON r.id = rs.review_id
 
-    WHERE rs.user_id = $1 AND rs.is_deleted = FALSE
+    WHERE rs.user_id = $1 AND rs.is_deleted = FALSE AND r.is_deleted = FALSE
     `,
     [userId],
   );
