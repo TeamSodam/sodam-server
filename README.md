@@ -190,74 +190,78 @@ module.exports = {
 ## 🏛 프로젝트 폴더 구조
 
 ```
-├── README.md
-├── appspec.yml
-├── image
-│   ├── IA.png
-│   └── sodam-db.png
-├── package-lock.json
-├── package.json
-└── src
-    ├── app.js
-    ├── config
-    │   └── dbConfig.js
-    ├── constants
-    │   ├── jwt.js
-    │   ├── responseMessage.js
-    │   └── statusCode.js
-    ├── db
-    │   ├── db.js
-    │   ├── index.js
-    |	├── review.js
-    |	├── shop.js
-    |	├── spreadsheet.js
-    │   └── user.js
-    ├── lib
-    │   ├── convertSnakeToCamel.js
-    |	├── convertRawDataToProcessedData.js
-    |	├── jwtHandlers.js
-    │   └── util.js
-    ├── middlewares
-    │   ├── auth.js
-    |	├── slackAPI.js
-    │   └── uploadImage.js
-    └── routes
-				├── index.js
-	      ├── auth
-				|		├── index.js
-				|		├── authLoginPOST.js
-		    │   └── authSignupPOST.js
-	      ├── my
-				|		├── index.js
-		    │   ├── myReviewGET.js
-		    │   └── myScrapGET.js
-	      ├── review
-				│   ├── index.js
-		    │   ├── reviewLikePOST.js
-				|		├── reviewPOST.js
-				|		├── reviewRecentGET.js
-				|		├── reviewScrapPOST.js
-		    │   └── reviewShopIdSortPageGET.js
-	      ├── shop
-				│   ├── index.js
-		    │   ├── bookmarkGET.js
-				|		├── bookmarkPOST.js
-				|		├── shopCategory.js
-				|		├── shopGET.js
-				|		├── shopReviewIdGET.js
-				|		├── shopSearchGET.js
-				|		├── shopShopIdGET.js
-				|		├── shopShopIdLocationGET.js
-		    │   └── shopRecommendGET.js
-				├── script
-				│   ├── insertShop.js
-		    │   ├── insertReviewImage.js
-				|		├── insertReviewItem.js
-				|		├── insertReviewTag.js
-				|		├── insertShop.js
-				|		├── insertTag.js
-				|		├── insertUser.
-				└── 
+📦sodam-server
+ ┣ 📂.git
+ ┣ 📂src
+ ┃ ┣ 📂config
+ ┃ ┃ ┗ 📜dbConfig.js
+ ┃ ┣ 📂constants
+ ┃ ┃ ┣ 📜jwt.js
+ ┃ ┃ ┣ 📜responseMessage.js
+ ┃ ┃ ┗ 📜statusCode.js
+ ┃ ┣ 📂db
+ ┃ ┃ ┣ 📜db.js
+ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┣ 📜review.js
+ ┃ ┃ ┣ 📜shop.js
+ ┃ ┃ ┣ 📜spreadsheet.js
+ ┃ ┃ ┗ 📜user.js
+ ┃ ┣ 📂lib
+ ┃ ┃ ┣ 📜convertRawDataToProccessedData.js
+ ┃ ┃ ┣ 📜convertSnakeToCamel.js
+ ┃ ┃ ┣ 📜jwtHandlers.js
+ ┃ ┃ ┗ 📜util.js
+ ┃ ┣ 📂middlewares
+ ┃ ┃ ┣ 📜auth.js
+ ┃ ┃ ┣ 📜slackAPI.js
+ ┃ ┃ ┗ 📜uploadImage.js
+ ┃ ┣ 📂routes
+ ┃ ┃ ┣ 📂auth
+ ┃ ┃ ┃ ┣ 📜authLoginPOST.js
+ ┃ ┃ ┃ ┣ 📜authSignupPOST.js
+ ┃ ┃ ┃ ┗ 📜index.js
+ ┃ ┃ ┣ 📂my
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┣ 📜myReviewGET.js
+ ┃ ┃ ┃ ┗ 📜myScrapGET.js
+ ┃ ┃ ┣ 📂review
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┣ 📜reviewLikePOST.js
+ ┃ ┃ ┃ ┣ 📜reviewPOST.js
+ ┃ ┃ ┃ ┣ 📜reviewRecentGET.js
+ ┃ ┃ ┃ ┣ 📜reviewScrapPOST.js
+ ┃ ┃ ┃ ┗ 📜reviewShopIdSortPageGET.js
+ ┃ ┃ ┣ 📂shop
+ ┃ ┃ ┃ ┣ 📜bookmarkGET.js
+ ┃ ┃ ┃ ┣ 📜bookmarkPOST.js
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┣ 📜shopCategoryGET.js
+ ┃ ┃ ┃ ┣ 📜shopGET.js
+ ┃ ┃ ┃ ┣ 📜shopRecommendGET.js
+ ┃ ┃ ┃ ┣ 📜shopReviewIdGET.js
+ ┃ ┃ ┃ ┣ 📜shopSearchGET.js
+ ┃ ┃ ┃ ┣ 📜shopShopIdGET.js
+ ┃ ┃ ┃ ┗ 📜shopShopIdLocationGET.js
+ ┃ ┃ ┣ 📂user
+ ┃ ┃ ┃ ┣ 📜index.js
+ ┃ ┃ ┃ ┗ 📜userGET.js
+ ┃ ┃ ┗ 📜index.js
+ ┃ ┣ 📂script
+ ┃ ┃ ┣ 📜insertReviewData.js
+ ┃ ┃ ┣ 📜insertReviewImage.js
+ ┃ ┃ ┣ 📜insertReviewItem.js
+ ┃ ┃ ┣ 📜insertReviewTag.js
+ ┃ ┃ ┣ 📜insertShop.js
+ ┃ ┃ ┣ 📜insertTag.js
+ ┃ ┃ ┗ 📜insertUser.js
+ ┃ ┗ 📜app.js
+ ┣ 📜.env
+ ┣ 📜.eslintrc.js
+ ┣ 📜.gitignore
+ ┣ 📜.prettierrc.js
+ ┣ 📜package-lock.json
+ ┣ 📜package.json
+ ┗ 📜README.md
 ```
 
 
