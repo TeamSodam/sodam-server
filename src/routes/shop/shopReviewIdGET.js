@@ -44,15 +44,11 @@ module.exports = async (req, res) => {
     let isLiked = false;
     let isScraped = false;
 
-    // console.log('리뷰 상세페이지 req.user', req.user);
-
     // 로그인 했으면 db에서 데이터 가져오기
     if (req.user) {
       const like = await reviewDB.getReviewLikeByUserId(client, reviewId, req.user[0].id);
-      console.log(like);
 
       const scrap = await reviewDB.getReviewScrapByUserId(client, reviewId, req.user[0].id);
-      console.log(scrap);
 
       if (like?.length !== 0) isLiked = true;
       if (scrap?.length !== 0) isScraped = true;
@@ -69,7 +65,7 @@ module.exports = async (req, res) => {
     }
 
     // item 정보, 테그 정보
-    const item = await reviewDB.getReviewItemByReviewId(client, userId);
+    const item = await reviewDB.getReviewItemByReviewId(client, reviewId);
     let tag = await reviewDB.getReviewTagByReviewId(client, reviewId);
     tag = tag.map((item) => item.name);
 
