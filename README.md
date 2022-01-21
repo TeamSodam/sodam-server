@@ -42,6 +42,7 @@
 ![https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png](https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png)
 
 ## 📕 Cloud Service
+<img alt="Amazon AWS" src ="https://img.shields.io/badge/Amazon AWS-232F3E.svg?&style=for-the-badge&logo=Amazon AWS&logoColor=white"/>
 
 - AWS EC2 - 클라우드 컴퓨팅 시스템
 - AWS RDS - 클라우드 관계형 데이터베이스
@@ -51,12 +52,16 @@
 - AWS CodeDeploy - 애플리케이션 배포를 자동화하는 배포 서비스
 
 ## 📚 사용 도구
+<img alt="Node.js" src ="https://img.shields.io/badge/Node.js-339933.svg?&style=for-the-badge&logo=Node.js&logoColor=white"/>  <img alt="Express" src ="https://img.shields.io/badge/Express-000000.svg?&style=for-the-badge&logo=Express&logoColor=white"/>
+<img alt="npm" src ="https://img.shields.io/badge/npm-CB3837.svg?&style=for-the-badge&logo=npm&logoColor=white"/>
+<img alt="PM2" src ="https://img.shields.io/badge/PM2-2B037A.svg?&style=for-the-badge&logo=PM2&logoColor=white"/>
+<img alt="PostgreSQL" src ="https://img.shields.io/badge/PostgreSQL-4169E1.svg?&style=for-the-badge&logo=PostgreSQL&logoColor=white"/>
 
 - Node.js
 - Express.js
 - NPM - 패키지 매니저
 - PM2
-- PostgresSQL
+- PostgreSQL
 
 ## 🔔 Dependencies
 
