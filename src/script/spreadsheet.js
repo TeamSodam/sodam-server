@@ -10,6 +10,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const db = require('../db/db');
 const dbConfig = require('../config/dbConfig');
+const { CommandCompleteMessage } = require('pg-protocol/dist/messages');
 
 const client = new google.auth.JWT(keys.client_email, null, keys.private_key, ['https://www.googleapis.com/auth/spreadsheets']);
 
@@ -240,7 +241,7 @@ async function gsrun(client) {
   let imageThemeLen = [cute.length, hip.length, modern.length, vintage.length];
 
   // 현재 저장될 이미지 번호
-  let imageThemeCount = [0, 0, 0, 0];
+  let imageThemeCount = [];
 
   const { rows: allShop } = await client2.query(
     `
@@ -253,7 +254,7 @@ async function gsrun(client) {
   await Promise.all(
     allShop.map(async (shop) => {
       const shopId = shop.id;
-      console.log(shopId);
+      console.log(`소품샵 id : ${shopId}`);
 
       const { rows: theme_id } = await client2.query(
         `
@@ -266,147 +267,120 @@ async function gsrun(client) {
         [shopId],
       );
 
-      const themeId = Number(theme_id[0].theme_id) - 1;
-
-      // console.log(`themeID: ${themeId}`);
-      // console.log(themeId);
-
-      // console.log(`배열: ${imageThemeCount}`);
-
+      const themeId = theme_id[0].theme_id - 1;
+      const max = 16;
+      const min = 0;
+      let n = Math.floor(Math.random() * (max - min)) + min;
+      console.log(`themeId, n = ${themeId}, ${n}`);
+      console.log(theme[themeId][n]);
       const { rows: rows1 } = await client2.query(
         `
-              INSERT INTO shop_image
-              (shop_id, image, is_preview)
-              VALUES
-              ( $1 , $2, true);
-      
-                `,
-        // 테마[현재테마][현재 저장될 이미지번호]
-        [shopId, theme[themeId][imageThemeCount[themeId]]],
-      );
-      // 환형구조: 이미지번호가 이미지 개수만큼 커지면 다시 0부터 시작
-      imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
+                  INSERT INTO shop_image
+                  (shop_id, image, is_preview)
+                  VALUES
+                  ( $1 , $2, false);
 
-      const { rows: rows2 } = await client2.query(
-        `
-              INSERT INTO shop_image
-              (shop_id, image, is_preview)
-              VALUES
-              ( $1 , $2, false);
-      
-                `,
+                    `,
         // 테마[현재테마][현재 저장될 이미지번호]
-        [shopId, theme[themeId][imageThemeCount[themeId]]],
+        [shopId, theme[themeId][n]],
       );
-      // 환형구조: 이미지번호가 이미지 개수만큼 커지면 다시 0부터 시작
-      imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
 
-      const { rows: rows3 } = await client2.query(
-        `
-              INSERT INTO shop_image
-              (shop_id, image, is_preview)
-              VALUES
-              ( $1 , $2, false);
-      
-                `,
-        // 테마[현재테마][현재 저장될 이미지번호]
-        [shopId, theme[themeId][imageThemeCount[themeId]]],
-      );
-      // 환형구조: 이미지번호가 이미지 개수만큼 커지면 다시 0부터 시작
-      imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
-
-      const { rows: rows4 } = await client2.query(
-        `
-              INSERT INTO shop_image
-              (shop_id, image, is_preview)
-              VALUES
-              ( $1 , $2, false);
-      
-                `,
-        // 테마[현재테마][현재 저장될 이미지번호]
-        [shopId, theme[themeId][imageThemeCount[themeId]]],
-      );
-      // 환형구조: 이미지번호가 이미지 개수만큼 커지면 다시 0부터 시작
-      imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
+      // const max = 16;
+      // const min = 0;
+      // const index = [0, 1, 2, 3];
+      // imageThemeCount = [];
+      // let temp = [];
+      // imageThemeCount = await Promise.all(
+      //   index.map(async (idx) => {
+      //     temp = [];
+      //     while (true) {
+      //       let n = Math.floor(Math.random() * (max - min)) + min;
+      //       // 겹치는 값이 없으면
+      //       if (temp.every((e) => e !== n)) {
+      //         temp.push(n);
+      //         // console.log(`imageThemeCount, n = [${imageThemeCount}] ${n}`);
+      //         return n;
+      //       }
+      //     }
+      //   }),
+      // );
     }),
   );
   console.log('작업 종료');
-  // // 모든 소품샵 테마 정보 가져오기
-  // const { rows: allShopTheme } = await client2.query(
-  //   `
-  //   SELECT *
-  //   FROM shop_theme
-  //   WHERE is_deleted = FALSE
-  //       ORDER BY shop_id
-
-  //     `,
-  // );
-
-  // // 대표이미지만 처리하는 코드 (사용 안 함)
-  // // 이미 처리한 적이 있는 소품샵 id인지 확인용도
-  // let beforeShopId = 0;
-  // await Promise.all(
-  //   allShopTheme.map(async (item) => {
-  //     const shopId = item.shop_id;
-  //     // 인덱스로 처리하기 때문에 -1이 붙음
-  //     let themeId = Number(item.theme_id) - 1;
-
-  //     // 방금전에 처리한 shopId와 다르다면
-  //     if (beforeShopId !== shopId) {
-  //       const { rows } = await client2.query(
-  //         `
-  //       INSERT INTO shop_image
-  //       (id, shop_id, image, is_preview)
-  //       VALUES
-  //       ( $1 , $2, $3, true);
-
-  //         `,
-  //         // 테마[현재테마][현재 저장될 이미지번호]
-  //         [shopId, shopId, theme[themeId][imageThemeCount[themeId]]],
-  //       );
-  //       // 환형구조: 이미지번호가 이미지 개수만큼 커지면 다시 0부터 시작
-  //       imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
-  //     }
-  //     beforeShopId = shopId;
-  //   }),
-  // );
-
-  // // 대표이미지 1장, 일반 이미지 3장 넣는 코드
-  // // 이미 처리한 적이 있는 소품샵 id인지 확인용도
-  // let beforeShopId = 0;
-  // await Promise.all(
-  //   allShopTheme.map(async (item) => {
-  //     const shopId = item.shop_id;
-  //     // 인덱스로 처리하기 때문에 -1이 붙음
-  //     let themeId = Number(item.theme_id) - 1;
-
-  //     imageName = [];
-  //     for (let i = 0; i < 3; i++) {
-  //       imageName.push(theme[themeId][imageThemeCount[themeId]]);
-  //       imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
-  //     }
-  //     // console.log(imageName);
-
-  //     // // 방금전에 처리한 shopId와 다르다면
-  //     if (beforeShopId !== shopId) {
-  //       await Promise.all(
-  //         imageName.map(async (image) => {
-  //           const { rows } = await client2.query(
-  //             `
-  //       INSERT INTO shop_image
-  //       (shop_id, image, is_preview)
-  //       VALUES
-  //       ( $1 , $2, false);
-
-  //         `,
-  //             // 테마[현재테마][현재 저장될 이미지번호]
-  //             [shopId, theme[themeId][imageThemeCount[themeId]]],
-  //           );
-  //         }),
-  //       );
-  //     }
-
-  //     beforeShopId = shopId;
-  //   }),
-  // );
 }
+// // 모든 소품샵 테마 정보 가져오기
+// const { rows: allShopTheme } = await client2.query(
+//   `
+//   SELECT *
+//   FROM shop_theme
+//   WHERE is_deleted = FALSE
+//       ORDER BY shop_id
+
+//     `,
+// );
+
+// // 대표이미지만 처리하는 코드 (사용 안 함)
+// // 이미 처리한 적이 있는 소품샵 id인지 확인용도
+// let beforeShopId = 0;
+// await Promise.all(
+//   allShopTheme.map(async (item) => {
+//     const shopId = item.shop_id;
+//     // 인덱스로 처리하기 때문에 -1이 붙음
+//     let themeId = Number(item.theme_id) - 1;
+
+//     // 방금전에 처리한 shopId와 다르다면
+//     if (beforeShopId !== shopId) {
+//       const { rows } = await client2.query(
+//         `
+//       INSERT INTO shop_image
+//       (id, shop_id, image, is_preview)
+//       VALUES
+//       ( $1 , $2, $3, true);
+
+//         `,
+//         // 테마[현재테마][현재 저장될 이미지번호]
+//         [shopId, shopId, theme[themeId][imageThemeCount[themeId]]],
+//       );
+//       // 환형구조: 이미지번호가 이미지 개수만큼 커지면 다시 0부터 시작
+//       imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
+//     }
+//     beforeShopId = shopId;
+//   }),
+// );
+
+// // 대표이미지 1장, 일반 이미지 3장 넣는 코드
+// // 이미 처리한 적이 있는 소품샵 id인지 확인용도
+// let beforeShopId = 0;
+// await Promise.all(
+//   allShopTheme.map(async (item) => {
+//     const shopId = item.shop_id;
+//     // 인덱스로 처리하기 때문에 -1이 붙음
+//     let themeId = Number(item.theme_id) - 1;
+
+//     imageName = [];
+//     for (let i = 0; i < 3; i++) {
+//       imageName.push(theme[themeId][imageThemeCount[themeId]]);
+//       imageThemeCount[themeId] = (imageThemeCount[themeId] + 1) % imageThemeLen[themeId];
+//     }
+//     // console.log(imageName);
+
+//     // // 방금전에 처리한 shopId와 다르다면
+//     if (beforeShopId !== shopId) {
+//       await Promise.all(
+//         imageName.map(async (image) => {
+//           const { rows } = await client2.query(
+//             `
+//       INSERT INTO shop_image
+//       (shop_id, image, is_preview)
+//       VALUES
+//       ( $1 , $2, false);
+
+//         `,
+//             // 테마[현재테마][현재 저장될 이미지번호]
+//             [shopId, theme[themeId][imageThemeCount[themeId]]],
+//           );
+//         }),
+//       );
+//     }
+
+//     beforeShopId = shopId;
