@@ -478,6 +478,7 @@ const getReviewByUserId = async (client, userId) => {
         FROM review r
         WHERE r.user_id = $1
         AND is_deleted = FALSE
+        ORDER BY r.created_at DESC
         `,
     [userId],
   );
