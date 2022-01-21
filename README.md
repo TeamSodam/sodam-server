@@ -202,18 +202,18 @@ module.exports = {
     ├── db
     │   ├── db.js
     │   ├── index.js
-		|		├── review.js
-		|		├── shop.js
-		|		├── spreadsheet.js
+    |	├── review.js
+    |	├── shop.js
+    |	├── spreadsheet.js
     │   └── user.js
     ├── lib
     │   ├── convertSnakeToCamel.js
-		|		├── convertRawDataToProcessedData.js
-		|		├── jwtHandlers.js
+    |	├── convertRawDataToProcessedData.js
+    |	├── jwtHandlers.js
     │   └── util.js
     ├── middlewares
     │   ├── auth.js
-		|		├── slackAPI.js
+    |	├── slackAPI.js
     │   └── uploadImage.js
     └── routes
 				├── index.js
