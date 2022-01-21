@@ -21,17 +21,24 @@ module.exports = async (req, res) => {
 
   // 이미지 없으면 fail
   if (imageUrls.length === 0) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_IMAGE));
+  }
+
+  // 내용 없음
+  if (!content) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_CONTENT));
   }
 
   // req.body 중 빠진 값 확인
-  if (!shopId || !shopName || !content) {
+  if (!shopId || !shopName) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
   // string을 JSON 배열로 파싱
-  const parsedItem = JSON.parse(item);
-  const parsedTag = JSON.parse(tag);
+  let parsedItem = [];
+  if (item) parsedItem = JSON.parse(item);
+  let parsedTag = [];
+  if (tag) parsedTag = JSON.parse(tag);
 
   let client;
 
@@ -47,8 +54,13 @@ module.exports = async (req, res) => {
 
     // shopId가 적절한지 확인, 아니면 fail
     const shop = await shopDB.getShopByShopId(client, shopId);
-    if (writer.length === 0) {
+    if (shop.length === 0) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));
+    }
+
+    // shopName이 적절한지 확인, 아니면 fail
+    if (shopName !== shop[0].shopName) {
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NOT_MATCH_SHOPNAME_SHOPID));
     }
 
     // DB에 리뷰 저장하고 리뷰 id를 포함한 모든 데이터 얻기
@@ -62,23 +74,29 @@ module.exports = async (req, res) => {
     });
 
     // DB에 구매한 아이템 저장
-    parsedItem.map(async (item) => {
-      const createdItem = await reviewDB.createReviewItem(client, reviewId, item.price, item.itemName);
-    });
+    if (parsedItem.length > 0) {
+      // 구매한 아이템이 있다면
+      parsedItem.map(async (item) => {
+        const createdItem = await reviewDB.createReviewItem(client, reviewId, item.price, item.itemName);
+      });
+    }
 
     // DB에 태그 저장
-    parsedTag.map(async (tagName) => {
-      // 이미 있는 태그인지 검사
-      let targetTag = await reviewDB.getTagByName(client, tagName);
+    if (parsedTag.length > 0) {
+      // 태그가 있다면
+      parsedTag.map(async (tagName) => {
+        // 이미 있는 태그인지 검사
+        let targetTag = await reviewDB.getTagByName(client, tagName);
 
-      // DB에 태그가 없다면
-      if (targetTag.length === 0) {
-        // 태그 저장하고 태그 id 얻기
-        targetTag = await reviewDB.createTag(client, tagName);
-      }
-      // 리뷰 id와 태그 id 연결
-      const createdReviewTag = await reviewDB.createReviewTag(client, reviewId, targetTag[0].id);
-    });
+        // DB에 태그가 없다면
+        if (targetTag.length === 0) {
+          // 태그 저장하고 태그 id 얻기
+          targetTag = await reviewDB.createTag(client, tagName);
+        }
+        // 리뷰 id와 태그 id 연결
+        const createdReviewTag = await reviewDB.createReviewTag(client, reviewId, targetTag[0].id);
+      });
+    }
 
     // review count 업데이트
     const updatedReviewCount = await shopDB.updateReviewCount(client, shopId, shop[0].reviewCount + 1);
