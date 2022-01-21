@@ -43,12 +43,17 @@ module.exports = async (req, res) => {
     // liked여부, scrap여부
     let isLiked = false;
     let isScraped = false;
-    // console.log('req.user', req.user);
+
+    // console.log('리뷰 상세페이지 req.user', req.user);
 
     // 로그인 했으면 db에서 데이터 가져오기
     if (req.user) {
-      const like = await reviewDB.getReviewLikeByUserId(client, reviewId, userId);
-      const scrap = await reviewDB.getReviewScrapByUserId(client, reviewId, userId);
+      const like = await reviewDB.getReviewLikeByUserId(client, reviewId, req.user[0].id);
+      console.log(like);
+
+      const scrap = await reviewDB.getReviewScrapByUserId(client, reviewId, req.user[0].id);
+      console.log(scrap);
+
       if (like?.length !== 0) isLiked = true;
       if (scrap?.length !== 0) isScraped = true;
     }

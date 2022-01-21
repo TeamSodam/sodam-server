@@ -380,7 +380,9 @@ const getReviewOrderByRecent = async (client) => {
     ON sc.category_id = c.id
     INNER JOIN "user" u
     ON u.id = r.user_id
+    WHERE r.is_deleted = false
     ORDER BY r.created_at DESC
+    
     limit 15
     `,
   );
