@@ -100,6 +100,7 @@ const getBookmarkedShopIdByUserIdAndArea = async (client, area, userId) => {
             WHERE s.area = $1
                 AND sb.user_id = $2
                 AND s.is_deleted = FALSE
+                AND sb.is_deleted = FALSE
             `,
     [area, userId],
   );
