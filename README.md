@@ -31,6 +31,12 @@
     → 다녀온 소품샵 후기 기록 ⇒ 내가 작성한 리뷰
     → 다른 유저들의 소품샵 후기 스크랩 ⇒ 스크랩한 리뷰
 
+## 👨‍👩‍👦 역할 분담
+
+![리드미에 올릴것](https://user-images.githubusercontent.com/65010481/150528566-310f46b9-1a47-4f09-9af5-009e496c2f77.png)
+
+</br>
+
 ## ✏️ DB ERD
 
 ![https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png](https://user-images.githubusercontent.com/81923229/148952075-b8fbce5c-ea3f-498c-ba9b-b97e1a918337.png)
@@ -254,6 +260,4 @@ module.exports = {
 				└── 
 ```
 
-## 👨‍👩‍👦 팀별 역할 분담
 
-[제목 없음](https://www.notion.so/00afe7c60d1e4a9bb3f1527d56659ce7)
