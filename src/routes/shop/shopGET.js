@@ -84,15 +84,21 @@ module.exports = async (req, res) => {
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_AREA_SUCCESS, responseData));
     }
     if (theme) {
-      const themeArr = await shopDB.getShopByTheme(client, theme, sort, pageOffset, pageLimit);
-      responseData = duplicatedDataClean(themeArr, 'shopId', 'category');
+      responseData = await shopDB.getShopByTheme(client, theme, sort, pageOffset, pageLimit);
+      // responseData = duplicatedDataClean(themeArr, 'shopId', 'category');
       // console.log('responseData',responseData);
       const imagePromise = responseData.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
 
+      const categoryPromise = responseData.map((item) => {
+        const shopId = item.shopId;
+        return shopDB.getCategoryAndIdByShopId(client, shopId);
+      });
+
       const previewImageObj = {};
+      const categoryObj = {};
       // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
       await Promise.allSettled(imagePromise).then((image) => {
         image.map((result) => {
@@ -104,12 +110,27 @@ module.exports = async (req, res) => {
           }
         });
       });
+      await Promise.allSettled(categoryPromise).then((shop) => {
+        shop.map((result) => {
+          if (result.status === 'fulfilled') {
+            if (result.value.length >= 1) {
+              const newData = result.value.map((o) => o.name);
+              categoryObj[Number(result.value[0]?.shopId)] = newData;
+              return newData;
+            }
+          }
+        });
+      });
       responseData.map((item) => {
         if (previewImageObj[item.shopId]) {
           item.image = [previewImageObj[item.shopId].image];
+          item.category = [categoryObj[item.shopId]];
         }
         if (!item.image) {
           item.image = null;
+        }
+        if (!item.category) {
+          item.category = null;
         }
       });
 

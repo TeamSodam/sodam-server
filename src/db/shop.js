@@ -59,19 +59,14 @@ const getShopByTheme = async (client, theme, sort, offset, limit) => {
 
   const { rows } = await client.query(
     `
-          SELECT s.id as shop_id, s.shop_name, c.name as category
+          SELECT s.id as shop_id, s.shop_name
           FROM shop s 
-          INNER JOIN shop_category sc
-          ON s.id = sc.shop_id
-          INNER JOIN category c
-          ON sc.category_id = c.id
           INNER JOIN shop_theme st
           ON s.id = st.shop_id
           INNER JOIN theme t
           ON st.theme_id = t.id
           WHERE t.name = $1
               AND s.is_deleted = FALSE
-              AND sc.is_deleted = FALSE
               AND st.is_deleted = FALSE
           ${sortQuery}
           OFFSET ${offset} LIMIT ${limit}
@@ -115,6 +110,21 @@ const getCategoryByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
     SELECT "name"
+    FROM shop_category c
+    JOIN category t
+    ON c.category_id = t.id
+    WHERE c.shop_id = $1
+        AND c.is_deleted = FALSE
+          `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getCategoryAndIdByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+    SELECT t.name, c.shop_id
     FROM shop_category c
     JOIN category t
     ON c.category_id = t.id
@@ -420,4 +430,5 @@ module.exports = {
   updateBookmarkCountByShopId,
   updateReviewCount,
   getShopBookmarkByCounts,
+  getCategoryAndIdByShopId,
 };
