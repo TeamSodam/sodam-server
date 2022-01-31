@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
 
 const getImage = async (shopId) => {
   const browser = await puppeteer.launch(); // headless 브라우저 실행
@@ -10,63 +11,57 @@ const getImage = async (shopId) => {
   });
 
   await page.waitForSelector('._3TiO6', { visible: true });
-  const imageResponse = await page.evaluate(() => document.querySelector('._3TiO6').outerHTML);
-  console.log('>>>>>>>>>>>>>>>>>>>imageResponse', imageResponse);
+  const content = await page.content();
+  const $ = cheerio.load(content);
+  const $img = $('img');
+  const imgSources = [];
+  $img.each((_, elem) => {
+    imgSources.push(elem.attribs.src);
+  });
+
+  return imgSources;
+};
+
+const getShopIdFromUrl = (url) => {
+  const splitUrl = url.split('/');
+  const paramAndQuery = splitUrl[splitUrl.length - 1].split('?');
+  const shopId = paramAndQuery[0];
+  return shopId;
 };
 
 const ExecuteCrawling = async (keyword) => {
-  // 임시로 브라우저 작동 과정 봄
-  const browser = await puppeteer.launch(); // headless 브라우저 실행
+  // 임시로 브라우저 작동 과정 보기 위해 headless 꺼둠
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage(); // 새로운 페이지 열기
   await page.setJavaScriptEnabled(true);
   await page.goto(`https://map.naver.com/v5/search/${keyword}?c=14137173.7122868,4521234.4977928,15,0,0,0,dh`, { waitUntil: 'networkidle0' });
 
+  //   console.log(page);
   const frameUrl = await page.frames()[0]._url;
-  const splitUrl = frameUrl.split('/');
-  const paramAndQuery = splitUrl[splitUrl.length - 1].split('?');
-  const shopId = paramAndQuery[0];
+  const shopId = getShopIdFromUrl(frameUrl);
+  //   console.log('>>>>>>shopId', shopId);
+  if (typeof shopId === 'number') {
+    const imageArray = await getImage(shopId);
+    // console.log('&&&&&&&&&&&&&&UimageArray', imageArray);
+  } else {
+    // 리스트 요소 중 첫번째를 클릭한 이후 shopId에 해당하는 돔 찾기
+    const elementHandle = await page.$('#searchIframe');
+    const searchResultFrame = await elementHandle.contentFrame();
+    await searchResultFrame.click('a._3LMxZ:first-child');
 
-  const imageArray = getImage(shopId);
+    await page.waitForSelector('#entryIframe', { visible: true });
 
-  //   await page.waitForSelector('._ngcontent-ucw-c135', { visible: true });
-  //   const response = await page.evaluate(() => document.querySelector('._1Y6hi').outerHTML);
-  //   console.log('>>>>>>>>>>>>>>>>>>>response', response);
+    const entryIframe = await page.$('#entryIframe');
+    const shopInfoIframe = await entryIframe.contentFrame();
+    const shopInfoIframeUrl = shopInfoIframe._frameManager._mainFrame._url;
+    const newShopId = getShopIdFromUrl(shopInfoIframeUrl);
+    // console.log('>>>>>>>>>newShopId', newShopId);
+    const imageArray = await getImage(newShopId);
+    // console.log('&&&&&&&&&&&&&&UimageArray', imageArray);
+  }
 
-  //   console.log(a);
-  //   const url = await page.url();
-  //   const chain = response.request().redirectChain();
-  //   console.log('>>>>>>chain.length', chain.length);
-  //   console.log('*************chain[0].url()', chain);
-  //   console.log('))))))url', url);
-  //   const a = await page.goto(`https://map.naver.com/v5/search/${keyword}?c=14137173.7122868,4521234.4977928,15,0,0,0,dh`, { waitUntil: 'domcontentloaded', timeout: 0 });
-  //   const result = await response.text();
-  //   console.log(result);
-
-  // 키워드 입력
-  //   await page.type('input.input_search', keyword);
-  // 키워드 검색
-  //   await page.type('input.input_search', String.fromCharCode(13));
-
-  //   await page.waitForNavigation();
-
-  //story1
-  //   await page.click('._1Az1K > ul > li:nth-child(1)');
-
-  //story2
-  //     await page.waitForSelector(`div._2MDmw`);
-  //     await page.click(`div._2MDmw:nth-child(4)`);
-  //   await page.click('div.place_detail_wrapper > div.place_fixed_maintab > div._1XNy0 > div.XirMe > div > div._2MDmw:nth-child(4)');
-
-  //페이지 로딩 후 evaluate() 함수는 javascript 코드를 DOM 컨텍스트에서 실행 가능하게 하고 변수 전달도 가능하다
-  //   const allData = await page.evaluate(() => {
-  //     // const scrappedData = [];
-  //     const placeChilds = document.querySelector('.place_didmount');
-  //     console.log('&&&&placeChilds', placeChilds);
-  //     return placeChilds;
-  //   });
-  //   console.log('allData!>>>>', allData);
   // 모든 스크래핑 작업을 마치고 브라우저 닫기
-  //   await browser.close();
+  await browser.close();
 };
 
-ExecuteCrawling('원모어백');
+ExecuteCrawling('공작새');
