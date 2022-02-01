@@ -115,14 +115,14 @@ const insertShopImageDataToDb = async (shopImgObj, client) => {
       isPreview = false;
     }
 
-    const shopImg = shopImgObj.img[i];
+    const shopImg = shopImgObj.img[i].replace('type=f180_180', 'type=w750');
     const shopImgInfo = await shopDB.insertShopImage(client, shopId, shopImg, isPreview);
     console.log('insert return value', shopImgInfo);
     const shopImageArr = [
       {
         shopId: shopImgInfo[0].shopId,
         shopName: shopImgObj.shopName,
-        image: shopImgInfo[0].image,
+        image: shopImg,
         isPreview,
       },
     ];
@@ -152,6 +152,7 @@ const connectWithDb = async () => {
     });
 
     const shopImageArr = [];
+    const shopRejectedArr = [];
     await Promise.allSettled(imagePromiseList).then((image) => {
       image.map((result) => {
         if (result.status === 'fulfilled') {
