@@ -408,6 +408,58 @@ const updateReviewCount = async (client, shopId, reviewCount) => {
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
+
+const getAllShopNameAndShopId = async (client) => {
+  const { rows } = await client.query(
+    `
+      SELECT s.id as shop_id, s.shop_name 
+      FROM shop s
+      ORDER BY s.id ASC
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const insertShopImage = async (client, shopId, image, isPreview) => {
+  const { rows: existingRows } = await client.query(
+    `
+          SELECT *
+          FROM image_test_table it
+          WHERE it.shop_id = $1
+              AND it.image= $2
+              AND it.is_preview= $3
+              AND it.is_deleted= FALSE
+          `,
+    [shopId, image, isPreview],
+  );
+  if (existingRows.length === 0) {
+    console.log('>>> making new');
+    const { rows } = await client.query(
+      `
+      INSERT INTO image_test_table
+      (shop_id, image, is_preview)
+      VALUES
+      ($1, $2, $3  )
+      RETURNING *
+      `,
+      [shopId, image, isPreview],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  } else {
+    console.log('>>> updating');
+    const { rows } = await client.query(
+      `
+      UPDATE image_test_table
+      SET is_preview = $3
+      WHERE shop_id = $1
+        AND image = $2
+      RETURNING *
+      `,
+      [shopId, image, isPreview],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  }
+};
 module.exports = {
   getReviewCountByShopId,
   getShopCounts,
@@ -432,4 +484,6 @@ module.exports = {
   updateReviewCount,
   getShopBookmarkByCounts,
   getCategoryAndIdByShopId,
+  getAllShopNameAndShopId,
+  insertShopImage,
 };
