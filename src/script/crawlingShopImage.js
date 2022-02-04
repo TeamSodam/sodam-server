@@ -154,10 +154,10 @@ const insertShopImageDataToDb = async (shopImgObj, client) => {
 };
 
 // TODO 전역변수 지양하는 방식으로 수정
-const shopImageArr = [];
+let shopImageArr = [];
 let shopRejectedArr = [];
 const shopImageJson = {};
-const shopRejectedArrLength = [];
+let shopRejectedArrLength = [];
 let currentIdx = 0;
 const unPackedImagePromise = async (imagePromiseList) => {
   await Promise.allSettled(imagePromiseList).then((image) => {
@@ -204,6 +204,14 @@ const unPackedImagePromise = async (imagePromiseList) => {
   }
 };
 
+const waitOneMin = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 60000);
+  });
+};
+
 const connectWithDb = async () => {
   let client;
   // 1. shopId와 shopName 가져오기
@@ -211,27 +219,58 @@ const connectWithDb = async () => {
     client = await db.connect();
     const shopInfo = await shopDB.getAllShopNameAndShopId(client);
 
-    // 비동기적 로직 => 요청수 제한으로 인해 rejected가 많음. 재귀함수로 rejected요청 없을 때까지 돌리기
-    const imagePromiseList = shopInfo.map((item) => {
-      let keyword;
-      if (item.landAddress) {
-        const splitAddress = item.landAddress.split(' ');
-        keyword = splitAddress[1] + ' ' + splitAddress[2] + ' ' + item.shopName;
-      } else {
-        keyword = item.area + ' ' + item.shopName;
-      }
-      return ExecuteCrawling(keyword, item.shopId);
-    });
+    // 50개씩 끊어서 실행시킬 것ㅣㅁ
+    let shopInfoArrLength = shopInfo.length / 50;
+    if (shopInfo.length % 50 !== 0) {
+      shopInfoArrLength += 1;
+    }
 
-    // 재귀적으로 프로미스 다룰 함수
-    const resultArr = await unPackedImagePromise(imagePromiseList);
+    let index = 0;
+    const newSyncArr = [];
+
+    for (let i = 0; i < shopInfoArrLength; i++) {
+      if (i !== shopInfoArrLength - 1) {
+        newSyncArr.push([...shopInfo].slice(index, index + 50));
+      } else {
+        newSyncArr.push([...shopInfo].slice(index));
+        break;
+      }
+      index += 50;
+    }
 
     const shopImageJson = {};
-    for (const shopData of resultArr) {
-      const isInsertSuccess = await insertShopImageDataToDb(shopData, client);
-      console.log('isInsertSuccess?', isInsertSuccess);
-      shopImageJson[shopData.shopId] = shopData;
+    //50 단위로 동기적 로직, 그 내부는 비동기적 로직
+    for (const shopInfoArr of newSyncArr) {
+      // 비동기적 로직 => 요청수 제한으로 인해 rejected가 많음. 재귀함수로 rejected요청 없을 때까지 돌리기
+      const imagePromiseList = shopInfoArr.map((item) => {
+        let keyword;
+        if (item.landAddress) {
+          const splitAddress = item.landAddress.split(' ');
+          keyword = splitAddress[1] + ' ' + splitAddress[2] + ' ' + item.shopName;
+        } else {
+          keyword = item.area + ' ' + item.shopName;
+        }
+        return ExecuteCrawling(keyword, item.shopId);
+      });
+
+      // 재귀적으로 프로미스 다룰 함수
+      const resultArr = await unPackedImagePromise(imagePromiseList);
+
+      for (const shopData of resultArr) {
+        const isInsertSuccess = await insertShopImageDataToDb(shopData, client);
+        console.log('isInsertSuccess?', isInsertSuccess);
+        shopImageJson[shopData.shopId] = shopData;
+      }
+      csvWriter2.writeRecords(shopRejectedArr).then(() => console.log('[SUCCESS] rejected image CSV file was written successfully'));
+      shopImageArr = [];
+      shopRejectedArr = [];
+      shopRejectedArrLength = [];
+      currentIdx = 0;
+
+      // 1분 쉬었다가 다음 비동기적 로직 실행
+      await waitOneMin();
     }
+
     // 디버깅을 위해 json파일로 데이터 저장
     fs.writeFile('shopImg4.json', JSON.stringify(shopImageJson), (err) => {
       if (err) {
@@ -241,8 +280,6 @@ const connectWithDb = async () => {
       }
     });
     console.log('[&&&&&&&] 최종적으로 결과값 없는 소품샵', shopRejectedArr);
-
-    csvWriter2.writeRecords(shopRejectedArr).then(() => console.log('[SUCCESS] rejected image CSV file was written successfully'));
   } catch (err) {
     console.log('err', err);
   } finally {
