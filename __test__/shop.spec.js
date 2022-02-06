@@ -94,3 +94,110 @@ describe('[GET] /shop?area={}&sort={}', () => {
       });
   });
 });
+
+describe('[GET] /shop?theme={}&sort={}&offset={}&limit={}', () => {
+  it('[GET] 테마별 소품샵 : 인기순 정렬 - offset, limit 없음', (done) => {
+    chai
+      .request(url)
+      .get('/shop')
+      .query({ theme: '빈티지', sort: 'popular' })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('테마별 소품샵 가져오기 성공');
+        expect(res.body).be.a('object');
+        expect(res.body.data).be.a('array');
+        expect(res.body.data).to.have.lengthOf(20);
+        expect(res.body.data[0].shopId).be.a('number');
+        expect(res.body.data[0].shopName).be.a('string');
+        expect(res.body.data[0].category).be.a('array');
+        expect(res.body.data[0].image).be.a('array');
+        expect(res.body.data[0]).to.have.all.keys('shopId', 'shopName', 'category', 'image');
+        done();
+      });
+  });
+
+  it('[GET] 테마별 소품샵 : 인기순 정렬 - offset 1, limit 10', (done) => {
+    chai
+      .request(url)
+      .get('/shop')
+      .query({ theme: '아기자기한', sort: 'popular', offset: 2, limit: 10 })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('테마별 소품샵 가져오기 성공');
+        expect(res.body).be.a('object');
+        expect(res.body.data).be.a('array');
+        expect(res.body.data).to.have.lengthOf(10);
+        expect(res.body.data[0].shopId).be.a('number');
+        expect(res.body.data[0].shopName).be.a('string');
+        expect(res.body.data[0].category).be.a('array');
+        expect(res.body.data[0].image).be.a('array');
+        expect(res.body.data[0]).to.have.all.keys('shopId', 'shopName', 'category', 'image');
+        done();
+      });
+  });
+
+  it('[GET] 테마별 소품샵 : 리뷰순 정렬 - offset, limit 없음', (done) => {
+    chai
+      .request(url)
+      .get('/shop')
+      .query({ theme: '힙한', sort: 'review' })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('테마별 소품샵 가져오기 성공');
+        expect(res.body).be.a('object');
+        expect(res.body.data).be.a('array');
+        expect(res.body.data).to.have.lengthOf(20);
+        expect(res.body.data[0].shopId).be.a('number');
+        expect(res.body.data[0].shopName).be.a('string');
+        expect(res.body.data[0].category).be.a('array');
+        expect(res.body.data[0].image).be.a('array');
+        expect(res.body.data[0]).to.have.all.keys('shopId', 'shopName', 'category', 'image');
+        done();
+      });
+  });
+
+  it('[GET] 테마별 소품샵 : 리뷰순 정렬 - offset = 2, limit = 10 ', (done) => {
+    chai
+      .request(url)
+      .get('/shop')
+      .query({ theme: '모던한', sort: 'review', offset: 1, limit: 30 })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('테마별 소품샵 가져오기 성공');
+        expect(res.body).be.a('object');
+        expect(res.body.data).be.a('array');
+        expect(res.body.data).to.have.lengthOf(30);
+        expect(res.body.data[0].shopId).be.a('number');
+        expect(res.body.data[0].shopName).be.a('string');
+        expect(res.body.data[0].category).be.a('array');
+        expect(res.body.data[0].image).be.a('array');
+        expect(res.body.data[0]).to.have.all.keys('shopId', 'shopName', 'category', 'image');
+        done();
+      });
+  });
+
+  it('[GET] 테마별 소품샵 : theme 쿼리가 없을 때', (done) => {
+    chai
+      .request(url)
+      .get('/shop')
+      .query({ sort: 'review' })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.body).to.deep.equal({
+          status: 400,
+          success: false,
+          message: '필요한 값이 없습니다',
+        });
+        done();
+      });
+  });
+});
