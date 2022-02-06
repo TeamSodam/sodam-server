@@ -119,3 +119,115 @@ describe('[POST] /review/:reviewId/like', () => {
       });
   });
 });
+
+describe('[POST] /review/:reviewId/scrap', () => {
+  it('[POST] 리뷰 스크랩', (done) => {
+    chai
+      .request(url)
+      .post('/review/1/scrap')
+      .set('accesstoken', process.env.TEST_TOKEN)
+      .send({ isScraped: true })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('리뷰 스크랩 성공');
+        expect(res.body.data).be.a('object');
+        expect(res.body.data.isScraped).be.a('boolean');
+        expect(res.body.data.scrapCount).be.a('number');
+        expect(res.body.data).to.have.all.keys('isScraped', 'scrapCount');
+        expect(res.body.data.isScraped).to.deep.equal(true);
+        done();
+      });
+  });
+
+  it('[POST] 리뷰 스크랩 취소', (done) => {
+    chai
+      .request(url)
+      .post('/review/1/scrap')
+      .set('accesstoken', process.env.TEST_TOKEN)
+      .send({ isScraped: false })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('리뷰 스크랩 성공');
+        expect(res.body.data).be.a('object');
+        expect(res.body.data.isScraped).be.a('boolean');
+        expect(res.body.data.scrapCount).be.a('number');
+        expect(res.body.data).to.have.all.keys('isScraped', 'scrapCount');
+        expect(res.body.data.isScraped).to.deep.equal(false);
+        done();
+      });
+  });
+
+  it('[POST] 리뷰 스크랩 - 로그인 되어있지 않을 때', (done) => {
+    chai
+      .request(url)
+      .post('/review/1/scrap')
+      .send({ isScraped: false })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(401);
+        expect(res.body).to.deep.equal({
+          status: 401,
+          success: false,
+          message: '로그인이 필요한 서비스 입니다.',
+        });
+        done();
+      });
+  });
+
+  it('[POST] 리뷰 스크랩 - body에 이상한 값이 들어있을 때', (done) => {
+    chai
+      .request(url)
+      .post('/review/1/scrap')
+      .set('accesstoken', process.env.TEST_TOKEN)
+      .send({ isScraped: '문자열' })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.body).to.deep.equal({
+          status: 400,
+          success: false,
+          message: '파라미터 값이 잘못되었습니다',
+        });
+        done();
+      });
+  });
+
+  it('[POST] 리뷰 스크랩 - reviewId에 이상한 값이 들어갔을 때', (done) => {
+    chai
+      .request(url)
+      .post('/review/blabla/scrap')
+      .set('accesstoken', process.env.TEST_TOKEN)
+      .send({ isScraped: true })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.body).to.deep.equal({
+          status: 400,
+          success: false,
+          message: '파라미터 값이 잘못되었습니다',
+        });
+        done();
+      });
+  });
+
+  it('[POST] 리뷰 스크랩 - 필요한 값이 없을 때', (done) => {
+    chai
+      .request(url)
+      .post('/review/1/scrap')
+      .send({})
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.body).to.deep.equal({
+          status: 400,
+          success: false,
+          message: '필요한 값이 없습니다',
+        });
+        done();
+      });
+  });
+});
