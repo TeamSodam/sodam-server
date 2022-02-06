@@ -13,7 +13,11 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
-  if (typeof isScraped === 'string') {
+  if (!util.checkIsNum(reviewId)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
+  if (typeof isLiked === 'string') {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
   }
 
@@ -28,20 +32,22 @@ module.exports = async (req, res) => {
       const userId = req.user[0].id;
       const isDeletedBefore = await reviewDB.getCurrentLikeStatusByReviewIdAndUserId(client, reviewId, userId); //true -> 좋아요 안돼있음, false-> 좋아요 눌려있음
 
+      // 처음으로 isLiked요청을 보낸 경우
       if (isDeletedBefore.length === 0) {
         const isDeleted = await reviewDB.postReviewLikeByReviewId(client, userId, reviewId, isLiked);
-        // 좋아요가 true인 경우
+        // isLiked가 true인 경우
         if (!isDeleted[0].isDeleted) {
           const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount + 1);
           responseData['isLiked'] = !isDeleted[0].isDeleted;
           responseData['likeCount'] = updateLikeCount[0].likeCount;
         }
-        // 좋아요가 false인 경우
+        // isLiked가 false인 경우
         else {
           const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount - 1);
           responseData['isLiked'] = !isDeleted;
           responseData['likeCount'] = updateLikeCount[0].likeCount;
         }
+        // 이미 보냈던 isLiked 오청이 있는 경우
       } else {
         if (isLiked === !isDeletedBefore[0].isDeleted) {
           // 지금 받은 isLiked상태가 기존과 같은 경우
@@ -50,13 +56,13 @@ module.exports = async (req, res) => {
           return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.REVIEW_LIKE_POST_SUCCESS, responseData));
         } else {
           const isDeleted = await reviewDB.postReviewLikeByReviewId(client, userId, reviewId, isLiked);
-          // 좋아요가 true인 경우
+          // isLiked가 true인 경우
           if (!isDeleted[0].isDeleted) {
             const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount + 1);
             responseData['isLiked'] = !isDeleted[0].isDeleted;
             responseData['likeCount'] = updateLikeCount[0].likeCount;
           }
-          // 좋아요가 false인 경우
+          // isLiked가 false인 경우
           else {
             const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount - 1);
             responseData['isLiked'] = !isDeleted[0].isDeleted;
