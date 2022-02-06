@@ -12,6 +12,13 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
+  if (!util.checkIsNum(shopId)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+  if (!util.checkIsNum(reviewId)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
   let client;
 
   try {
@@ -20,7 +27,7 @@ module.exports = async (req, res) => {
     // 소품샵 기본정보
     const shop = await shopDB.getShopByShopId(client, shopId);
     if (shop.length === 0) {
-      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
     }
     const { shopId: id, shopName } = shop[0];
 
@@ -31,7 +38,7 @@ module.exports = async (req, res) => {
     // 리뷰 정보
     let review = await reviewDB.getReviewByReviewId(client, reviewId);
     if (review.length === 0) {
-      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_REVIEW));
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
     }
 
     const { shopId: reviewShopId, userId, date, likeCount, scrapCount, content } = review[0];
@@ -47,7 +54,6 @@ module.exports = async (req, res) => {
     // 로그인 했으면 db에서 데이터 가져오기
     if (req.user) {
       const like = await reviewDB.getReviewLikeByUserId(client, reviewId, req.user[0].id);
-
       const scrap = await reviewDB.getReviewScrapByUserId(client, reviewId, req.user[0].id);
 
       if (like?.length !== 0) isLiked = true;
@@ -71,7 +77,7 @@ module.exports = async (req, res) => {
 
     // 데이터 합치기
     const result = {
-      shopId,
+      shopId: Number(shopId),
       shopName,
       category,
       reviewId: Number(reviewId),
