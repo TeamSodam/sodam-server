@@ -3,6 +3,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
 chai.use(chaiHttp);
+const dotenv = require('dotenv');
+dotenv.config();
 
 const url = 'http://localhost:8080';
 
@@ -11,10 +13,7 @@ describe('[GET] /shop/:shopId/review/:reviewId', () => {
     chai
       .request(url)
       .get('/shop/4/review/4')
-      .set(
-        'accesstoken',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdrc2RrZHVzQGdtYWlsLmNvbSIsIm5hbWUiOiLtlZzslYTsl7AiLCJwYXNzd29yZCI6ImRrZHVzMTMiLCJpYXQiOjE2NDI1NTI0NTEsImV4cCI6MTY0NTE0NDQ1MSwiaXNzIjoic29kYW0ifQ.CoFy_hWBksu54L1d_M4sSRWQS93MrUBVkAHLEKOO4_I',
-      )
+      .set('accesstoken', process.env.TEST_TOKEN)
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
