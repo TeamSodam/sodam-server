@@ -8,18 +8,22 @@ const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
   //sort쿼리 save, recent, review
-  const { sort, offset, limit } = req.query;
+  const { sort: sortQuery, offset, limit } = req.query;
+  let pageOffset = Number((offset - 1) * limit);
+  let pageLimit = limit;
+  let sort = sortQuery;
 
-  // offset, limit 설정
-  let pageOffset = 0;
-  let pageLimit = 20;
-
-  if (offset) {
-    pageOffset = Number((offset - 1) * limit);
+  // offset, limit, sortQuery 값이 없을 때 디폴트 설정
+  if (!offset) {
+    pageOffset = 0;
   }
 
-  if (limit) {
-    pageLimit = limit;
+  if (!limit) {
+    pageLimit = 20;
+  }
+
+  if (!sort) {
+    sort = 'save';
   }
 
   let client;
@@ -28,18 +32,25 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     // 로그인 되어있는 경우
     if (req.user) {
-      const savedShopList = await shopDB.getSavedShopList(client, sort, req.user[0].id, pageOffset, pageLimit);
-      let responseData = duplicatedDataClean(savedShopList, 'shopId', 'category');
+      let responseData = await shopDB.getSavedShopList(client, sort, req.user[0].id, pageOffset, pageLimit);
+
+      // 저장한 소품샵이 없는 경우
       if (responseData.length === 0) {
-        responseData = [];
-        return res.status(statusCode.NOT_FOUND).send(util.fail(statusCode.NOT_FOUND, responseMessage.SAVED_SHOP_EMPTY, responseData));
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SAVED_SHOP_EMPTY, responseData));
       }
+
+      // 카테고리, 이미지는 promise배열을 받고, promise api를 통해 풀어서 최종 데이터에 붙이기
+      const categoryPromise = responseData.map((item) => {
+        const shopId = item.shopId;
+        return shopDB.getCategoryAndIdByShopId(client, shopId);
+      });
       const imagePromise = responseData.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
       const previewImageObj = {};
-      // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
+      const categoryObj = {};
+
       await Promise.allSettled(imagePromise).then((image) => {
         image.map((result) => {
           if (result.status === 'fulfilled') {
@@ -50,12 +61,28 @@ module.exports = async (req, res) => {
           }
         });
       });
+      await Promise.allSettled(categoryPromise).then((shop) => {
+        shop.map((result) => {
+          if (result.status === 'fulfilled') {
+            if (result.value.length >= 1) {
+              const newData = result.value.map((o) => o.name);
+              categoryObj[Number(result.value[0]?.shopId)] = newData;
+              return newData;
+            }
+          }
+        });
+      });
+
       responseData.map((item) => {
         if (previewImageObj[item.shopId]) {
           item.image = [previewImageObj[item.shopId].image];
+          item.category = [categoryObj[item.shopId]];
         }
         if (!item.image) {
           item.image = null;
+        }
+        if (!item.category) {
+          item.category = null;
         }
       });
 
