@@ -20,6 +20,7 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     const numArr = [];
     const num = await shopDB.getShopCounts(client);
+    // console.log(num);
     if (type === 'random') {
       //랜덤 숫자 20개 골라서 getShopById 이용해서 정보 불러오기
       for (i = 0; i < 20; i++) {
@@ -28,7 +29,9 @@ module.exports = async (req, res) => {
       }
       shopArr = await Promise.all(
         numArr.map(async (value) => {
-          let shop = await shopDB.getShopByShopId(client, value);
+          const shop = await shopDB.getShopByShopId(client, value);
+          const shopId = shop[0].shopId;
+          const shopName = shop[0].shopName;
           if (shop.length === 0) {
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));
           }
@@ -42,9 +45,9 @@ module.exports = async (req, res) => {
           image = image.map((item) => item.image);
 
           const result = {
-            ...shop[0],
+            shopId,
+            shopName,
             category,
-            theme,
             image,
           };
           return result;
