@@ -18,13 +18,12 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
-    const num = await shopDB.getShopCounts(client);
-    // console.log(num);
+    const shopCount = await shopDB.getShopCounts(client);
     const numArr = [];
 
     let selectRandom = (range) =>{
       for (i = 0; i < range; i++) {
-        randomNum = Math.floor(Math.random() * num[0].count);
+        randomNum = Math.floor(Math.random() * shopCount[0].count);
         numArr.push(randomNum);
       }
       return numArr;
@@ -33,54 +32,36 @@ module.exports = async (req, res) => {
     if (type === 'random') {
       shopArr = await Promise.all(
         selectRandom(20).map(async (value) => {
-          const shop = await shopDB.getShopByShopId(client, value);
-          const shopId = shop[0].shopId;
-          const shopName = shop[0].shopName;
-          if (shop.length === 0) {
-            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));
-          }
-          let category = await shopDB.getCategoryByShopId(client, value);
-          let theme = await shopDB.getThemeByShopId(client, value);
-          let image = await shopDB.getImageByShopId(client, value);
-
-          category = category.map((item) => item.name);
-          theme = theme.map((item) => item.name);
-          image = image.map((item) => item.image);
-
-          const result = {
-            shopId,
-            shopName,
-            category,
-            image,
-          };
-          return result;
+            const shop = await shopDB.getShopByShopId(client, value);
+            if (shop.length === 0) {
+              return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));
+            }
+            const shopId = shop[0].shopId;
+            const shopName = shop[0].shopName;
+            
+            let category = await shopDB.getCategoryByShopId(client, value);
+            let image = await shopDB.getPreviewImageByShopId(client, value);
+            
+            category = category.map((item) => item.name);
+            image = image.map((item) => item.image);
+            
+            const result = {
+              shopId,
+              shopName,
+              category,
+              image,
+            };
+            return result;
         }),
       );
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, shopArr));
     } else if (type === 'popular') {
-      const rankList = await shopDB.getShopBookmarkByCounts(client);
+      const rankList = await shopDB.getShopByBookmarkCounts(client,20);
       let responseRankData = duplicatedDataClean(rankList, 'shopId', 'category');
       const imagePromise = responseRankData.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
-
-      // // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
-      // Promise.allSettled(imagePromise).then((image) => {
-      //   image.forEach((result) => {
-      //     if (result.status === 'fulfilled') {
-      //       console.log('성공함');
-      //     } else if (result.status === 'rejected') {
-      //       //     console.log('리젝티드됨');
-      //     }
-      //   });
-      // });
-
-      // responseRankData.map((item) => {
-      //   if (!item.image) {
-      //     item.image = null;
-      //   }
-      // });
 
       const previewImageObj = {};
       // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
