@@ -56,15 +56,15 @@ module.exports = async (req, res) => {
       );
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, shopArr));
     } else if (type === 'popular') {
-      const rankList = await shopDB.getShopByBookmarkCounts(client,20);
-      let responseRankData = duplicatedDataClean(rankList, 'shopId', 'category');
-      const imagePromise = responseRankData.map((item) => {
+      shopArr = await shopDB.getShopByBookmarkCounts(client,20);
+      shopArr = duplicatedDataClean(shopArr, 'shopId', 'category');
+
+      const imagePromise = shopArr.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
 
       const previewImageObj = {};
-      // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
       await Promise.allSettled(imagePromise).then((image) => {
         image.map((result) => {
           if (result.status === 'fulfilled') {
@@ -75,7 +75,8 @@ module.exports = async (req, res) => {
           }
         });
       });
-      responseRankData.map((item) => {
+
+      shopArr.map((item) => {
         if (previewImageObj[item.shopId]) {
           item.image = previewImageObj[item.shopId].image;
         }
@@ -84,9 +85,8 @@ module.exports = async (req, res) => {
         }
       });
 
-      responseData = duplicatedDataClean(responseRankData, 'shopId', 'image');
-      console.log(responseData);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, responseData));
+      shopArr = duplicatedDataClean(shopArr, 'shopId', 'image');
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, shopArr));
     }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
