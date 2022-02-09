@@ -18,24 +18,27 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
-    const numArr = [];
     const num = await shopDB.getShopCounts(client);
     // console.log(num);
-    if (type === 'random') {
-      //랜덤 숫자 20개 골라서 getShopById 이용해서 정보 불러오기
-      for (i = 0; i < 20; i++) {
+    const numArr = [];
+
+    let selectRandom = (range) =>{
+      for (i = 0; i < range; i++) {
         randomNum = Math.floor(Math.random() * num[0].count);
         numArr.push(randomNum);
       }
+      return numArr;
+    }
+
+    if (type === 'random') {
       shopArr = await Promise.all(
-        numArr.map(async (value) => {
+        selectRandom(20).map(async (value) => {
           const shop = await shopDB.getShopByShopId(client, value);
           const shopId = shop[0].shopId;
           const shopName = shop[0].shopName;
           if (shop.length === 0) {
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));
           }
-
           let category = await shopDB.getCategoryByShopId(client, value);
           let theme = await shopDB.getThemeByShopId(client, value);
           let image = await shopDB.getImageByShopId(client, value);
