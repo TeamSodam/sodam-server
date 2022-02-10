@@ -8,14 +8,14 @@ const router = require('../user');
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
-  const { type } = req.query;
-
-  if (!type) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
-  }
   let client;
   let shopArr = [];
 
+  const { type } = req.query;
+  if (!type) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+  }
+  
   try {
     client = await db.connect(req);
     const shopCount = await shopDB.getShopCounts(client);
@@ -58,7 +58,6 @@ module.exports = async (req, res) => {
     } else if (type === 'popular') {
       shopArr = await shopDB.getShopByBookmarkCounts(client,20);
       shopArr = duplicatedDataClean(shopArr, 'shopId', 'category');
-
       const imagePromise = shopArr.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
@@ -87,6 +86,8 @@ module.exports = async (req, res) => {
 
       shopArr = duplicatedDataClean(shopArr, 'shopId', 'image');
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_RECOMMEND_SUCCESS, shopArr));
+    } else{
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
     }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
