@@ -19,32 +19,36 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     if (keyword) {
-      const shopArr = await shopDB.getShopByName(client, keyword);
+      let shopArr = await shopDB.getShopByName(client, keyword);
+      shopArr = duplicatedDataClean(shopArr, 'shopId', 'category');
 
       const imagePromise = shopArr.map((item) => {
         const shopId = item.shopId;
         return shopDB.getPreviewImageByShopId(client, shopId);
       });
 
-      // TODO 이미지 데이터 들어오는 포맷 보고 데이터 붙이기
-      Promise.allSettled(imagePromise).then((image) => {
-        image.forEach((result) => {
+      const previewImageObj = {};
+      await Promise.allSettled(imagePromise).then((image) => {
+        image.map((result) => {
           if (result.status === 'fulfilled') {
-            console.log('성공함');
-          } else if (result.status === 'rejected') {
-            // console.log('[IMAGE PROMISE REJECTED]');
+            if (result.value.length >= 1) {
+              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              return result.value[0];
+            }
           }
         });
       });
 
       shopArr.map((item) => {
+        if (previewImageObj[item.shopId]) {
+          item.image = previewImageObj[item.shopId].image;
+        }
         if (!item.image) {
           item.image = null;
         }
       });
 
-      const responseData = duplicatedDataClean(shopArr, 'shopId', 'category');
-      console.log(responseData);
+      const responseData = duplicatedDataClean(shopArr, 'shopId', 'image');
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_SHOP_BY_NAME, responseData));
     }
   } catch (error) {
