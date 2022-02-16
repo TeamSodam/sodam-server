@@ -15,6 +15,7 @@ module.exports = async (req, res) => {
   if (!userId) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
+
   let client;
 
   try {
@@ -48,18 +49,13 @@ module.exports = async (req, res) => {
         }
       });
 
-      let responseData = [];
-      responseData = myReviewArr;
+      let responseData = myReviewArr;
       responseData = duplicatedDataClean(responseData, 'reviewId', 'image');
 
       responseData = await Promise.all(
         responseData.map(async (value) => {
           let shopId = value.shopId;
           let shop = await shopDB.getShopByShopId(client, shopId);
-          // if (shop.length === 0) {
-          //   return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));
-          // }
-
           let category = await shopDB.getCategoryByShopId(client, shopId);
 
           category = category.map((item) => item.name);
@@ -73,9 +69,9 @@ module.exports = async (req, res) => {
         }),
       );
 
-      if (myReviewArr.length !== 0) return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_MINE, responseData));
+      if (responseData.length !== 0) return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_REVIEW_OF_MINE, responseData));
       else {
-        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.NO_REVIEW, myReviewArr));
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.NO_REVIEW, responseData));
       }
     }
   } catch (error) {
