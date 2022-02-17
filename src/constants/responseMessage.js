@@ -50,6 +50,7 @@ module.exports = {
   CREATE_REVIEW_SUCCESS: '리뷰 작성 성공',
   NOT_MATCH_WITH_SHOP: '소품샵 아이디와 리뷰 아이디가 일치하지 않습니다',
   GET_REVIEW_OF_MINE: '내가 작성한 리뷰 가져오기 성공',
+  GET_SCRAP_OF_MINE: '내가 스크랩한 리뷰 가져오기 성공',
   NO_IMAGE: '이미지가 없습니다',
   NO_CONTENT: '리뷰 내용이 없습니다',
 
