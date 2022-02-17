@@ -8,6 +8,6 @@ router.post('/', checkUser, uploadImage, require('./reviewPOST'));
 router.get('/recent', require('./reviewRecentGET'));
 router.post('/:reviewId/like', checkUser, require('./reviewLikePOST'));
 router.post('/:reviewId/scrap', checkUser, require('./reviewScrapPOST'));
-router.get('/:shopId', require('./reviewShopIdSortPageGET'));
+router.get('/:shopId', require('./reviewShopIdSortOffsetLimitGET'));
 
 module.exports = router;
