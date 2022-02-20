@@ -421,7 +421,7 @@ const getAllShop = async (client, sort, offset, limit) => {
     default:
       sortQuery = `ORDER BY s.shop_name collate "ko_KR.utf8"`;
   }
-console.log('>>>>sortQuery,sortQuery',sortQuery)
+
   const { rows } = await client.query(
     `
           SELECT s.id as shop_id, s.shop_name

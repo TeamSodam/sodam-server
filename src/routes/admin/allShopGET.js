@@ -3,7 +3,6 @@ const statusCode = require('../../constants/statusCode');
 const { shopDB } = require('../../db');
 const db = require('../../db/db');
 const util = require('../../lib/util');
-const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedData');
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
@@ -17,10 +16,6 @@ module.exports = async (req, res) => {
   }
   if (!limit) {
     pageLimit = 20;
-  }
-
-  if (!sort) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
   let client;
@@ -76,9 +71,7 @@ module.exports = async (req, res) => {
         }
       });
 
-      console.log('>>>>>>>>result',responseData);
-
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SHOP_BY_THEME_SUCCESS, responseData));
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.GET_ALL_SHOP_SUCCESS, responseData));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
