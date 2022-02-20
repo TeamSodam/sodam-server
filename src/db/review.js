@@ -485,6 +485,36 @@ const getReviewByUserId = async (client, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getAllReview = async (client, sort, offset, limit) => {
+  // TODO 추후 신고기능 생기면 신고순도
+  let sortQuery;
+
+  switch (sort) {
+    case 'popular':
+      sortQuery = `ORDER BY r.created_at DESC`;
+      break;
+    default:
+      sortQuery = `ORDER BY r.created_at DESC`;
+  }
+
+  const { rows } = await client.query(
+    `
+    SELECT r.id AS review_id, r.shop_id, s.shop_name, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content
+    FROM review r
+    INNER JOIN shop s
+    on s.id = r.shop_id
+    INNER JOIN "user" u
+    ON u.id = r.user_id
+    WHERE r.is_deleted = false
+    ${sortQuery}
+    
+    OFFSET $1 LIMIT $2
+    `,
+    [offset, limit],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getReviewByReviewId,
   getLikeCountByReviewId,
@@ -514,4 +544,5 @@ module.exports = {
   createReviewTag,
   getTagByName,
   getReviewByUserId,
+  getAllReview,
 };
