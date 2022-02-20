@@ -408,6 +408,33 @@ const updateReviewCount = async (client, shopId, reviewCount) => {
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
+
+const getAllShop = async (client, sort, offset, limit) => {
+  let sortQuery = '';
+  switch (sort) {
+    case 'recent':
+      sortQuery = `ORDER BY s.created_at DESC`;
+      break;
+    case 'alphabet':
+      sortQuery = `ORDER BY s.shop_name collate "ko_KR.utf8"`;
+      break;
+    default:
+      sortQuery = `ORDER BY s.shop_name collate "ko_KR.utf8"`;
+  }
+
+  const { rows } = await client.query(
+    `
+          SELECT s.id as shop_id, s.shop_name
+          FROM shop s 
+          WHERE s.is_deleted = FALSE
+          ${sortQuery}
+          OFFSET $1 LIMIT $2
+          `,
+    [offset, limit ],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
 module.exports = {
   getReviewCountByShopId,
   getShopCounts,
@@ -432,4 +459,5 @@ module.exports = {
   updateReviewCount,
   getShopBookmarkByCounts,
   getCategoryAndIdByShopId,
+  getAllShop
 };
