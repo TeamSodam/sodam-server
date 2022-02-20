@@ -465,7 +465,7 @@ const getShopThemeCount = async (client) => {
 const getShopAreaCount = async (client) => {
   const { rows } = await client.query(
     `
-    SELECT s.area , COUNT(*)
+    SELECT s.area as name , COUNT(*)
     FROM shop s
     GROUP BY s.area
           `,
