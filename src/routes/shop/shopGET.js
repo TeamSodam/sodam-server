@@ -11,11 +11,8 @@ const slackAPI = require('../../middlewares/slackAPI');
 module.exports = async (req, res) => {
   //sort쿼리 popular, mysave (지역별에서) , popular, review(테마별에서)
   const { area, theme, offset, limit, sort } = req.query;
-  let pageOffset;
-  let pageLimit;
-
-  pageOffset = Number((offset - 1) * limit);
-  pageLimit = limit;
+  let pageOffset = Number((offset - 1) * limit);
+  let pageLimit = limit;
 
   if (theme && !offset) {
     pageOffset = 0;
