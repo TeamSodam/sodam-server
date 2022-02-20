@@ -430,10 +430,48 @@ const getAllShop = async (client, sort, offset, limit) => {
           ${sortQuery}
           OFFSET $1 LIMIT $2
           `,
-    [offset, limit ],
+    [offset, limit],
   );
   return convertSnakeToCamel.keysToCamel(rows);
-}
+};
+
+const getShopCategoryCount = async (client) => {
+  const { rows } = await client.query(
+    `
+    SELECT c.name , COUNT(*) 
+    FROM shop_category  sc
+    INNER JOIN category c
+    ON sc.category_id = c.id
+    GROUP BY c.name
+
+          `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getShopThemeCount = async (client) => {
+  const { rows } = await client.query(
+    `
+    SELECT t.name , COUNT(*) 
+    FROM shop_theme  st
+    INNER JOIN theme t
+    ON st.theme_id = t.id
+    GROUP BY t.name
+          `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const getShopAreaCount = async (client) => {
+  const { rows } = await client.query(
+    `
+    SELECT s.area as name , COUNT(*)
+    FROM shop s
+    GROUP BY s.area
+          `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
 
 module.exports = {
   getReviewCountByShopId,
@@ -459,5 +497,8 @@ module.exports = {
   updateReviewCount,
   getShopBookmarkByCounts,
   getCategoryAndIdByShopId,
-  getAllShop
+  getAllShop,
+  getShopCategoryCount,
+  getShopThemeCount,
+  getShopAreaCount,
 };
