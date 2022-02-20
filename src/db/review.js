@@ -515,6 +515,15 @@ const getAllReview = async (client, sort, offset, limit) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getReviewCounts = async (client) => {
+  const { rows } = await client.query(
+    `
+      SELECT COUNT(*) FROM review;
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getReviewByReviewId,
   getLikeCountByReviewId,
@@ -545,4 +554,5 @@ module.exports = {
   getTagByName,
   getReviewByUserId,
   getAllReview,
+  getReviewCounts,
 };
