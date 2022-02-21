@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
       responseData.map((item) => {
         if (previewImageObj[item.shopId]) {
           item.image = [previewImageObj[item.shopId].image];
-          item.category = [categoryObj[item.shopId]];
+          item.category = categoryObj[item.shopId];
         }
         if (!item.image) {
           item.image = null;
