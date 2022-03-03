@@ -84,7 +84,7 @@ describe('[GET] /shop/:shopId', () => {
       });
   });
 
-  it('[GET] /shop/:shopId -  shopId가 잘못된 경우', (done) => {
+  it('[GET] /shop/:shopId - shopId 범위가 벗어난 경우', (done) => {
     chai
       .request(url)
       .get('/shop/-1')
@@ -93,6 +93,20 @@ describe('[GET] /shop/:shopId', () => {
         expect(res).to.have.status(400);
         expect(res.body.status).to.deep.equal(400);
         expect(res.body.message).to.deep.equal('존재하지 않는 소품샵입니다.');
+        expect(res.body).be.a('object');
+        done();
+      });
+  });
+
+  it('[GET] /shop/:shopId - shopId가 숫자가 아닌 경우', (done) => {
+    chai
+      .request(url)
+      .get('/shop/ddd')
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.deep.equal(400);
+        expect(res.body.message).to.deep.equal('파라미터 값이 잘못되었습니다');
         expect(res.body).be.a('object');
         done();
       });
