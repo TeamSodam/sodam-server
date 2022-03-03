@@ -14,7 +14,6 @@ describe('[POST] /shop/bookmark', () => {
       .request(url)
       .post('/shop/bookmark')
       .set('accesstoken', process.env.TEST_TOKEN)
-      .set('content-type', 'application/x-www-form-urlencoded')
       .send({
         shopId: 1,
         isBookmarked: false,
@@ -35,7 +34,6 @@ describe('[POST] /shop/bookmark', () => {
     chai
       .request(url)
       .post('/shop/bookmark')
-      .set('content-type', 'application/x-www-form-urlencoded')
       .send({
         shopId: 1,
         isBookmarked: false,
@@ -54,7 +52,6 @@ describe('[POST] /shop/bookmark', () => {
       .request(url)
       .post('/shop/bookmark')
       .set('accesstoken', process.env.TEST_TOKEN)
-      .set('content-type', 'application/x-www-form-urlencoded')
       .send({
         shopId: 1,
       })
@@ -72,7 +69,6 @@ describe('[POST] /shop/bookmark', () => {
       .request(url)
       .post('/shop/bookmark')
       .set('accesstoken', process.env.TEST_TOKEN)
-      .set('content-type', 'application/x-www-form-urlencoded')
       .send({
         isBookmarked: false,
       })
@@ -90,7 +86,6 @@ describe('[POST] /shop/bookmark', () => {
       .request(url)
       .post('/shop/bookmark')
       .set('accesstoken', process.env.TEST_TOKEN)
-      .set('content-type', 'application/x-www-form-urlencoded')
       .send({
         shopId: 'dfd',
         isBookmarked: false,
@@ -109,7 +104,6 @@ describe('[POST] /shop/bookmark', () => {
       .request(url)
       .post('/shop/bookmark')
       .set('accesstoken', process.env.TEST_TOKEN)
-      .set('content-type', 'application/x-www-form-urlencoded')
       .send({
         shopId: 1,
         isBookmarked: 'dfdfd',
