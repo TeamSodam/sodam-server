@@ -100,11 +100,10 @@ describe('[GET] /review/:shopId?sort={}&offset={}&limit={}', () => {
   });
 
   it('[GET] 소품샵별 리뷰 sort 없음, offset과 limit 정상', (done) => {
-    const limit = 4;
     chai
       .request(url)
       .get('/review/15')
-      .query({ offset: 1, limit: limit })
+      .query({ offset: 1, limit: 4 })
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
