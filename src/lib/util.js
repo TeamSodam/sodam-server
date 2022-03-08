@@ -23,10 +23,10 @@ module.exports = {
     }
   },
   checkIsInRange: (page) => {
-    if (Number(page) < 0 || !Number.isInteger(Number(page)) || isNaN(page) === true){
+    if (Number(page) < 0 || !Number.isInteger(Number(page)) || isNaN(page) === true) {
       return false;
     } else {
       return true;
     }
-  }
+  },
 };

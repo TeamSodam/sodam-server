@@ -12,6 +12,11 @@ module.exports = async (req, res) => {
   if (!reviewId || isScraped === undefined) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
+
+  if (!util.checkIsNum(reviewId)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
   if (typeof isScraped === 'string') {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
   }
@@ -21,7 +26,14 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     const scrapCount = await reviewDB.getScrapCountByReviewId(client, reviewId);
-    const responseData = {};
+    let responseData = {};
+
+    const getScrapedResponseData = async (isScraped, client, reviewId, scrapCount) => {
+      const updateScrapCount = await reviewDB.updateReviewScrapCount(client, reviewId, scrapCount);
+      responseData['isScraped'] = isScraped;
+      responseData['scrapCount'] = updateScrapCount[0].scrapCount;
+      return responseData;
+    };
 
     if (req.user) {
       const userId = req.user[0].id;
@@ -32,15 +44,11 @@ module.exports = async (req, res) => {
         const isDeleted = await reviewDB.postReviewScrapByReviewId(client, userId, reviewId, isScraped);
         // scrap이 true인 경우
         if (!isDeleted[0].isDeleted) {
-          const updateScrapCount = await reviewDB.updateReviewScrapCount(client, reviewId, scrapCount[0].scrapCount + 1);
-          responseData['isScraped'] = !isDeleted[0].isDeleted;
-          responseData['scrapCount'] = updateScrapCount[0].scrapCount;
+          responseData = await getScrapedResponseData(true, client, reviewId, scrapCount[0].scrapCount + 1);
         }
         // scrap이 false인 경우
         else {
-          const updateScrapCount = await reviewDB.updateReviewScrapCount(client, reviewId, scrapCount[0].scrapCount - 1);
-          responseData['isScraped'] = !isDeleted[0].isDeleted;
-          responseData['scrapCount'] = updateScrapCount[0].scrapCount;
+          responseData = await getScrapedResponseData(false, client, reviewId, scrapCount[0].scrapCount - 1);
         }
         // 이미 보냈던 scrap요청이 있는 경우
       } else {
@@ -53,15 +61,11 @@ module.exports = async (req, res) => {
           const isDeleted = await reviewDB.postReviewScrapByReviewId(client, userId, reviewId, isScraped);
           // scrap이 true인 경우
           if (!isDeleted[0].isDeleted) {
-            const updateScrapCount = await reviewDB.updateReviewScrapCount(client, reviewId, scrapCount[0].scrapCount + 1);
-            responseData['isScraped'] = !isDeleted[0].isDeleted;
-            responseData['scrapCount'] = updateScrapCount[0].scrapCount;
+            responseData = await getScrapedResponseData(true, client, reviewId, scrapCount[0].scrapCount + 1);
           }
           // scrap이 false인 경우
           else {
-            const updateScrapCount = await reviewDB.updateReviewScrapCount(client, reviewId, scrapCount[0].scrapCount - 1);
-            responseData['isScraped'] = !isDeleted[0].isDeleted;
-            responseData['scrapCount'] = updateScrapCount[0].scrapCount;
+            responseData = await getScrapedResponseData(false, client, reviewId, scrapCount[0].scrapCount - 1);
           }
         }
       }
@@ -74,10 +78,10 @@ module.exports = async (req, res) => {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
     // 슬랙으로 보낼 메시지
-    const slackMessage = `[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl} ${req.user ? `uid:${req.user[0].id}` : `req.user 없음`} \n[CONTENT] ${error} \n${JSON.stringify(error)} `;
+    // const slackMessage = `[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl} ${req.user ? `uid:${req.user[0].id}` : `req.user 없음`} \n[CONTENT] ${error} \n${JSON.stringify(error)} `;
 
-    // 슬랙 Webhook을 사용해, 에러가 발생했을 때 슬랙으로 해당 에러 내용을 담은 메시지를 보내는 코드
-    slackAPI.sendMessageToSlack(slackMessage, slackAPI.DEV_WEB_HOOK_ERROR_MONITORING);
+    // // 슬랙 Webhook을 사용해, 에러가 발생했을 때 슬랙으로 해당 에러 내용을 담은 메시지를 보내는 코드
+    // slackAPI.sendMessageToSlack(slackMessage, slackAPI.DEV_WEB_HOOK_ERROR_MONITORING);
 
     res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
   } finally {
