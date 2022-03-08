@@ -246,17 +246,12 @@ const getSavedShopList = async (client, sort, userId, offset, limit) => {
   }
   const { rows } = await client.query(
     `
-    SELECT s.id as shop_id, s.shop_name, c.name as category
+    SELECT s.id as shop_id, s.shop_name
     FROM shop s 
-    INNER JOIN shop_category sc
-    ON s.id = sc.shop_id
-    INNER JOIN category c
-    ON sc.category_id = c.id
     INNER JOIN shop_bookmark sb
     ON s.id = sb.shop_id
     WHERE sb.user_id = $1
         AND s.is_deleted = FALSE
-        AND sc.is_deleted = FALSE
         AND sb.is_deleted = FALSE
         ${sortQuery}
         OFFSET ${offset} LIMIT ${limit}
