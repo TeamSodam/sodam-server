@@ -118,7 +118,7 @@ describe('[GET] /shop?theme={}&sort={}&offset={}&limit={}', () => {
       });
   });
 
-  it('[GET] 테마별 소품샵 : 인기순 정렬 - offset 1, limit 10', (done) => {
+  it('[GET] 테마별 소품샵 : 인기순 정렬 - offset 2, limit 10', (done) => {
     chai
       .request(url)
       .get('/shop')
@@ -162,7 +162,7 @@ describe('[GET] /shop?theme={}&sort={}&offset={}&limit={}', () => {
       });
   });
 
-  it('[GET] 테마별 소품샵 : 리뷰순 정렬 - offset = 2, limit = 10 ', (done) => {
+  it('[GET] 테마별 소품샵 : 리뷰순 정렬 - offset = 1, limit = 10 ', (done) => {
     chai
       .request(url)
       .get('/shop')

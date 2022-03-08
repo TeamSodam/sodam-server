@@ -11,6 +11,7 @@ const slackAPI = require('../../middlewares/slackAPI');
 module.exports = async (req, res) => {
   //sort쿼리 popular, mysave (지역별에서) , popular, review(테마별에서)
   const { area, theme, offset, limit, sort } = req.query;
+  
   let pageOffset = Number((offset - 1) * limit);
   let pageLimit = limit;
 
@@ -20,6 +21,14 @@ module.exports = async (req, res) => {
   if (theme && !limit) {
     pageLimit = 20;
   }
+
+  if(theme && offset && !util.checkIsInRange(offset)){
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+  if(theme && limit && !util.checkIsInRange(limit)){
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+  
   if (!area && !theme) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
