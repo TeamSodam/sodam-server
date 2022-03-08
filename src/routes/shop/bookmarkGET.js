@@ -22,6 +22,13 @@ module.exports = async (req, res) => {
     pageLimit = 20;
   }
 
+  if (offset && !util.checkIsInRange(offset)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+  if (limit && !util.checkIsInRange(limit)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
   if (!sort) {
     sort = 'save';
   }
