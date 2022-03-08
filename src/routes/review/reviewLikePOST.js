@@ -26,7 +26,14 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     const likeCount = await reviewDB.getLikeCountByReviewId(client, reviewId);
-    const responseData = {};
+    let responseData = {};
+
+    const getLikedResponseData = async (isLiked, client, reviewId, likeCount) => {
+      const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount);
+      responseData['isLiked'] = isLiked;
+      responseData['likeCount'] = updateLikeCount[0].likeCount;
+      return responseData;
+    };
 
     if (req.user) {
       const userId = req.user[0].id;
@@ -37,15 +44,11 @@ module.exports = async (req, res) => {
         const isDeleted = await reviewDB.postReviewLikeByReviewId(client, userId, reviewId, isLiked);
         // isLiked가 true인 경우
         if (!isDeleted[0].isDeleted) {
-          const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount + 1);
-          responseData['isLiked'] = !isDeleted[0].isDeleted;
-          responseData['likeCount'] = updateLikeCount[0].likeCount;
+          responseData = await getLikedResponseData(true, client, reviewId, likeCount[0].likeCount + 1);
         }
         // isLiked가 false인 경우
         else {
-          const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount - 1);
-          responseData['isLiked'] = !isDeleted;
-          responseData['likeCount'] = updateLikeCount[0].likeCount;
+          responseData = await getLikedResponseData(false, client, reviewId, likeCount[0].likeCount - 1);
         }
         // 이미 보냈던 isLiked 오청이 있는 경우
       } else {
@@ -58,15 +61,11 @@ module.exports = async (req, res) => {
           const isDeleted = await reviewDB.postReviewLikeByReviewId(client, userId, reviewId, isLiked);
           // isLiked가 true인 경우
           if (!isDeleted[0].isDeleted) {
-            const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount + 1);
-            responseData['isLiked'] = !isDeleted[0].isDeleted;
-            responseData['likeCount'] = updateLikeCount[0].likeCount;
+            responseData = await getLikedResponseData(true, client, reviewId, likeCount[0].likeCount + 1);
           }
           // isLiked가 false인 경우
           else {
-            const updateLikeCount = await reviewDB.updateReviewLikeCount(client, reviewId, likeCount[0].likeCount - 1);
-            responseData['isLiked'] = !isDeleted[0].isDeleted;
-            responseData['likeCount'] = updateLikeCount[0].likeCount;
+            responseData = await getLikedResponseData(false, client, reviewId, likeCount[0].likeCount - 1);
           }
         }
       }
