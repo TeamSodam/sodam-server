@@ -24,28 +24,8 @@ describe('[GET] /shop/category',()=>{
                 expect(res.body.data[0].shopId).be.a('number');
                 expect(res.body.data[0].shopName).be.a('string');
                 expect(res.body.data[0].category).be.a('array');
-                expect(res.body.data[0].image).be.a('array')
-                expect(res.body.data[0]).to.have.all.keys('shopId','shopName','category','image');
-                done();
-            });  
-    })
-
-    it('[GET] 카테고리별 소품샵 제공 - type = X',(done)=>{
-        chai
-            .request(url)
-            .get('/shop/category')
-            .query({type:'random'})
-            .end((err,res)=>{
-                expect(err).to.be.null;
-                expect(res).to.have.status(200);
-                expect(res.body.status).to.deep.equal(200);
-                expect(res.body.message).to.deep.equal('카테고리별 소품샵 리스트 가져오기 성공');
-                expect(res.body).be.a('object');
-                expect(res.body.data).to.have.lengthOf(20);
-                expect(res.body.data[0].shopId).be.a('number');
-                expect(res.body.data[0].shopName).be.a('string');
-                expect(res.body.data[0].category).be.a('array');
-                expect(res.body.data[0].image).be.a('array')
+                expect(res.body.data[0].image).be.a('array');
+                expect(res.body.data[0].image).to.have.lengthOf(1);
                 expect(res.body.data[0]).to.have.all.keys('shopId','shopName','category','image');
                 done();
             });  

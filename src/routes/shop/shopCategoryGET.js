@@ -22,15 +22,10 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     let shopIdArr;
-    if (type === 'random') {
-      const randomType = randomItem(typeArray);
-      shopIdArr = await shopDB.getShopIdByCategory(client, randomType);
-    } else {
-      if(!typeArray.includes(type)){
-        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
-      }
-      shopIdArr = await shopDB.getShopIdByCategory(client, type);
+    if(!typeArray.includes(type)){
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
     }
+    shopIdArr = await shopDB.getShopIdByCategory(client, type);
 
     const shopAllList = await Promise.all(
       shopIdArr.map(async (item) => {
