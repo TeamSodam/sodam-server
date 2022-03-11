@@ -8,10 +8,6 @@ const slackAPI = require('../../middlewares/slackAPI');
 
 const typeArray = ['문구팬시', '인테리어소품', '주방용품', '패션소품', '공예품', '인형장난감'];
 
-function randomItem(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
 module.exports = async (req, res) => {
   const { type } = req.query;
   if (!type) {
