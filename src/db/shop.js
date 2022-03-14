@@ -79,7 +79,7 @@ const getShopByTheme = async (client, theme, sort, offset, limit) => {
 const getPreviewImageByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
-        SELECT si.image, si.shop_id as shopId
+        SELECT si.image, si.shop_id
         FROM shop_image si
         WHERE si.shop_id = $1
             AND si.is_preview = true
