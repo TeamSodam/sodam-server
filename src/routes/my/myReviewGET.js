@@ -7,18 +7,19 @@ const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedDat
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
-  if (!req.user) {
+  if (req.user.length === 0) {
     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
   }
   const userId = req.user[0].id;
 
-  if (!userId) {
-    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
-  }
 
   let client;
 
   try {
+    if (!userId) {
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    }
+
     client = await db.connect(req);
     if (userId) {
       const myReviewArr = await reviewDB.getReviewByUserId(client, userId);
@@ -54,8 +55,8 @@ module.exports = async (req, res) => {
 
       responseData = await Promise.all(
         responseData.map(async (value) => {
-          let shopId = value.shopId;
-          let shop = await shopDB.getShopByShopId(client, shopId);
+          const shopId = value.shopId;
+          const shop = await shopDB.getShopByShopId(client, shopId);
           let category = await shopDB.getCategoryByShopId(client, shopId);
 
           category = category.map((item) => item.name);
