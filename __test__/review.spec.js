@@ -45,8 +45,9 @@ it('[GET] 내가 작성한 리뷰 - 리뷰 데이터 없을 때', (done) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res.body.status).to.deep.equal(200);
-        expect(res.body.message).to.deep.equal('존재하지 않는 리뷰입니다');
+        expect(res.body.message).to.deep.equal('리뷰가 존재하지 않습니다');
         expect(res.body).be.a('object');
+        expect(res.body.data).be.a('array');
         done();
     });
 });
