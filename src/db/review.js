@@ -367,7 +367,7 @@ const getReviewTagByReviewId = async (client, reviewId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getReviewOrderByRecent = async (client) => {
+const getReviewOrderByRecent = async (client,limit) => {
   const { rows } = await client.query(
     `
     SELECT r2.id AS review_id, r2.shop_id, s.shop_name, u.image AS writer_thumbnail, u.nickname AS writer_name, r2.like_count, r2.scrap_count, r2.content, c.name as category
@@ -376,7 +376,7 @@ const getReviewOrderByRecent = async (client) => {
             FROM review r
             WHERE r.is_deleted = false
             ORDER BY r.created_at DESC
-            LIMIT 15
+            LIMIT $1
     ) AS r2
     INNER JOIN shop s
     on s.id = r2.shop_id
@@ -386,6 +386,7 @@ const getReviewOrderByRecent = async (client) => {
     ON sc.category_id = c.id
     INNER JOIN "user" u
     ON u.id = r2.user_id    `,
+    [limit]
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };

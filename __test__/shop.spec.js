@@ -28,6 +28,7 @@ describe('[GET] /review/recent',()=>{
                 expect(res.body.data[0].category).be.a('array');
                 expect(res.body.data[0].writerThumbnail).be.a('string');
                 expect(res.body.data[0].writerName).be.a('string');
+                expect(res.body.data[0].content).be.a('string');
                 expect(res.body.data[0].likeCount).be.a('number');
                 expect(res.body.data[0].scrapCount).be.a('number');
                 expect(res.body.data[0].image).be.a('array');
