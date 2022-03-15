@@ -45,7 +45,7 @@ module.exports = {
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
   REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
   REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',
-  NO_REVIEW: '존재하지 않는 리뷰입니다',
+  NO_REVIEW: '리뷰가 존재하지 않습니다',
   GET_ONE_REVIEW_GET_SUCCESS: '리뷰 상세 정보 조회 성공',
   CREATE_REVIEW_SUCCESS: '리뷰 작성 성공',
   NOT_MATCH_WITH_SHOP: '소품샵 아이디와 리뷰 아이디가 일치하지 않습니다',
