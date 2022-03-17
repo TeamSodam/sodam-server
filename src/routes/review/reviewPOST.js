@@ -9,6 +9,11 @@ const slackAPI = require('../../middlewares/slackAPI');
 module.exports = async (req, res) => {
   const { shopId, shopName, item, content, tag } = req.body;
 
+  // shopId가 정수가 아님
+  if (isNaN(shopId) || !Number.isInteger(Number(shopId))) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
   // 로그인 안 했으면 fail
   if (!req.user) {
     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
