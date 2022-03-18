@@ -210,21 +210,24 @@ const getShopBookmarkByUserId = async (client, shopId, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getShopBookmarkByCounts = async (client) => {
+const getShopByBookmarkCounts = async (client, count) => {
   const { rows } = await client.query(
     `
-      SELECT s.id as shop_id, s.shop_name, c.name as category
-      FROM shop s 
-      INNER JOIN shop_category sc
-      ON s.id = sc.shop_id
-      INNER JOIN category c
-      ON sc.category_id = c.id
-      WHERE 
-        s.is_deleted = FALSE
-        AND sc.is_deleted = FALSE
-      ORDER BY s.bookmark_count DESC
-      LIMIT 20
+    SELECT s2.id as shop_id, s2.shop_name, c.name as category
+    FROM (
+        SELECT * FROM shop s
+        ORDER BY s.bookmark_count DESC
+        LIMIT $1
+      ) AS s2
+    INNER JOIN shop_category sc
+    ON s2.id = sc.shop_id
+    INNER JOIN category c
+    ON sc.category_id = c.id
+    WHERE
+      s2.is_deleted = FALSE
+      AND sc.is_deleted = FALSE
     `,
+    [count],
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
@@ -540,7 +543,7 @@ module.exports = {
   updateBookmarkByShopIdAndUserId,
   updateBookmarkCountByShopId,
   updateReviewCount,
-  getShopBookmarkByCounts,
+  getShopByBookmarkCounts,
   getCategoryAndIdByShopId,
   getAllShop,
   getShopCategoryCount,
