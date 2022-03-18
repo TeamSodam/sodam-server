@@ -56,6 +56,7 @@ module.exports = {
   GET_REVIEW_OF_MINE: '내가 작성한 리뷰 가져오기 성공',
   NO_IMAGE: '이미지가 없습니다',
   NO_CONTENT: '리뷰 내용이 없습니다',
+  GET_RECENT_REVIEW_SUCCESS: '최근 리뷰 가져오기 성공',
 
   // 파일 업로드
   ONLY_IMAGE_AVAILABLE: '이미지만 업로드 가능합니다',
