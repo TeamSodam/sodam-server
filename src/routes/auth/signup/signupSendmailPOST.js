@@ -88,9 +88,7 @@ module.exports = async (req, res) => {
     }
 
     // 메일 전송
-    sendMail(email, verificationNumber)
-      .then((result) => console.log('Email sent...', result))
-      .catch((error) => console.log(error.message));
+    sendMail(email, verificationNumber).catch((error) => console.log(error.message));
 
     result.uniqueEmail = true;
     result.sendMail = true;
