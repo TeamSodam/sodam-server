@@ -7,6 +7,9 @@ module.exports = {
   DELETE_USER: '회원 탈퇴 성공',
   ALREADY_EMAIL: '이미 사용중인 이메일입니다.',
   DIFFRERENT_PASSWORD: '비밀번호와 비밀번호 확인이 일치하지 않습니다',
+  EMAIL_OK: '가입 가능한 이메일입니다',
+  VERIFY_SUCCESS: '인증번호 확인이 완료되었습니다',
+  VERIFY_FAIL: '인증번호가 일치하지 않습니다',
 
   // 로그인
   LOGIN_SUCCESS: '로그인 성공',
@@ -43,7 +46,7 @@ module.exports = {
   RECOMMEND_BY_SUBWAY_SUCCESS: '소품샵 근처 지하철역 기반 소품샵 추천 성공',
   NOT_MATCH_SHOPNAME_SHOPID: '소품샵 이름과 아이디가 일치하지 않습니다',
   SHOP_BY_CATEGORY_SUCCESS: '카테고리별 소품샵 리스트 가져오기 성공',
-  
+
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
   GET_ALL_REVIEW_SUCCESS: '전체 리뷰 목록 가져오기 성공',
