@@ -72,3 +72,34 @@ describe('[GET] user/image', () => {
       });
   });
 });
+
+describe('[GET] user/theme', () => {
+  it('[GET] 유저 선호 소품 테마 가져오기 - 성공', (done) => {
+    chai
+      .request(url)
+      .get('/user/theme')
+      .set('accesstoken', process.env.TEST_TOKEN)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('유저 조회 성공');
+        expect(res.body).be.a('object');
+        expect(res.body.data).be.a('array');
+        done();
+      });
+  });
+
+  it('[GET] 유저 선호 소품 테마 가져오기 - 실패 (토큰 없음)', (done) => {
+    chai
+      .request(url)
+      .get('/user/theme')
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(401);
+        expect(res.body.status).to.deep.equal(401);
+        expect(res.body.message).to.deep.equal('로그인이 필요한 서비스 입니다.');
+        done();
+      });
+  });
+});
