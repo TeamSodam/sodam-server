@@ -24,6 +24,7 @@ module.exports = {
   READ_ALL_USERS_SUCCESS: '모든 유저 조회 성공',
   UPDATE_ONE_USER_SUCCESS: '유저 수정 성공',
   DELETE_ONE_USER_SUCCESS: '유저 삭제 성공',
+  DELETE_INFO_SUCCESS: '유저 정보 삭제 성공',
 
   // 포스트
   ADD_ONE_POST_SUCCESS: '포스트 추가 성공',
@@ -43,7 +44,7 @@ module.exports = {
   RECOMMEND_BY_SUBWAY_SUCCESS: '소품샵 근처 지하철역 기반 소품샵 추천 성공',
   NOT_MATCH_SHOPNAME_SHOPID: '소품샵 이름과 아이디가 일치하지 않습니다',
   SHOP_BY_CATEGORY_SUCCESS: '카테고리별 소품샵 리스트 가져오기 성공',
-  
+
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
   GET_ALL_REVIEW_SUCCESS: '전체 리뷰 목록 가져오기 성공',
