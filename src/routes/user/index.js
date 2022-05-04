@@ -12,5 +12,6 @@ router.delete('/image', checkUser, require('./userImageDELETE'));
 
 router.put('/theme', checkUser, require('./userThemePUT'));
 router.put('/image', checkUser, uploadImage(uploadPath.USERIMAGE), require('./userImagePUT'));
+router.put('/nickname', checkUser, require('./userNicknamePUT'));
 
 module.exports = router;
