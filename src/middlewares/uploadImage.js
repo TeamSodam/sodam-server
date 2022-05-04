@@ -76,8 +76,13 @@ const uploadImage = (folder) => {
         }
       }
 
+      // form-data의 key가 하나도 없음
+      if (!req.files) {
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_IMAGE));
+      }
       // 정상적으로 완료됨
       console.log('업로드 성공');
+
       // 이미지가 저장된 Url 배열
       const imageUrls = req.files.map((file) => file.location);
       // req에 넣어서 다음 미들웨어에서 사용할 수 있게

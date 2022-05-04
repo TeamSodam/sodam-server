@@ -1,6 +1,6 @@
 module.exports = {
   REVIEW: 'review',
-  PROFILE: 'profile',
+  USERIMAGE: 'userimage',
   SHOP_CUTE: 'theme/cute',
   SHOP_HIP: 'theme/hip',
   SHOP_MODERN: 'theme/modern',
