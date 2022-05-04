@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { checkUser } = require('../../middlewares/auth');
 
-router.get('/:id', require('./userGET'));
+router.get('/info', checkUser, require('./userInfoGET'));
 
 module.exports = router;
