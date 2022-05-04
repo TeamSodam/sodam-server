@@ -21,7 +21,7 @@ const GMAIL_REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN;
 const oAuth2Client = new google.auth.OAuth2(GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REDIRECT_URI);
 oAuth2Client.setCredentials({ refresh_token: GMAIL_REFRESH_TOKEN });
 
-async function sendMail(to, verificationNumber) {
+async function sendMail(to, verificationCode) {
   try {
     const accesstoken = await oAuth2Client.getAccessToken();
 
@@ -41,13 +41,14 @@ async function sendMail(to, verificationNumber) {
       from: '소담<sodamteam2@gmail.com>',
       to,
       subject: '소담 이메일 인증번호',
-      text: `인증번호를 입력해주세요: ${verificationNumber}`,
-      html: `<h2>인증번호를 입력해주세요</h2><h1>${verificationNumber}</h1>`,
+      text: `인증번호를 입력해주세요: ${verificationCode}`,
+      html: `<h2>인증번호를 입력해주세요</h2><h1>${verificationCode}</h1>`,
     };
 
     const result = await transport.sendMail(mailOptions);
     return result;
   } catch (error) {
+    console.log(error);
     return error;
   }
 }
@@ -73,7 +74,7 @@ module.exports = async (req, res) => {
 
     let result = {
       uniqueEmail: false,
-      sendMail: false,
+      verificationCode: '',
     };
 
     if (duplicatedEmail.length !== 0) {
@@ -82,16 +83,16 @@ module.exports = async (req, res) => {
 
     // 랜덤 숫자
     const n = randomInt(100, 9990);
-    let verificationNumber = String(n);
-    if (verificationNumber.length === 3) {
-      verificationNumber = '0' + verificationNumber;
+    let verificationCode = String(n);
+    if (verificationCode.length === 3) {
+      verificationCode = '0' + verificationCode;
     }
 
     // 메일 전송
-    sendMail(email, verificationNumber).catch((error) => console.log(error.message));
+    sendMail(email, verificationCode).catch((error) => console.log(error.message));
 
     result.uniqueEmail = true;
-    result.sendMail = true;
+    result.verificationCode = String(verificationCode);
 
     // 가입 가능
     return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGNUP_OK, result));
