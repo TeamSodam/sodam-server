@@ -69,4 +69,30 @@ const getUserByNickname = async (client, nickname) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getUserByEmail, postUserBySignup, checkDuplicatedEmailByEmail, getUserById, getUserByNickname };
+const getThemeById = async (client, userId) => {
+  const { rows } = await client.query(
+    `
+    SELECT name
+    FROM (
+      SELECT theme_id
+      FROM preference_theme pt
+      WHERE pt.user_id = $1
+        AND is_deleted = false
+      ) pt
+    INNER JOIN theme t
+    ON pt.theme_id = t.id
+    ORDER BY id
+        `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+module.exports = {
+  getUserByEmail,
+  postUserBySignup,
+  checkDuplicatedEmailByEmail,
+  getUserById,
+  getUserByNickname,
+  getThemeById,
+};
