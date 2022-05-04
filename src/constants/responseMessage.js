@@ -26,6 +26,7 @@ module.exports = {
   READ_ALL_USERS_SUCCESS: '모든 유저 조회 성공',
   UPDATE_ONE_USER_SUCCESS: '유저 수정 성공',
   DELETE_ONE_USER_SUCCESS: '유저 삭제 성공',
+  DELETE_INFO_SUCCESS: '유저 정보 삭제 성공',
 
   // 포스트
   ADD_ONE_POST_SUCCESS: '포스트 추가 성공',

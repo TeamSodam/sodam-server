@@ -103,3 +103,33 @@ describe('[GET] user/theme', () => {
       });
   });
 });
+
+// 현재 프로필 사진 삭제
+describe('[DELETE] user/image', () => {
+  it('[DELETE] 현재 프로필 사진 삭제 - 성공', (done) => {
+    chai
+      .request(url)
+      .delete('/user/image')
+      .set('accesstoken', process.env.TEST_TOKEN)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.deep.equal(200);
+        expect(res.body.message).to.deep.equal('유저 정보 삭제 성공');
+        done();
+      });
+  });
+
+  it('[DELETE] 현재 프로필 사진 삭제 - 실패 (토큰 없음)', (done) => {
+    chai
+      .request(url)
+      .delete('/user/image')
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(401);
+        expect(res.body.status).to.deep.equal(401);
+        expect(res.body.message).to.deep.equal('로그인이 필요한 서비스 입니다.');
+        done();
+      });
+  });
+});

@@ -88,6 +88,18 @@ const getThemeById = async (client, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const deleteImageById = async (client, userId) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "user"
+    SET image = ''
+    WHERE id = $1
+        `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getUserByEmail,
   postUserBySignup,
@@ -95,4 +107,5 @@ module.exports = {
   getUserById,
   getUserByNickname,
   getThemeById,
+  deleteImageById,
 };

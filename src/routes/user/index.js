@@ -6,4 +6,6 @@ router.get('/info', checkUser, require('./userInfoGET'));
 router.get('/image', checkUser, require('./userImageGET'));
 router.get('/theme', checkUser, require('./userThemeGET'));
 
+router.delete('/image', checkUser, require('./userImageDELETE'));
+
 module.exports = router;
