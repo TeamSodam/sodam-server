@@ -100,6 +100,71 @@ const deleteImageById = async (client, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getThemeIdByUserId = async (client, userId) => {
+  const { rows } = await client.query(
+    `
+      SELECT theme_id
+      FROM preference_theme pt
+      WHERE pt.user_id = $1
+        AND is_deleted = false
+        `,
+    [userId],
+  );
+
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const deleteThemeByUserIdAndThemeId = async (client, userId, themeId) => {
+  const { rows } = await client.query(
+    `
+    UPDATE preference_theme
+    SET is_deleted = true
+    WHERE user_id = $1
+      AND theme_id = $2
+    `,
+    [userId, themeId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const postThemeByUserIdAndThemeId = async (client, userId, themeId) => {
+  const existTheme = await client.query(
+    `
+    SELECT *
+    FROM preference_theme pt
+    WHERE pt.user_id = $1
+      AND pt.theme_id = $2
+    `,
+    [userId, themeId],
+  );
+
+  // 컬럼이 없으면 새로 만들어줌
+  if (existTheme.rows.length === 0) {
+    const { rows } = await client.query(
+      `
+      INSERT INTO preference_theme
+      (user_id, theme_id)
+      VALUES
+      ($1, $2)
+      `,
+      [userId, themeId],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  }
+
+  // 컬럼이 있으면 업데이트
+  const { rows } = await client.query(
+    `
+    UPDATE preference_theme
+    SET is_deleted = false
+    WHERE user_id = $1
+      AND theme_id = $2
+    `,
+    [userId, themeId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getUserByEmail,
   postUserBySignup,
@@ -108,4 +173,7 @@ module.exports = {
   getUserByNickname,
   getThemeById,
   deleteImageById,
+  getThemeIdByUserId,
+  deleteThemeByUserIdAndThemeId,
+  postThemeByUserIdAndThemeId,
 };

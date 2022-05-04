@@ -8,4 +8,6 @@ router.get('/theme', checkUser, require('./userThemeGET'));
 
 router.delete('/image', checkUser, require('./userImageDELETE'));
 
+router.put('/theme', checkUser, require('./userThemePUT'));
+
 module.exports = router;
