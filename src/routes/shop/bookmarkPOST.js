@@ -15,6 +15,14 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
+  if (isNaN(shopId)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
+  if (isBookmarked !== true && isBookmarked !== false) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
   // ~~~ 로그인 여부 확인
   if (!req.user) {
     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));

@@ -7,6 +7,8 @@ module.exports = {
   DELETE_USER: '회원 탈퇴 성공',
   ALREADY_EMAIL: '이미 사용중인 이메일입니다.',
   DIFFRERENT_PASSWORD: '비밀번호와 비밀번호 확인이 일치하지 않습니다',
+  SIGNUP_OK: '가입 가능합니다',
+  SIGNUP_NOT_OK: '가입 불가능합니다',
 
   // 로그인
   LOGIN_SUCCESS: '로그인 성공',
@@ -24,6 +26,8 @@ module.exports = {
   READ_ALL_USERS_SUCCESS: '모든 유저 조회 성공',
   UPDATE_ONE_USER_SUCCESS: '유저 수정 성공',
   DELETE_ONE_USER_SUCCESS: '유저 삭제 성공',
+  DELETE_INFO_SUCCESS: '유저 정보 삭제 성공',
+  NICKNAME_EXIST: '닉네임이 중복되었습니다',
 
   // 포스트
   ADD_ONE_POST_SUCCESS: '포스트 추가 성공',
@@ -42,19 +46,22 @@ module.exports = {
   GET_SHOP_RECOMMEND_SUCCESS: '소품샵 추천 성공',
   RECOMMEND_BY_SUBWAY_SUCCESS: '소품샵 근처 지하철역 기반 소품샵 추천 성공',
   NOT_MATCH_SHOPNAME_SHOPID: '소품샵 이름과 아이디가 일치하지 않습니다',
+  SHOP_BY_CATEGORY_SUCCESS: '카테고리별 소품샵 리스트 가져오기 성공',
 
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
   GET_ALL_REVIEW_SUCCESS: '전체 리뷰 목록 가져오기 성공',
   REVIEW_LIKE_POST_SUCCESS: '리뷰 좋아요 성공',
   REVIEW_SCRAP_POST_SUCCESS: '리뷰 스크랩 성공',
-  NO_REVIEW: '존재하지 않는 리뷰입니다',
+  NO_REVIEW: '리뷰가 존재하지 않습니다',
   GET_ONE_REVIEW_GET_SUCCESS: '리뷰 상세 정보 조회 성공',
   CREATE_REVIEW_SUCCESS: '리뷰 작성 성공',
   NOT_MATCH_WITH_SHOP: '소품샵 아이디와 리뷰 아이디가 일치하지 않습니다',
   GET_REVIEW_OF_MINE: '내가 작성한 리뷰 가져오기 성공',
+  GET_SCRAP_OF_MINE: '내가 스크랩한 리뷰 가져오기 성공',
   NO_IMAGE: '이미지가 없습니다',
   NO_CONTENT: '리뷰 내용이 없습니다',
+  GET_RECENT_REVIEW_SUCCESS: '최근 리뷰 가져오기 성공',
 
   // 파일 업로드
   ONLY_IMAGE_AVAILABLE: '이미지만 업로드 가능합니다',

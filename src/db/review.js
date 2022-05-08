@@ -161,30 +161,6 @@ const updateReviewLikeCount = async (client, reviewId, likeCount) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getReviewByShopIdOrderByLike = async (client, shopId, limit, offset) => {
-  const { rows } = await client.query(
-    `
-    SELECT  r.id AS review_id, r.shop_id, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content
-    FROM (SELECT r.id, r.shop_id, r.user_id, r.content, r.like_count, r.scrap_count
-        FROM review r
-        WHERE r.shop_id = $1
-        AND r.is_deleted = FALSE) AS r
-    INNER JOIN "user" u
-    ON r.user_id = u.id
-    INNER JOIN (SELECT ri.image, ri.review_id
-        FROM review_image ri
-        WHERE ri.is_preview = TRUE
-        AND ri.is_deleted = FALSE) AS ri
-    ON r.id = ri.review_id
-    
-    ORDER BY r.like_count DESC, r.scrap_count DESC , r.id
-    LIMIT $2
-    OFFSET $3
-        `,
-    [shopId, limit, offset],
-  );
-  return convertSnakeToCamel.keysToCamel(rows);
-};
 const updateReviewScrapCount = async (client, reviewId, scrapCount) => {
   const { rows } = await client.query(
     `
@@ -235,32 +211,14 @@ const getScrapedReviewByUserId = async (client, userId) => {
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
-const getReviewByShopIdOrderByScrap = async (client, shopId, limit, offset) => {
-  const { rows } = await client.query(
-    `
-    SELECT  r.id AS review_id, r.shop_id, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content
-    FROM (SELECT r.id, r.shop_id, r.user_id, r.content, r.like_count, r.scrap_count
-        FROM review r
-        WHERE r.shop_id = $1
-        AND r.is_deleted = FALSE) AS r
-    INNER JOIN "user" u
-    ON r.user_id = u.id
-    INNER JOIN (SELECT ri.image, ri.review_id
-        FROM review_image ri
-        WHERE ri.is_preview = TRUE
-        AND ri.is_deleted = FALSE) AS ri
-    ON r.id = ri.review_id
-    
-    ORDER BY r.scrap_count DESC, r.like_count DESC , r.id
-    LIMIT $2
-    OFFSET $3
-          `,
-    [shopId, limit, offset],
-  );
-  return convertSnakeToCamel.keysToCamel(rows);
-};
+const getReviewByShopIdOrderBySort = async (client, shopId, limit, offset, sort) => {
+  let order = 'like_count';
+  if (sort === 'save') {
+    order = 'scrap_count';
+  } else if (sort === 'recent') {
+    order = 'created_at';
+  }
 
-const getReviewByShopIdOrderByRecent = async (client, shopId, limit, offset) => {
   const { rows } = await client.query(
     `
     SELECT  r.id AS review_id, r.shop_id, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content
@@ -276,7 +234,7 @@ const getReviewByShopIdOrderByRecent = async (client, shopId, limit, offset) => 
         AND ri.is_deleted = FALSE) AS ri
     ON r.id = ri.review_id
     
-    ORDER BY r.created_at , r.scrap_count DESC , r.id
+    ORDER BY r.${order}, r.like_count DESC , r.id
     LIMIT $2
     OFFSET $3
           `,
@@ -367,24 +325,26 @@ const getReviewTagByReviewId = async (client, reviewId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getReviewOrderByRecent = async (client) => {
+const getReviewOrderByRecent = async (client,limit) => {
   const { rows } = await client.query(
     `
-    SELECT r.id AS review_id, r.shop_id, s.shop_name, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content, c.name as category
-    FROM review r
+    SELECT r2.id AS review_id, r2.shop_id, s.shop_name, u.image AS writer_thumbnail, u.nickname AS writer_name, r2.like_count, r2.scrap_count, r2.content, c.name as category
+    FROM (
+            SELECT *
+            FROM review r
+            WHERE r.is_deleted = false
+            ORDER BY r.created_at DESC
+            LIMIT $1
+    ) AS r2
     INNER JOIN shop s
-    on s.id = r.shop_id
+    on s.id = r2.shop_id
     INNER JOIN shop_category sc
     ON s.id = sc.shop_id
     INNER JOIN category c
     ON sc.category_id = c.id
     INNER JOIN "user" u
-    ON u.id = r.user_id
-    WHERE r.is_deleted = false
-    ORDER BY r.created_at DESC
-    
-    limit 15
-    `,
+    ON u.id = r2.user_id    `,
+    [limit]
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
@@ -536,9 +496,7 @@ module.exports = {
   getReviewImagesByReviewId,
   getReviewItemByReviewId,
   getReviewTagByReviewId,
-  getReviewByShopIdOrderByLike,
-  getReviewByShopIdOrderByScrap,
-  getReviewByShopIdOrderByRecent,
+  getReviewByShopIdOrderBySort,
   getScrapCountByReviewId,
   getCurrentScrapStatusByReviewIdAndUserId,
   postReviewScrapByReviewId,

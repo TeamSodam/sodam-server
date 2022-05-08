@@ -79,7 +79,7 @@ const getShopByTheme = async (client, theme, sort, offset, limit) => {
 const getPreviewImageByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
-        SELECT si.image, si.shop_id as shopId
+        SELECT si.image, si.shop_id
         FROM shop_image si
         WHERE si.shop_id = $1
             AND si.is_preview = true
@@ -210,21 +210,24 @@ const getShopBookmarkByUserId = async (client, shopId, userId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const getShopBookmarkByCounts = async (client) => {
+const getShopByBookmarkCounts = async (client, count) => {
   const { rows } = await client.query(
     `
-      SELECT s.id as shop_id, s.shop_name, c.name as category
-      FROM shop s 
-      INNER JOIN shop_category sc
-      ON s.id = sc.shop_id
-      INNER JOIN category c
-      ON sc.category_id = c.id
-      WHERE 
-        s.is_deleted = FALSE
-        AND sc.is_deleted = FALSE
-      ORDER BY s.bookmark_count DESC
-      LIMIT 20
+    SELECT s2.id as shop_id, s2.shop_name, c.name as category
+    FROM (
+        SELECT * FROM shop s
+        ORDER BY s.bookmark_count DESC
+        LIMIT $1
+      ) AS s2
+    INNER JOIN shop_category sc
+    ON s2.id = sc.shop_id
+    INNER JOIN category c
+    ON sc.category_id = c.id
+    WHERE
+      s2.is_deleted = FALSE
+      AND sc.is_deleted = FALSE
     `,
+    [count],
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
@@ -246,17 +249,12 @@ const getSavedShopList = async (client, sort, userId, offset, limit) => {
   }
   const { rows } = await client.query(
     `
-    SELECT s.id as shop_id, s.shop_name, c.name as category
+    SELECT s.id as shop_id, s.shop_name
     FROM shop s 
-    INNER JOIN shop_category sc
-    ON s.id = sc.shop_id
-    INNER JOIN category c
-    ON sc.category_id = c.id
     INNER JOIN shop_bookmark sb
     ON s.id = sb.shop_id
     WHERE sb.user_id = $1
         AND s.is_deleted = FALSE
-        AND sc.is_deleted = FALSE
         AND sb.is_deleted = FALSE
         ${sortQuery}
         OFFSET ${offset} LIMIT ${limit}
@@ -443,7 +441,6 @@ const getShopCategoryCount = async (client) => {
     INNER JOIN category c
     ON sc.category_id = c.id
     GROUP BY c.name
-
           `,
   );
   return convertSnakeToCamel.keysToCamel(rows);
@@ -473,6 +470,57 @@ const getShopAreaCount = async (client) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getAllShopNameAndShopId = async (client) => {
+  const { rows } = await client.query(
+    `
+      SELECT s.id as shop_id, s.shop_name, s.land_address, s.area
+      FROM shop s
+      ORDER BY s.id ASC
+    `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
+const insertShopImage = async (client, shopId, image, isPreview) => {
+  const { rows: existingRows } = await client.query(
+    `
+          SELECT *
+          FROM image_test_table_2 it
+          WHERE it.shop_id = $1
+              AND it.image= $2
+              AND it.is_preview= $3
+              AND it.is_deleted= FALSE
+          `,
+    [shopId, image, isPreview],
+  );
+  if (existingRows.length === 0) {
+    console.log('>>> making new');
+    const { rows } = await client.query(
+      `
+      INSERT INTO image_test_table_2
+      (shop_id, image, is_preview)
+      VALUES
+      ($1, $2, $3 )
+      RETURNING *
+      `,
+      [shopId, image, isPreview],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  } else {
+    console.log('>>> updating');
+    const { rows } = await client.query(
+      `
+      UPDATE image_test_table_2
+      SET image = $2, is_preview = $3
+      WHERE shop_id = $1
+      RETURNING *
+      `,
+      [shopId, image, isPreview],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  }
+};
+
 module.exports = {
   getReviewCountByShopId,
   getShopCounts,
@@ -495,10 +543,12 @@ module.exports = {
   updateBookmarkByShopIdAndUserId,
   updateBookmarkCountByShopId,
   updateReviewCount,
-  getShopBookmarkByCounts,
+  getShopByBookmarkCounts,
   getCategoryAndIdByShopId,
   getAllShop,
   getShopCategoryCount,
   getShopThemeCount,
   getShopAreaCount,
+  getAllShopNameAndShopId,
+  insertShopImage,
 };

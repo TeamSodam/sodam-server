@@ -13,12 +13,31 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
+  if (isNaN(shopId)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
   // ~~ query 확인
   let { sort, offset, limit } = req.query;
-  if (!offset || !limit) {
-    // return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+
+  // sort가 지정된 값 이외인 경우
+  if (![undefined, 'like', 'save', 'recent'].includes(sort)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
+  // offset과 limit을 둘 다 안 보낸 경우
+  if (!offset && !limit) {
     offset = 1;
     limit = 9;
+  }
+
+  // offset과 limit 중 하나만 보낸 경우
+  if (!offset || !limit) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+  }
+
+  // offset과 limit 중 하나라도 숫자가 아닌 경우
+  if (isNaN(offset) || isNaN(limit)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
   }
 
   // offset과 limit 범위 확인
@@ -34,6 +53,12 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
 
+    // 존재하지 않는 shopId인 경우
+    const existShop = await shopDB.getShopByShopId(client, shopId);
+    if (existShop.length === 0) {
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+    }
+
     // 리뷰 총 개수
     const reviewCount = await shopDB.getReviewCountByShopId(client, shopId);
 
@@ -41,14 +66,7 @@ module.exports = async (req, res) => {
     let reviewList;
 
     // sort에 따라 db에 요청 보내기
-    if (sort === 'save') {
-      reviewList = await reviewDB.getReviewByShopIdOrderByScrap(client, shopId, limit, pageOffset);
-    } else if (sort === 'recent') {
-      reviewList = await reviewDB.getReviewByShopIdOrderByRecent(client, shopId, limit, pageOffset);
-    } else {
-      // sort === "like"
-      reviewList = await reviewDB.getReviewByShopIdOrderByLike(client, shopId, limit, pageOffset);
-    }
+    reviewList = await reviewDB.getReviewByShopIdOrderBySort(client, shopId, limit, pageOffset, sort);
 
     // 결과 모양 만들어주기
     let result = {

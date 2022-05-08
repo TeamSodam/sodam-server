@@ -1,10 +1,10 @@
-const responseMessage = require('../../constants/responseMessage');
-const statusCode = require('../../constants/statusCode');
-const { userDB } = require('../../db');
-const db = require('../../db/db');
-const util = require('../../lib/util');
-const jwtHandlers = require('../../lib/jwtHandlers');
-const slackAPI = require('../../middlewares/slackAPI');
+const responseMessage = require('../../../constants/responseMessage');
+const statusCode = require('../../../constants/statusCode');
+const { userDB } = require('../../../db');
+const db = require('../../../db/db');
+const util = require('../../../lib/util');
+const jwtHandlers = require('../../../lib/jwtHandlers');
+const slackAPI = require('../../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
   const { email, name, nickname, password, passwordConfirm, themePreference } = req.body;

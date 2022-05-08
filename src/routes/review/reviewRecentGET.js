@@ -11,8 +11,8 @@ module.exports = async (req, res) => {
 
   try {
     client = await db.connect(req);
-
-    result = await reviewDB.getReviewOrderByRecent(client);
+    const limit = 15;
+    result = await reviewDB.getReviewOrderByRecent(client,limit);
     let responseData = [];
     responseData = duplicatedDataClean(result, 'reviewId', 'category');
     if (responseData.length === 0) {

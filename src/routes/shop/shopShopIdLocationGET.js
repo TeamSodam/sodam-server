@@ -14,6 +14,10 @@ module.exports = async (req, res) => {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
+  if (isNaN(shopId)) {
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+  }
+
   let client;
 
   try {
