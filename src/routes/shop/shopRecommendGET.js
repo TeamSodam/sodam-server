@@ -68,7 +68,7 @@ module.exports = async (req, res) => {
         image.map((result) => {
           if (result.status === 'fulfilled') {
             if (result.value.length >= 1) {
-              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              previewImageObj[Number(result.value[0]?.shopId)] = result.value[0];
               return result.value[0];
             }
           }
