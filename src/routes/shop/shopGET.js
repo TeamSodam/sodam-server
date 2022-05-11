@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
         image.map((result) => {
           if (result.status === 'fulfilled') {
             if (result.value.length >= 1) {
-              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              previewImageObj[Number(result.value[0]?.shopId)] = result.value[0];
               return result.value[0];
             }
           }
@@ -64,6 +64,7 @@ module.exports = async (req, res) => {
         if (previewImageObj[item.shopId]) {
           item.image = [previewImageObj[item.shopId].image];
         }
+        console.log('>>',item.image);
         if (!item.image) {
           item.image = null;
         }
@@ -123,7 +124,7 @@ module.exports = async (req, res) => {
         image.map((result) => {
           if (result.status === 'fulfilled') {
             if (result.value.length >= 1) {
-              previewImageObj[Number(result.value[0]?.shopid)] = result.value[0];
+              previewImageObj[Number(result.value[0]?.shopId)] = result.value[0];
               return result.value[0];
             }
           }
