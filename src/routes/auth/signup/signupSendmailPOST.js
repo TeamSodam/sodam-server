@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
     };
 
     if (duplicatedEmail.length !== 0) {
-      return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.BAD_REQUEST, responseMessage.ALREADY_EMAIL, result));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ALREADY_EMAIL, result));
     }
 
     // 랜덤 숫자
