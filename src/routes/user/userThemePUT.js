@@ -57,7 +57,8 @@ module.exports = async (req, res) => {
       userDB.postThemeByUserIdAndThemeId(client, userId, Number(item));
     });
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_ONE_USER_SUCCESS, theme));
+    const responseData = { theme };
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_ONE_USER_SUCCESS, responseData));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 

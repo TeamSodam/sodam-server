@@ -30,7 +30,8 @@ module.exports = async (req, res) => {
     // 객체를 배열로 펼쳐주기
     theme = theme.map((item) => item.name);
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_ONE_USER_SUCCESS, theme));
+    const responseData = { theme };
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_ONE_USER_SUCCESS, responseData));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
