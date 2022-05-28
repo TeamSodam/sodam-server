@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
 
     const { accesstoken } = jwtHandlers.sign(user[0]);
 
-    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CREATED_USER, user));
+    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CREATED_USER, {'accesstoken':accesstoken}));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
