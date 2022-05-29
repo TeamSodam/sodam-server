@@ -1,11 +1,13 @@
 const jwt = require('jsonwebtoken');
 const { TOKEN_INVALID, TOKEN_EXPIRED } = require('../constants/jwt');
+const { promisify } = require('util');
+const redisClient = require('./redis');
 
 // JWT를 발급/인증할 떄 필요한 secretKey를 설정합니다. 값은 .env로부터 불러옵니다.
 const secretKey = process.env.JWT_SECRET;
 const options = {
   algorithm: 'HS256',
-  expiresIn: '30d',
+  expiresIn: '1h',
   issuer: 'sodam',
 };
 
@@ -44,7 +46,39 @@ const verify = (token) => {
   return decoded;
 };
 
+const refresh = () =>{
+   return jwt.sign({}, secretKey,{
+     algorithm:'HS256',
+     expiresIn:'14d',
+   });
+}
+
+const refreshVerify = async(token, userId) => {
+  if(!redisClient.isOpen){    
+    await redisClient.connect();
+  }    
+  const getAsync = await promisify(redisClient.get).bind(redisClient);
+
+  try{
+    const data = await getAsync(userId);
+    if(token === data){
+      try{
+        jwt.verify(token, secret);
+        return true;
+      } catch(err){
+        return false;
+      }
+    } else{
+      return false;
+    }
+  } catch(err){
+    return false;
+  }
+}
+
 module.exports = {
   sign,
   verify,
+  refresh,
+  refreshVerify,
 };
