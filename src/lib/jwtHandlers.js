@@ -7,7 +7,7 @@ const redisClient = require('./redis');
 const secretKey = process.env.JWT_SECRET;
 const options = {
   algorithm: 'HS256',
-  expiresIn: '1h',
+  expiresIn: '10m',
   issuer: 'sodam',
 };
 
