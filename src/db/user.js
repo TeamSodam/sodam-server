@@ -35,11 +35,10 @@ const postUserBySignup = async (client, email, name, nickname, password, themePr
       (name, email, nickname, password, preference_theme)
       VALUES
       ($1, $2, $3, $4, $5)
-      RETURNING name, email, password
+      RETURNING id, name, email, password
           `,
     [name, email, nickname, password, themePreference],
   );
-  console.log(rows);
   return convertSnakeToCamel.keysToCamel(rows);
 };
 

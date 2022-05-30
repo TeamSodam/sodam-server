@@ -6,8 +6,6 @@ const util = require('../../lib/util');
 const jwtHandlers = require('../../lib/jwtHandlers');
 const slackAPI = require('../../middlewares/slackAPI');
 const redisClient = require('../../lib/redis');
-const { stringify } = require('yamljs');
-const userImageDELETE = require('../user/userImageDELETE');
 
 module.exports = async (req, res) => {
   const { email, password } = req.body;
@@ -21,7 +19,7 @@ module.exports = async (req, res) => {
   try {
     client = await db.connect(req);
     const user = await userDB.getUserByEmail(client, email);
-    if (user.length !== 0) {
+    if (user && user.length !== 0) {
       const { email, name, password } = user[0];
       const { accesstoken } = jwtHandlers.sign({ email, name, password });
       const refreshtoken = jwtHandlers.refresh();
@@ -31,7 +29,7 @@ module.exports = async (req, res) => {
       redisClient.set(String(user[0].id),String(refreshtoken));
       return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, accesstoken));
     } else {
-      return res.status(statusCode.NOT_FOUND).send(util.fail(statusCode.NOT_FOUND, responseMessage.NO_USER));
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
     }
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);

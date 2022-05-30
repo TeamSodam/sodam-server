@@ -27,15 +27,13 @@ module.exports = async (req, res) => {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.ALREADY_EMAIL));
     }
     const user = await userDB.postUserBySignup(client, email, name, nickname, password, themePreference);
-
     const { accesstoken } = jwtHandlers.sign(user[0]);
-    const loginUser = await userDB.getUserByEmail(client, email);
     const refreshtoken = jwtHandlers.refresh();                                                                                                                                                                  
     if(!redisClient.isOpen){    
       await redisClient.connect();
     }    
-    redisClient.set(String(loginUser[0].id),String(refreshtoken));
-    return res.status(statusCode.OK).cookie("userId",loginUser[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, accesstoken));
+    redisClient.set(String(user[0].id),String(refreshtoken));
+    return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, accesstoken));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
