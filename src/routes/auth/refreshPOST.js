@@ -8,26 +8,26 @@ module.exports = async (req, res) => {
   try{
       if(req.headers.accesstoken && req.cookies.refreshToken && req.cookies.userId){
         const authToken = await req.headers.accesstoken;
-        const refreshToken = req.cookies.refreshToken;
-        const userId = req.cookies.userId;
+        const refreshToken = await req.cookies.refreshToken;
+        const userId = await req.cookies.userId;
         const authResult = verify(authToken);
         const decoded = jwt.decode(authToken);
         if(decoded === null){
           return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NO_AUTH));
         }
-        const refreshResult = refreshVerify(refreshToken, userId);
+        const refreshResult = await refreshVerify(refreshToken, userId);
         if(authResult === -3){
           if(refreshResult === false){
             return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NO_AUTH));
           } else{
             const newAccessToken = sign(decoded).accesstoken;
-            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.REFRESH_TOKEN_SUCCESS,{ accesstoken: newAccessToken,}));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ACCESS_TOKEN_SUCCESS,{ accesstoken: newAccessToken,}));
           }
         } else {
-          return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.BAD_REQUEST));
+          return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NOT_TOKEN_EXPIRED));
         }
       } else{
-          res.status(statusCode.NO_CONTENT).send(util.fail(statusCode.NO_CONTENT,responseMessage.NULL_VALUE))
+          return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
       }
   } catch(error){
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);

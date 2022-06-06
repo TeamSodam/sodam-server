@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
         await redisClient.connect();
       }
       redisClient.set(String(user[0].id),String(refreshtoken));
-      return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, accesstoken));
+      return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, {accesstoken}));
     } else {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
     }

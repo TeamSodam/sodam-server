@@ -28,7 +28,7 @@ module.exports = {
   DELETE_ONE_USER_SUCCESS: '유저 삭제 성공',
   DELETE_INFO_SUCCESS: '유저 정보 삭제 성공',
   NICKNAME_EXIST: '닉네임이 중복되었습니다',
-  REFRESH_TOKEN_SUCCESS: '리프레쉬 토큰 발급 성공',
+  ACCESS_TOKEN_SUCCESS: 'access token 발급 성공',
 
   // 포스트
   ADD_ONE_POST_SUCCESS: '포스트 추가 성공',

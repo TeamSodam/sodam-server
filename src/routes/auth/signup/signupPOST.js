@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
       await redisClient.connect();
     }    
     redisClient.set(String(user[0].id),String(refreshtoken));
-    return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, accesstoken));
+    return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, {accesstoken}));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 

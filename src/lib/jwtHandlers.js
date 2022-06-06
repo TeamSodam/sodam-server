@@ -57,13 +57,12 @@ const refreshVerify = async(token, userId) => {
   if(!redisClient.isOpen){    
     await redisClient.connect();
   }    
-  const getAsync = await promisify(redisClient.get).bind(redisClient);
 
   try{
-    const data = await getAsync(userId);
+    const data = await redisClient.get(userId);
     if(token === data){
       try{
-        jwt.verify(token, secret);
+        jwt.verify(token, secretKey);
         return true;
       } catch(err){
         return false;
