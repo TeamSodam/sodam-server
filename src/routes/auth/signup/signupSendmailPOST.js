@@ -40,9 +40,21 @@ async function sendMail(to, verificationCode) {
     const mailOptions = {
       from: '소담<sodamteam2@gmail.com>',
       to,
-      subject: '소담 이메일 인증번호',
-      text: `인증번호를 입력해주세요: ${verificationCode}`,
-      html: `<h2>인증번호를 입력해주세요</h2><h1>${verificationCode}</h1>`,
+      subject: `[소담] 인증번호 ${verificationCode}를 입력해 주세요.`,
+      text: `안녕하세요,
+      소품샵 여정의 이야기를 담다 '소담'입니다.
+      하단의 인증번호를 입력해 주세요 :)
+      ${verificationCode}`,
+      html: `<center>
+        <p>
+          안녕하세요,<br/>
+          소품샵 여정의 이야기를 담다 '소담'입니다.<br/>
+          하단의 인증번호를 입력해 주세요 :)<br/>
+        </p>
+        <h2>
+          ${verificationCode}
+        </h2>
+      </center>`,
     };
 
     const result = await transport.sendMail(mailOptions);
@@ -78,7 +90,7 @@ module.exports = async (req, res) => {
     };
 
     if (duplicatedEmail.length !== 0) {
-      return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.BAD_REQUEST, responseMessage.ALREADY_EMAIL, result));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ALREADY_EMAIL, result));
     }
 
     // 랜덤 숫자

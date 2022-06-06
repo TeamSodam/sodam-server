@@ -7,11 +7,10 @@ const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedDat
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
-  if (req.user.length === 0) {
+  if (!req.user) {
     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
   }
   const userId = req.user[0].id;
-
 
   let client;
 
