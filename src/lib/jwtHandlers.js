@@ -11,6 +11,12 @@ const options = {
   issuer: 'sodam',
 };
 
+const adminOptions = {
+  algorithm: 'HS256',
+  expiresIn: '60m',
+  issuer: 'sodamAdmin',
+};
+
 // email, name, password가 담긴 JWT를 발급합니다.
 const sign = (user) => {
   const payload = {
@@ -21,6 +27,19 @@ const sign = (user) => {
 
   const result = {
     accesstoken: jwt.sign(payload, secretKey, options),
+  };
+  return result;
+};
+
+const adminSign = (user) => {
+  const payload = {
+    email: user.email,
+    name: user.name,
+    password: user.password,
+  };
+
+  const result = {
+    accesstoken: jwt.sign(payload, secretKey, adminOptions),
   };
   return result;
 };
@@ -46,38 +65,39 @@ const verify = (token) => {
   return decoded;
 };
 
-const refresh = () =>{
-   return jwt.sign({}, secretKey,{
-     algorithm:'HS256',
-     expiresIn:'14d',
-   });
-}
+const refresh = () => {
+  return jwt.sign({}, secretKey, {
+    algorithm: 'HS256',
+    expiresIn: '14d',
+  });
+};
 
-const refreshVerify = async(token, userId) => {
-  if(!redisClient.isOpen){    
+const refreshVerify = async (token, userId) => {
+  if (!redisClient.isOpen) {
     await redisClient.connect();
-  }    
+  }
 
-  try{
+  try {
     const data = await redisClient.get(userId);
-    if(token === data){
-      try{
+    if (token === data) {
+      try {
         jwt.verify(token, secretKey);
         return true;
-      } catch(err){
+      } catch (err) {
         return false;
       }
-    } else{
+    } else {
       return false;
     }
-  } catch(err){
+  } catch (err) {
     return false;
   }
-}
+};
 
 module.exports = {
   sign,
   verify,
   refresh,
   refreshVerify,
+  adminSign,
 };
