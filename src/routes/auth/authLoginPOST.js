@@ -20,14 +20,17 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     const user = await userDB.getUserByEmail(client, email);
     if (user && user.length !== 0) {
-      const { email, name, password } = user[0];
+      const { email, name, password: userPassword } = user[0];
+      if (userPassword !== password) {
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW));
+      }
       const { accesstoken } = jwtHandlers.sign({ email, name, password });
       const refreshtoken = jwtHandlers.refresh();
-      if(!redisClient.isOpen) {
+      if (!redisClient.isOpen) {
         await redisClient.connect();
       }
-      redisClient.set(String(user[0].id),String(refreshtoken));
-      return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, {accesstoken}));
+      redisClient.set(String(user[0].id), String(refreshtoken));
+      return res.status(statusCode.OK).cookie('userId', user[0].id).cookie('refreshToken', refreshtoken).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, { accesstoken }));
     } else {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
     }
