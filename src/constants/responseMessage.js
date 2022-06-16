@@ -29,6 +29,7 @@ module.exports = {
   DELETE_INFO_SUCCESS: '유저 정보 삭제 성공',
   NICKNAME_EXIST: '닉네임이 중복되었습니다',
   ACCESS_TOKEN_SUCCESS: 'access token 발급 성공',
+  WRONG_THEME: '테마가 잘못되었습니다. 오타나 중복을 확인해주세요.',
 
   // 포스트
   ADD_ONE_POST_SUCCESS: '포스트 추가 성공',
@@ -75,7 +76,7 @@ module.exports = {
   TOKEN_INVALID: '토큰이 유효하지 않습니다.',
   TOKEN_EMPTY: '토큰이 없습니다.',
   NOT_TOKEN_EXPIRED: '토큰이 만료되지 않았습니다.',
-  
+
   // 인증
   NO_AUTH_HEADER: 'Authorization 헤더가 없습니다.',
   NO_AUTH: '인증되지 않았습니다',
