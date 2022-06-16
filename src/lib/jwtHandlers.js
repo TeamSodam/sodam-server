@@ -25,6 +25,18 @@ const sign = (user) => {
   return result;
 };
 
+const adminSign = (user) => {
+  const payload = {
+    email: user.email,
+    name: user.name,
+  };
+
+  const result = {
+    accesstoken: jwt.sign(payload, secretKey, adminOptions),
+  };
+  return result;
+};
+
 // JWT를 해독하고, 해독한 JWT가 우리가 만든 JWT가 맞는지 확인합니다 (인증).
 const verify = (token) => {
   let decoded;
@@ -80,4 +92,5 @@ module.exports = {
   verify,
   refresh,
   refreshVerify,
+  adminSign,
 };
