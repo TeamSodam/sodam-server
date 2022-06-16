@@ -11,7 +11,13 @@ const options = {
   issuer: 'sodam',
 };
 
-// email, name, nickname 담긴 JWT를 발급합니다.
+const adminOptions = {
+  algorithm: 'HS256',
+  expiresIn: '60m',
+  issuer: 'sodamAdmin',
+};
+
+// email, name, password가 담긴 JWT를 발급합니다.
 const sign = (user) => {
   const payload = {
     email: user.email,
