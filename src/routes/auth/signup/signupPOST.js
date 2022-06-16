@@ -1,6 +1,6 @@
 const responseMessage = require('../../../constants/responseMessage');
 const statusCode = require('../../../constants/statusCode');
-const { userDB } = require('../../../db');
+const { userDB, themeDB } = require('../../../db');
 const db = require('../../../db/db');
 const util = require('../../../lib/util');
 const jwtHandlers = require('../../../lib/jwtHandlers');
@@ -17,23 +17,49 @@ module.exports = async (req, res) => {
   if (password !== passwordConfirm) {
     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.DIFFRERENT_PASSWORD));
   }
-  //   중복 이메일 처리 필요
+
   let client;
 
   try {
     client = await db.connect(req);
+    // 중복 이메일 처리
     const duplicatedEmail = await userDB.checkDuplicatedEmailByEmail(client, email);
     if (duplicatedEmail.length !== 0) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.ALREADY_EMAIL));
     }
-    const user = await userDB.postUserBySignup(client, email, name, nickname, password, themePreference);
+
+    // 전체 테마 목록 가져오기
+    let allTheme = await themeDB.getAllTheme(client);
+
+    // 선호테마를 테마번호로 바꿔주기
+    const themePreferenceNumber = [];
+    await allTheme.forEach((element) => {
+      if (themePreference.includes(element.name)) {
+        themePreferenceNumber.push(element.id);
+      }
+    });
+
+    // 선호테마 테마 목록 잘못 보냄
+    if (themePreferenceNumber.length !== themePreference.length) {
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.WRONG_THEME));
+    }
+
+    // 새로운 user 생성
+    const user = await userDB.postUserBySignup(client, email, name, nickname, password);
+
+    // 테마 저장
+    await themePreferenceNumber.forEach((item) => {
+      userDB.postThemeByUserIdAndThemeId(client, user[0].id, Number(item));
+    });
+
+    // 토큰 생성
     const { accesstoken } = jwtHandlers.sign(user[0]);
-    const refreshtoken = jwtHandlers.refresh();                                                                                                                                                                  
-    if(!redisClient.isOpen){    
+    const refreshtoken = jwtHandlers.refresh();
+    if (!redisClient.isOpen) {
       await redisClient.connect();
-    }    
-    redisClient.set(String(user[0].id),String(refreshtoken));
-    return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, {accesstoken}));
+    }
+    redisClient.set(String(user[0].id), String(refreshtoken));
+    return res.status(statusCode.OK).cookie('userId', user[0].id).cookie('refreshToken', refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, { accesstoken }));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 
