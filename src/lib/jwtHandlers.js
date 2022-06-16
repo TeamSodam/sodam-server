@@ -35,7 +35,6 @@ const adminSign = (user) => {
   const payload = {
     email: user.email,
     name: user.name,
-    password: user.password,
   };
 
   const result = {
