@@ -7,6 +7,9 @@ const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedDat
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
+  if (!req.user) {
+    return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
+  }
   const { sort, offset, limit } = req.query;
   let pageOffset = Number((offset - 1) * limit);
   let pageLimit = limit;
