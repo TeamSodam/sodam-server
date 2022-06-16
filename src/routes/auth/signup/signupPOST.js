@@ -28,12 +28,12 @@ module.exports = async (req, res) => {
     }
     const user = await userDB.postUserBySignup(client, email, name, nickname, password, themePreference);
     const { accesstoken } = jwtHandlers.sign(user[0]);
-    const refreshtoken = jwtHandlers.refresh();                                                                                                                                                                  
-    if(!redisClient.isOpen){    
+    const refreshtoken = jwtHandlers.refresh();
+    if (!redisClient.isOpen) {
       await redisClient.connect();
-    }    
-    redisClient.set(String(user[0].id),String(refreshtoken));
-    return res.status(statusCode.OK).cookie("userId",user[0].id).cookie("refreshToken",refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, {accesstoken}));
+    }
+    redisClient.set(String(user[0].id), String(refreshtoken));
+    return res.status(statusCode.OK).cookie('userId', user[0].id).cookie('refreshToken', refreshtoken).send(util.success(statusCode.OK, responseMessage.CREATED_USER, { accesstoken }));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
 

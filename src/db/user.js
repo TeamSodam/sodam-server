@@ -35,7 +35,7 @@ const postUserBySignup = async (client, email, name, nickname, password, themePr
       (name, email, nickname, password, preference_theme)
       VALUES
       ($1, $2, $3, $4, $5)
-      RETURNING id, name, email, password
+      RETURNING id, name, email, password, nickname
           `,
     [name, email, nickname, password, themePreference],
   );

@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
       if (userPassword !== password) {
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW));
       }
-      const { accesstoken } = jwtHandlers.sign({ email, name, password });
+      const { accesstoken } = jwtHandlers.sign({ email, name, password, nickname });
       const refreshtoken = jwtHandlers.refresh();
       if (!redisClient.isOpen) {
         await redisClient.connect();
