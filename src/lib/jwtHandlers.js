@@ -33,8 +33,8 @@ const sign = (user) => {
 
 const adminSign = (user) => {
   const payload = {
-    email: user.email,
-    name: user.name,
+    email: user?.email,
+    name: user?.name,
   };
 
   const result = {
