@@ -17,7 +17,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 //bucket 정보
-const bucketname = 'sodam-bucket'; //AWS bucket name을 작성
+const bucketname = process.env.S3_BUCKET_NAME; //AWS bucket name을 작성
 const maxSize = 5 * 1024 * 1024; //최대 5MB로 제한
 const bucketRegion = 'ap-northeast-2';
 

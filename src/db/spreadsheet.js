@@ -97,7 +97,31 @@ const insertReviewImageData = async (client, id, review_id, image, is_preview) =
   console.log('rows', rows);
 };
 
+const insertShopImageData = async (client, shop_id, image, is_preview) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO shop_image
+    (shop_id, image, is_preview)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *
+    `,
+    [shop_id, image, is_preview],
+  );
+  console.log('rows', rows);
+};
+
 const updateShopReviewCount = async (client, shopId, reviewCount) => {
   // 나중에 소품샵 테이블의 리뷰카운트 올리는 로직 필요하면 추가
 };
-module.exports = { postShopSheet, insertUserData, inserttagData, insertReviewData, insertReviewTagData, insertReviewItemData, insertReviewImageData, updateShopReviewCount };
+module.exports = {
+  postShopSheet,
+  insertUserData,
+  inserttagData,
+  insertReviewData,
+  insertReviewTagData,
+  insertReviewItemData,
+  insertReviewImageData,
+  updateShopReviewCount,
+  insertShopImageData,
+};
