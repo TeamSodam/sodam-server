@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 dotenv.config();
 
 const corsOptions = {
-  origin: ['https://sodam-client.vercel.app', 'https://sodam.me'],
+  origin: 'https://sodam-client.vercel.app',
 };
 
 app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
