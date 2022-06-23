@@ -15,7 +15,6 @@ app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  console.log(req.headers.origin);
   if(allowedOrigins.includes(origin)){
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
