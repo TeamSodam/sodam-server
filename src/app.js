@@ -7,12 +7,13 @@ dotenv.config();
 
 const corsOptions = {
   origin: 'https://sodam-client.vercel.app',
+  credentials: true,
 };
 
 app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
 
 app.use((req, res, next) => {
-  // res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'https://sodam-client.vercel.app');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, content-type, x-access-token');
   next();
