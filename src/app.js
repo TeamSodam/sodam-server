@@ -5,15 +5,24 @@ const app = express();
 const cookieParser = require('cookie-parser');
 dotenv.config();
 
+const allowedOrigins = ['https://sodam.me', 'https://sodam-client.vercel.app', 'https://server.sodam.me']
 const corsOptions = {
-  origin: 'https://sodam-client.vercel.app',
-  credentials: true,
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
 };
 
 app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://sodam-client.vercel.app');
+  const origin = req.headers.origin;
+  if(allowedOrigins.includes(origin)){
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, content-type, x-access-token');
   next();
