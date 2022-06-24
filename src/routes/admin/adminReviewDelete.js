@@ -1,6 +1,6 @@
 const responseMessage = require('../../constants/responseMessage');
 const statusCode = require('../../constants/statusCode');
-const { reviewDB, shopDB } = require('../../db');
+const { reviewDB, userDB } = require('../../db');
 const db = require('../../db/db');
 const util = require('../../lib/util');
 const slackAPI = require('../../middlewares/slackAPI');
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
     const user = await userDB.getUserById(client, userId);
 
     // 없는 유저
-    if (!user) {
+    if (user.length === 0) {
       return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
     }
 
@@ -39,9 +39,9 @@ module.exports = async (req, res) => {
     }
 
     // 해당 리뷰 삭제
-    const isDeleted = await reviewDB.deleteReviewByReviewId(client, reviewId);
+    await reviewDB.deleteReviewByReviewId(client, reviewId);
 
-    const responseData = { isDeleted };
+    const responseData = { 'isDeleted' : true };
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.DELETE_REVIEW_SUCCESS, responseData));
   } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);

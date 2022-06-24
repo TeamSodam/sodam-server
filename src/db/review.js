@@ -487,9 +487,9 @@ const getReviewCounts = async (client) => {
 const deleteReviewByReviewId = async (client, reviewId) => {
   const { rows } = await client.query(
     `
-      UPDATE review_like
+      UPDATE review
       SET is_deleted = true
-      WHERE review_id = $1
+      WHERE review.id = $1
       RETURNING is_deleted
       `,
     [reviewId],
