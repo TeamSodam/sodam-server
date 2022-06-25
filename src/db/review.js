@@ -219,6 +219,7 @@ const getReviewByShopIdOrderBySort = async (client, shopId, limit, offset, sort)
     order = 'created_at';
   }
 
+  // order by id DESC: 중복값인 경우 최신 리뷰를 먼저 보여주기 위함
   const { rows } = await client.query(
     `
     SELECT  r.id AS review_id, r.shop_id, ri.image, u.image AS writer_thumbnail, u.nickname AS writer_name, r.like_count, r.scrap_count, r.content
@@ -233,8 +234,8 @@ const getReviewByShopIdOrderBySort = async (client, shopId, limit, offset, sort)
         WHERE ri.is_preview = TRUE
         AND ri.is_deleted = FALSE) AS ri
     ON r.id = ri.review_id
-    
-    ORDER BY r.${order}, r.like_count DESC , r.id
+
+    ORDER BY r.${order} DESC, r.id DESC
     LIMIT $2
     OFFSET $3
           `,
