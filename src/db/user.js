@@ -34,7 +34,7 @@ const postUserBySignup = async (client, email, name, nickname, password) => {
       INSERT INTO "user"
       (name, email, nickname, password)
       VALUES
-      ($1, $2, $3, $4, $5)
+      ($1, $2, $3, $4)
       RETURNING id, name, email, password, nickname
           `,
     [name, email, nickname, password],
