@@ -6,5 +6,5 @@ router.post('/login', require('./adminLoginPOST'));
 router.get('/shop/all', checkAdminUser, require('./allShopGET'));
 router.get('/shop/data', checkAdminUser, require('./shopDataGET'));
 router.get('/review/all', checkAdminUser, require('./allReviewGET'));
-
+router.post('/shop/newshop', checkAdminUser, require('./newShopDataPOST'));
 module.exports = router;
