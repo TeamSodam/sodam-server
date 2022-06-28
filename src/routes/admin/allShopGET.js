@@ -10,11 +10,11 @@ module.exports = async (req, res) => {
     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
   }
   //sort쿼리 recent, alphabet
-  const { sort, offset, limit } = req.query;
-  let pageOffset = Number((offset - 1) * limit);
+  const { sort, page, limit } = req.query;
+  let pageOffset = Number((page - 1) * limit);
   let pageLimit = limit;
 
-  if (!offset) {
+  if (!page) {
     pageOffset = 0;
   }
   if (!limit) {
@@ -67,10 +67,11 @@ module.exports = async (req, res) => {
         item.category = categoryObj[item.shopId];
       }
       if (!item.image) {
-        item.image = null;
+        item.image = [];
       }
       if (!item.category) {
-        item.category = null;
+        console.log('>>카테고리 없는 애들',item);
+        item.category = [];
       }
     });
 
