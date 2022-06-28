@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     let responseData;
     client = await db.connect(req);
     responseData = await shopDB.getAllShop(client, sort, pageOffset, pageLimit);
-
+    
     const imagePromise = responseData.map((item) => {
       const shopId = item.shopId;
       return shopDB.getPreviewImageByShopId(client, shopId);
@@ -61,16 +61,18 @@ module.exports = async (req, res) => {
         }
       });
     });
+
     responseData.map((item) => {
       if (previewImageObj[item.shopId]) {
         item.image = [previewImageObj[item.shopId].image];
+      }
+      if (categoryObj[item.shopId]) {
         item.category = categoryObj[item.shopId];
       }
       if (!item.image) {
         item.image = [];
       }
       if (!item.category) {
-        console.log('>>카테고리 없는 애들',item);
         item.category = [];
       }
     });
