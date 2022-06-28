@@ -5,7 +5,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 dotenv.config();
 
-const allowedOrigins = ['https://sodam.me', 'https://sodam-client.vercel.app', 'https://server.sodam.me', 'http://localhost:3000', 'http://52.78.223.91:8080']
+const allowedOrigins = ['https://sodam.me', 'https://sodam-client.vercel.app', 'https://server.sodam.me', 'http://localhost:3000', 'http://52.78.223.91:8080', 'http://127.0.0.1:5500', 'https://sodam-admin.vercel.app']
 const corsOptions = {
   origin: allowedOrigins,
   credentials: true,
