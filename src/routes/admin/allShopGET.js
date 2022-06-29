@@ -10,11 +10,11 @@ module.exports = async (req, res) => {
     return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.NEED_LOGIN));
   }
   //sort쿼리 recent, alphabet
-  const { sort, offset, limit } = req.query;
-  let pageOffset = Number((offset - 1) * limit);
+  const { sort, page, limit } = req.query;
+  let pageOffset = Number((page - 1) * limit);
   let pageLimit = limit;
 
-  if (!offset) {
+  if (!page) {
     pageOffset = 0;
   }
   if (!limit) {
@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     let responseData;
     client = await db.connect(req);
     responseData = await shopDB.getAllShop(client, sort, pageOffset, pageLimit);
-
+    
     const imagePromise = responseData.map((item) => {
       const shopId = item.shopId;
       return shopDB.getPreviewImageByShopId(client, shopId);
@@ -61,16 +61,19 @@ module.exports = async (req, res) => {
         }
       });
     });
+
     responseData.map((item) => {
       if (previewImageObj[item.shopId]) {
         item.image = [previewImageObj[item.shopId].image];
+      }
+      if (categoryObj[item.shopId]) {
         item.category = categoryObj[item.shopId];
       }
       if (!item.image) {
-        item.image = null;
+        item.image = [];
       }
       if (!item.category) {
-        item.category = null;
+        item.category = [];
       }
     });
 

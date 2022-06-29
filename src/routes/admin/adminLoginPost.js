@@ -19,7 +19,10 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     const user = await adminUserDB.getUserByEmail(client, email);
     if (user && user.length !== 0) {
-      const { email, name, password } = user[0];
+      const { email, name, password: userPassword } = user[0];
+      if (userPassword !== password) {
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW));
+      }
       const { accesstoken } = jwtHandlers.sign({ email, name, password });
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, { accesstoken }));
     } else {
