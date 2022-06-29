@@ -344,7 +344,9 @@ const getReviewOrderByRecent = async (client,limit) => {
     INNER JOIN category c
     ON sc.category_id = c.id
     INNER JOIN "user" u
-    ON u.id = r2.user_id    `,
+    ON u.id = r2.user_id
+    ORDER BY r2.created_at DESC
+    `,
     [limit]
   );
   return convertSnakeToCamel.keysToCamel(rows);
