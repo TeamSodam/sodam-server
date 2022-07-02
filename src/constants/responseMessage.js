@@ -30,7 +30,8 @@ module.exports = {
   NICKNAME_EXIST: '닉네임이 중복되었습니다',
   ACCESS_TOKEN_SUCCESS: 'access token 발급 성공',
   WRONG_THEME: '테마가 잘못되었습니다. 오타나 중복을 확인해주세요.',
-
+  WRONG_CATEGORY: '카테고리가 잘못되었습니다. 오타나 중복을 확인해주세요.',
+  
   // 포스트
   ADD_ONE_POST_SUCCESS: '포스트 추가 성공',
   READ_ONE_POST_SUCCESS: '포스트 조회 성공',
