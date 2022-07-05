@@ -15,8 +15,7 @@ module.exports = async (req, res) => {
   
   //이미지 url을 안담아주거나 이미지 배열이 안들어오면 오류 발생  
   const imageUrls = req.imageUrls;
-  console.log(imageUrls);
-  console.log(!image);
+  console.log(shopName);
   if(!imageUrls && !image) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
   }
