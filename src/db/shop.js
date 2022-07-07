@@ -485,11 +485,11 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
   const { rows: existingRows } = await client.query(
     `
           SELECT *
-          FROM image_test_table_2 it
-          WHERE it.shop_id = $1
-              AND it.image= $2
-              AND it.is_preview= $3
-              AND it.is_deleted= FALSE
+          FROM shop_image si
+          WHERE si.shop_id = $1
+              AND si.image= $2
+              AND si.is_preview= $3
+              AND si.is_deleted= FALSE
           `,
     [shopId, image, isPreview],
   );
@@ -497,7 +497,7 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
     console.log('>>> making new');
     const { rows } = await client.query(
       `
-      INSERT INTO image_test_table_2
+      INSERT INTO shop_image
       (shop_id, image, is_preview)
       VALUES
       ($1, $2, $3 )
@@ -510,7 +510,7 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
     console.log('>>> updating');
     const { rows } = await client.query(
       `
-      UPDATE image_test_table_2
+      UPDATE shop_image
       SET image = $2, is_preview = $3
       WHERE shop_id = $1
       RETURNING *

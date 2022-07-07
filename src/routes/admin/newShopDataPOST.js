@@ -13,11 +13,10 @@ module.exports = async (req, res) => {
   }
 
   
-  //이미지 url을 안담아주거나 이미지 배열이 안들어오면 오류 발생  
+  //이미지 없으면 fail
   const imageUrls = req.imageUrls;
-  console.log(shopName);
-  if(!imageUrls && !image) {
-      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
+  if(imageUrls.length === 0) {
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NO_IMAGE));
   }
 
   let client;
@@ -51,20 +50,6 @@ module.exports = async (req, res) => {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.WRONG_CATEGORY));
     }
 
-    // 3. 이미지 내용
-    let allImage = [];
-    if(!image) {
-      await image.forEach((element)=>{
-        allImage.push(element);
-      })
-    }
-
-    if(!imageUrls){
-      await imageUrls.forEach((element)=>{
-        allImage.push(element);
-      })
-    }
-
     const closeDay = close; 
 
     const newShop = await shopDB.insertNewShopData(client, shopName, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area);
@@ -81,6 +66,14 @@ module.exports = async (req, res) => {
         shopDB.insertShopCategory(client, newShopId, Number(item));
     })
 
+    // 3. 이미지 내용
+    // DB에 이미지 경로 저장
+    await shopDB.insertShopImage(client, newShopId, imageUrls[0], true);
+    imageUrls.slice(1).map(async (url) => {
+      const createdShopImage = await reviewDB.insertShopImage(client, newShopId, url);
+    });
+
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.POST_NEW_SHOP_DATA));
 
 } catch (error) {
     console.log(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
