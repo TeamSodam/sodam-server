@@ -561,6 +561,18 @@ const insertShopCategory = async(client, shopId, category) => {
   return convertSnakeToCamel.keysToCamel(rows);
 }
 
+const updateShopData = async(client, shopId, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area) =>{
+  const {rows} = await client.query(
+    `
+      UPDATE shop s
+      SET subway = $2, road_address = $3, land_address = $4, time = $5, close = $6, phone = $7, homepage = $8, instagram = $9, blog = $10, store = $11, area = $12
+      WHERE s.id = $1
+      RETURNING *
+    `,
+    [shopId, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area]
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
 module.exports = {
   getReviewCountByShopId,
   getShopCounts,
@@ -594,4 +606,5 @@ module.exports = {
   insertNewShopData,
   insertShopTheme,
   insertShopCategory,
+  updateShopData,
 };
