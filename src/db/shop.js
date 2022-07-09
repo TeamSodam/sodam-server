@@ -573,6 +573,121 @@ const updateShopData = async(client, shopId, subway, roadAddress, landAddress, t
   );
   return convertSnakeToCamel.keysToCamel(rows);
 }
+
+const getThemeIdByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+      SELECT theme_id
+      FROM shop_theme st
+      WHERE st.shop_id = $1
+        AND is_deleted = false
+        `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const deleteThemeByShopIdAndThemeId = async(client, shopId, themeId) =>{
+  const { rows } = await client.query(
+    `
+    UPDATE shop_theme
+    SET is_deleted = true
+    WHERE shop_id = $1
+      AND theme_id = $2
+    `,
+    [shopId, themeId],
+  )
+}
+
+const postThemeByShopIdAndThemeId = async(client, shopId, themeId) => {
+  const existTheme = await client.query(
+    `
+    SELECT *
+    FROM shop_theme st
+    WHERE st.shop_id = $1
+      AND st.theme_id = $2
+    `,
+    [shopId, themeId],
+  );
+
+  // 컬럼이 없으면 새로 만들어줌
+  if (existTheme.rows.length === 0) {
+    const { rows } = await client.query(
+      `
+      INSERT INTO shop_theme
+      (shop_id, theme_id)
+      VALUES
+      ($1, $2)
+      `,
+      [shopId, themeId],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  }
+}
+
+const getCategoryIdByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+      SELECT category_id
+      FROM shop_category sc
+      WHERE sc.shop_id = $1
+        AND is_deleted = false
+        `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const deleteCategoryByShopIdAndCategoryId = async(client, shopId, categoryId) =>{
+  const { rows } = await client.query(
+    `
+    UPDATE shop_category 
+    SET is_deleted = true
+    WHERE shop_id = $1
+      AND category_id = $2
+    `,
+    [shopId, categoryId],
+  )
+}
+
+const postCategoryByShopIdAndCategoryId = async(client, shopId, categoryId) => {
+  const existCategory = await client.query(
+    `
+    SELECT *
+    FROM shop_category sc
+    WHERE sc.shop_id = $1
+      AND sc.category_id = $2
+    `,
+    [shopId, categoryId],
+  );
+
+  // 컬럼이 없으면 새로 만들어줌
+  if (existCategory.rows.length === 0) {
+    const { rows } = await client.query(
+      `
+      INSERT INTO shop_category
+      (shop_id, category_id)
+      VALUES
+      ($1, $2)
+      `,
+      [shopId, categoryId],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  }
+}
+
+const deleteShopImageByShopId = async(client, shopId) =>{
+  const { rows } = await client.query(
+    `
+    UPDATE shop_image 
+    SET is_deleted = true
+    WHERE shop_id = $1
+    `,
+    [shopId],
+  )
+}
+
+
 module.exports = {
   getReviewCountByShopId,
   getShopCounts,
@@ -607,4 +722,11 @@ module.exports = {
   insertShopTheme,
   insertShopCategory,
   updateShopData,
+  getThemeIdByShopId,
+  deleteThemeByShopIdAndThemeId,
+  postThemeByShopIdAndThemeId,
+  getCategoryIdByShopId,
+  deleteCategoryByShopIdAndCategoryId,
+  postCategoryByShopIdAndCategoryId,
+  deleteShopImageByShopId,
 };
