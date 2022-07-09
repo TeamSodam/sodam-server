@@ -8,6 +8,7 @@ router.post('/login', require('./adminLoginPOST'));
 router.get('/shop/all', checkAdminUser, require('./allShopGET'));
 router.get('/shop/data', checkAdminUser, require('./shopDataGET'));
 router.get('/review/all', checkAdminUser, require('./allReviewGET'));
-router.post('/shop/newshop', uploadImage(uploadPath.SHOP),require('./newShopDataPOST')); // 나중에 어드민체크 추가
-router.put('/shop/existshop',require('./existShopDataPUT'));
+router.put('/shop/existshop',checkAdminUser, uploadImage(uploadPath.SHOP),require('./existShopDataPUT'));
+router.post('/shop/newshop', checkAdminUser, uploadImage(uploadPath.SHOP),require('./newShopDataPOST')); 
+
 module.exports = router;
