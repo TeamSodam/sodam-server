@@ -30,7 +30,8 @@ module.exports = {
   NICKNAME_EXIST: '닉네임이 중복되었습니다',
   ACCESS_TOKEN_SUCCESS: 'access token 발급 성공',
   WRONG_THEME: '테마가 잘못되었습니다. 오타나 중복을 확인해주세요.',
-
+  WRONG_CATEGORY: '카테고리가 잘못되었습니다. 오타나 중복을 확인해주세요.',
+  
   // 포스트
   ADD_ONE_POST_SUCCESS: '포스트 추가 성공',
   READ_ONE_POST_SUCCESS: '포스트 조회 성공',
@@ -49,7 +50,8 @@ module.exports = {
   RECOMMEND_BY_SUBWAY_SUCCESS: '소품샵 근처 지하철역 기반 소품샵 추천 성공',
   NOT_MATCH_SHOPNAME_SHOPID: '소품샵 이름과 아이디가 일치하지 않습니다',
   SHOP_BY_CATEGORY_SUCCESS: '카테고리별 소품샵 리스트 가져오기 성공',
-
+  POST_NEW_SHOP_DATA: '새로운 소품샵 데이터 추가 성공',
+  UPDATE_SHOP_DATA: '소품샵 데이터 수정 성공',
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
   GET_ALL_REVIEW_SUCCESS: '전체 리뷰 목록 가져오기 성공',

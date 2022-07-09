@@ -5,4 +5,5 @@ module.exports = {
   shopDB: require('./shop'),
   reviewDB: require('./review'),
   themeDB: require('./theme'),
+  categoryDB: require('./category'),
 };

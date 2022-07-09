@@ -5,4 +5,5 @@ module.exports = {
   SHOP_HIP: 'theme/hip',
   SHOP_MODERN: 'theme/modern',
   SHOP_VINTAGE: 'theme/vintage',
+  SHOP:'shop',
 };
