@@ -7,7 +7,7 @@ const jwtHandlers = require('../../lib/jwtHandlers');
 const slackAPI = require('../../middlewares/slackAPI');
 
 module.exports = async (req, res) => {
-  const { shopName, subway, roadAddress, landAddress, time, close, phone, homepage, instagram, blog, store, area, category, theme, image} = req.body;
+  const { shopName, subway, roadAddress, landAddress, time, close, phone, homepage, instagram, blog, store, area, category, theme} = req.body;
   if(!shopName || !subway || !roadAddress || !landAddress || !area || !category || !theme){
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
