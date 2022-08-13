@@ -46,8 +46,6 @@ module.exports = async (req, res) => {
     }
 
     const { password: encryptedPassword, salt } = await createHashedPassword(password);
-    console.log('encryptedPassword', encryptedPassword);
-    console.log('salt', salt);
     // 새로운 user 생성
     const user = await userDB.postUserBySignup(client, email, name, nickname, encryptedPassword, salt);
 

@@ -17,4 +17,14 @@ module.exports = {
       });
     });
   },
+  checkHashedPassword: (plainPassword, salt, savedPassword) => {
+    return new Promise(async (resolve, reject) => {
+      crypto.pbkdf2(plainPassword, salt, 9999, 64, 'sha512', (err, key) => {
+        if (err) reject(err);
+
+        const loginSuccess = key.toString('base64') === savedPassword ? true : false;
+        resolve(loginSuccess);
+      });
+    })
+  }
 };
