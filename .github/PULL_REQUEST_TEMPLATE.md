@@ -22,7 +22,7 @@
 - 이걸 했어
 - 저것도 했어
 -
-- resolved: #1(해당 Issue Number) 무슨 이슈에 대한 작업인지 명시합니다. 해당 이슈를 이곳에 적으면 pr merge 이후 해당 이슈는 자동으로 close 됩니다.
+- resolved: #1 <!--(해당 Issue Number) 무슨 이슈에 대한 작업인지 명시합니다. 해당 이슈를 이곳에 적으면 pr merge 이후 해당 이슈는 자동으로 close 됩니다. -->
 
 <br/>
 
