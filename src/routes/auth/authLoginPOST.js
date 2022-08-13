@@ -6,6 +6,7 @@ const util = require('../../lib/util');
 const jwtHandlers = require('../../lib/jwtHandlers');
 const slackAPI = require('../../middlewares/slackAPI');
 const redisClient = require('../../lib/redis');
+const { checkHashedPassword } = require('../../lib/encryptHandler');
 
 module.exports = async (req, res) => {
   const { email, password } = req.body;
@@ -20,10 +21,12 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     const user = await userDB.getUserByEmail(client, email);
     if (user && user.length !== 0) {
-      const { email, name, password: userPassword, nickname } = user[0];
-      if (userPassword !== password) {
+      const { email, name, password: userPassword, nickname, salt } = user[0];
+      const loginSuccess = await checkHashedPassword(password, salt, userPassword);
+      if(!loginSuccess){
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW));
       }
+
       const { accesstoken } = jwtHandlers.sign({ email, name, password, nickname });
       const refreshtoken = jwtHandlers.refresh();
       if (!redisClient.isOpen) {
