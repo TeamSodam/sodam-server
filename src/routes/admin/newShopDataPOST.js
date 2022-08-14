@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
     const themeNumber = [];
 
     await allTheme.forEach((element)=>{
-        if(theme.includes(element.name)){
+        if(JSON.parse(theme).includes(element.name)){
             themeNumber.push(element.id);
         }
     })
@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
     const categoryNumber = [];
 
     await allCategory.forEach((element)=>{
-      if(category.includes(element.name)){
+      if(JSON.parse(category).includes(element.name)){
         categoryNumber.push(element.id);
       }
     })
