@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
         let allTheme = await themeDB.getAllTheme(client);
         const newTheme = [];
         allTheme.forEach((element) => {
-            if(theme.includes(element.name)){
+            if(JSON.parse(theme).includes(element.name)){
                 newTheme.push(element.id);
             }
         });
@@ -62,7 +62,7 @@ module.exports = async (req, res) => {
         let allCategory = await categoryDB.getAllCategory(client);
         const newCategory = [];
         allCategory.forEach((element) => {
-            if(category.includes(element.name)){
+            if(JSON.parse(category).includes(element.name)){
                 newCategory.push(element.id);
             }
         });
