@@ -6,6 +6,7 @@ const util = require('../../../lib/util');
 const jwtHandlers = require('../../../lib/jwtHandlers');
 const slackAPI = require('../../../middlewares/slackAPI');
 const redisClient = require('../../../lib/redis');
+const { createHashedPassword } = require('../../../lib/encryptHandler');
 
 module.exports = async (req, res) => {
   const { email, name, nickname, password, passwordConfirm, themePreference } = req.body;
@@ -44,8 +45,9 @@ module.exports = async (req, res) => {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.WRONG_THEME));
     }
 
+    const { password: encryptedPassword, salt } = await createHashedPassword(password);
     // 새로운 user 생성
-    const user = await userDB.postUserBySignup(client, email, name, nickname, password);
+    const user = await userDB.postUserBySignup(client, email, name, nickname, encryptedPassword, salt);
 
     // 테마 저장
     await themePreferenceNumber.forEach((item) => {

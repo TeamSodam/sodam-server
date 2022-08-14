@@ -28,16 +28,16 @@ const getUserByEmail = async (client, email) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-const postUserBySignup = async (client, email, name, nickname, password) => {
+const postUserBySignup = async (client, email, name, nickname, password, salt) => {
   const { rows } = await client.query(
     `
       INSERT INTO "user"
-      (name, email, nickname, password)
+      (name, email, nickname, password, salt)
       VALUES
-      ($1, $2, $3, $4)
+      ($1, $2, $3, $4, $5)
       RETURNING id, name, email, password, nickname
           `,
-    [name, email, nickname, password],
+    [name, email, nickname, password, salt],
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
