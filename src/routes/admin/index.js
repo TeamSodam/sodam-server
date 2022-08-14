@@ -7,5 +7,6 @@ router.put('/review/:reviewId', checkAdminUser, require('./adminReviewDelete'));
 router.get('/shop/all', checkAdminUser, require('./allShopGET'));
 router.get('/shop/data', checkAdminUser, require('./shopDataGET'));
 router.get('/review/all', checkAdminUser, require('./allReviewGET'));
+router.get('/shop/:shopId',checkAdminUser,require('./adminShopDELETE'));
 
 module.exports = router;
