@@ -14,6 +14,10 @@ module.exports = async (req, res) => {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
   
+  //데이터 파싱 후 새 변수로 저장
+  const parsedTheme = JSON.parse(theme);
+  const parsedCategory = JSON.parse(category);
+
   const imageUrls = req.imageUrls;
   if(imageUrls.length === 0) {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NO_IMAGE));
@@ -38,7 +42,7 @@ module.exports = async (req, res) => {
         let allTheme = await themeDB.getAllTheme(client);
         const newTheme = [];
         allTheme.forEach((element) => {
-            if(JSON.parse(theme).includes(element.name)){
+            if(parsedTheme.includes(element.name)){
                 newTheme.push(element.id);
             }
         });
@@ -62,7 +66,7 @@ module.exports = async (req, res) => {
         let allCategory = await categoryDB.getAllCategory(client);
         const newCategory = [];
         allCategory.forEach((element) => {
-            if(JSON.parse(category).includes(element.name)){
+            if(parsedCategory.includes(element.name)){
                 newCategory.push(element.id);
             }
         });

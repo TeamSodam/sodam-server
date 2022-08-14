@@ -12,6 +12,9 @@ module.exports = async (req, res) => {
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
   }
 
+  //데이터 파싱 후 새 변수로 저장
+  const parsedTheme = JSON.parse(theme);
+  const parsedCategory = JSON.parse(category);
   
   //이미지 없으면 fail
   const imageUrls = req.imageUrls;
@@ -29,11 +32,11 @@ module.exports = async (req, res) => {
     const themeNumber = [];
 
     await allTheme.forEach((element)=>{
-        if(JSON.parse(theme).includes(element.name)){
+        if(parsedTheme.includes(element.name)){
             themeNumber.push(element.id);
         }
     })
-    if (themeNumber.length !== theme.length) {
+    if (themeNumber.length !== parsedTheme.length) {
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.WRONG_THEME));
     }
     
@@ -42,11 +45,11 @@ module.exports = async (req, res) => {
     const categoryNumber = [];
 
     await allCategory.forEach((element)=>{
-      if(JSON.parse(category).includes(element.name)){
+      if(parsedCategory.includes(element.name)){
         categoryNumber.push(element.id);
       }
     })
-    if(categoryNumber.length !== category.length){
+    if(categoryNumber.length !== parsedCategory.length){
       return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.WRONG_CATEGORY));
     }
 
