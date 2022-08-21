@@ -33,7 +33,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     status: 404,
     success: false,
-    message: '페이지 주소를 찾을 수 없습니다ㅠㅠ',
+    message: '페이지 주소를 찾을 수 없습니다!',
   });
 });
 
