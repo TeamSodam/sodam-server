@@ -92,9 +92,6 @@ module.exports = async (req, res) => {
         // 3. 이미지 관련 
         await shopDB.deleteShopImageByShopId(client, shopId);
         await shopDB.insertShopImage(client, shopId, imageUrls[0], true);
-        imageUrls.slice(1).map(async (url) => {
-            const createdShopImage = await reviewDB.insertShopImage(client, shopId, url);
-        });
 
         res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.UPDATE_SHOP_DATA));
 

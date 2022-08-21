@@ -72,9 +72,6 @@ module.exports = async (req, res) => {
     // 3. 이미지 내용
     // DB에 이미지 경로 저장
     await shopDB.insertShopImage(client, newShopId, imageUrls[0], true);
-    imageUrls.slice(1).map(async (url) => {
-      const createdShopImage = await reviewDB.insertShopImage(client, newShopId, url);
-    });
 
     res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.POST_NEW_SHOP_DATA));
 
