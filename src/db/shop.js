@@ -521,6 +521,20 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
   }
 };
 
+const deleteShopByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+      UPDATE shop
+      SET is_deleted = true
+      WHERE shop.id = $1
+      RETURNING is_deleted
+      `,
+    [shopId],
+  );
+  console.log(rows);
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 module.exports = {
   getReviewCountByShopId,
   getShopCounts,
@@ -551,4 +565,5 @@ module.exports = {
   getShopAreaCount,
   getAllShopNameAndShopId,
   insertShopImage,
+  deleteShopByShopId,
 };
