@@ -55,7 +55,7 @@ module.exports = async (req, res) => {
 
     const closeDay = close; 
 
-    const newShop = await shopDB.insertNewShopData(client, shopName, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area);
+    const newShop = await shopDB.insertNewShopData(client, shopName.trim(), subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area);
     //새로운 shop 데이터 저장 후 다시 받아와서 id값 파악, 이후 이미지, category, theme 저장시에 사용
     const newShopId = newShop[0].id;
     

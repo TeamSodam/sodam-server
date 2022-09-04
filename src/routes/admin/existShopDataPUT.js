@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
 
         //shopName 통해서 검색해서 shopId 받아오기 
         if(shopName){
-            let shopArr = await shopDB.getShopByName(client, shopName);
+            let shopArr = await shopDB.getShopByName(client, shopName.trim());
             if(shopArr){
                 shopArr = duplicatedDataClean(shopArr,'shopId','category');
                 shopId = await shopArr[0].shopId;
