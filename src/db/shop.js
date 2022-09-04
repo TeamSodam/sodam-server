@@ -183,6 +183,18 @@ const getShopByName = async (client, shopName) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getShopBySameName = async (client, shopName) => {
+  const {rows} = await client.query(
+    `
+     SELECT s.id as shop_id, s.shop_name
+     FROM shop s
+     WHERE s.shop_name = $1
+    `,
+    [shopName],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
 const getShopByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
@@ -699,6 +711,7 @@ module.exports = {
   getThemeByShopId,
   getImageByShopId,
   getShopByName,
+  getShopBySameName,
   getShopByShopId,
   getShopBookmarkByUserId,
   getSavedShopList,
