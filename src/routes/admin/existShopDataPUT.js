@@ -8,6 +8,16 @@ const slackAPI = require('../../middlewares/slackAPI');
 const shopDataGET = require('./shopDataGET');
 const { duplicatedDataClean } = require('../../lib/convertRawDataToProccessedData');
 
+const checkNull = (obj) =>{
+    if(obj === null || obj === undefined){
+      obj = '';
+      return obj;
+    }
+    else {
+      return obj;
+    }
+}
+
 module.exports = async (req, res) => {
   const { shopName, subway, roadAddress, landAddress, time, close, phone, homepage, instagram, blog, store, area, category, theme} = req.body;
   if(!shopName || !subway || !roadAddress || !landAddress || !area || !category || !theme){
@@ -88,7 +98,7 @@ module.exports = async (req, res) => {
         })
 
         const closeDay = close; 
-        const existShop = await shopDB.updateShopData(client, shopId, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area);
+        const existShop = await shopDB.updateShopData(client, shopId, subway, roadAddress, landAddress, checkNull(time), checkNull(closeDay), checkNull(phone), checkNull(homepage), checkNull(instagram), checkNull(blog), checkNull(store), area);
         //새로운 shop 데이터 저장 후 다시 받아와서 id값 파악, 이후 이미지, category, theme 저장시에 사용
 
         // 3. 이미지 관련 
