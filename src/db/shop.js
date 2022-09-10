@@ -183,6 +183,18 @@ const getShopByName = async (client, shopName) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getShopBySameName = async (client, shopName) => {
+  const {rows} = await client.query(
+    `
+     SELECT s.id as shop_id, s.shop_name
+     FROM shop s
+     WHERE s.shop_name = $1
+    `,
+    [shopName],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
 const getShopByShopId = async (client, shopId) => {
   const { rows } = await client.query(
     `
@@ -485,11 +497,11 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
   const { rows: existingRows } = await client.query(
     `
           SELECT *
-          FROM image_test_table_2 it
-          WHERE it.shop_id = $1
-              AND it.image= $2
-              AND it.is_preview= $3
-              AND it.is_deleted= FALSE
+          FROM shop_image si
+          WHERE si.shop_id = $1
+              AND si.image= $2
+              AND si.is_preview= $3
+              AND si.is_deleted= FALSE
           `,
     [shopId, image, isPreview],
   );
@@ -497,7 +509,7 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
     console.log('>>> making new');
     const { rows } = await client.query(
       `
-      INSERT INTO image_test_table_2
+      INSERT INTO shop_image
       (shop_id, image, is_preview)
       VALUES
       ($1, $2, $3 )
@@ -510,7 +522,7 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
     console.log('>>> updating');
     const { rows } = await client.query(
       `
-      UPDATE image_test_table_2
+      UPDATE shop_image
       SET image = $2, is_preview = $3
       WHERE shop_id = $1
       RETURNING *
@@ -520,6 +532,173 @@ const insertShopImage = async (client, shopId, image, isPreview) => {
     return convertSnakeToCamel.keysToCamel(rows);
   }
 };
+
+const insertNewShopData = async(client, shopName, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area) => {
+  const {rows} = await client.query(
+    `
+    INSERT INTO shop
+    (shop_name, subway, road_address, land_address, time, close, phone, homepage, instagram, blog, store, area)
+    VALUES
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    RETURNING *
+    `,
+    [shopName, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area]
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const insertShopTheme = async(client, shopId, theme) =>{
+  const {rows} = await client.query(
+    `
+    INSERT INTO shop_theme
+    (shop_id, theme_id)
+    VALUES
+    ($1, $2)
+    `,
+    [shopId, theme]
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const insertShopCategory = async(client, shopId, category) => {
+  const {rows} = await client.query(
+    `
+    INSERT INTO shop_category
+    (shop_id, category_id)
+    VALUES
+    ($1, $2)
+    `,
+    [shopId, category]
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const updateShopData = async(client, shopId, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area) =>{
+  const {rows} = await client.query(
+    `
+      UPDATE shop s
+      SET subway = $2, road_address = $3, land_address = $4, time = $5, close = $6, phone = $7, homepage = $8, instagram = $9, blog = $10, store = $11, area = $12
+      WHERE s.id = $1
+      RETURNING *
+    `,
+    [shopId, subway, roadAddress, landAddress, time, closeDay, phone, homepage, instagram, blog, store, area]
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const getThemeIdByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+      SELECT theme_id
+      FROM shop_theme st
+      WHERE st.shop_id = $1
+        AND is_deleted = false
+        `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const deleteThemeByShopIdAndThemeId = async(client, shopId, themeId) =>{
+  const { rows } = await client.query(
+    `
+    UPDATE shop_theme
+    SET is_deleted = true
+    WHERE shop_id = $1
+      AND theme_id = $2
+    `,
+    [shopId, themeId],
+  )
+}
+
+const postThemeByShopIdAndThemeId = async(client, shopId, themeId) => {
+  const existTheme = await client.query(
+    `
+    SELECT *
+    FROM shop_theme st
+    WHERE st.shop_id = $1
+      AND st.theme_id = $2
+    `,
+    [shopId, themeId],
+  );
+
+  // 컬럼이 없으면 새로 만들어줌
+  if (existTheme.rows.length === 0) {
+    const { rows } = await client.query(
+      `
+      INSERT INTO shop_theme
+      (shop_id, theme_id)
+      VALUES
+      ($1, $2)
+      `,
+      [shopId, themeId],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  }
+}
+
+const getCategoryIdByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+      SELECT category_id
+      FROM shop_category sc
+      WHERE sc.shop_id = $1
+        AND is_deleted = false
+        `,
+    [shopId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+}
+
+const deleteCategoryByShopIdAndCategoryId = async(client, shopId, categoryId) =>{
+  const { rows } = await client.query(
+    `
+    UPDATE shop_category 
+    SET is_deleted = true
+    WHERE shop_id = $1
+      AND category_id = $2
+    `,
+    [shopId, categoryId],
+  )
+}
+
+const postCategoryByShopIdAndCategoryId = async(client, shopId, categoryId) => {
+  const existCategory = await client.query(
+    `
+    SELECT *
+    FROM shop_category sc
+    WHERE sc.shop_id = $1
+      AND sc.category_id = $2
+    `,
+    [shopId, categoryId],
+  );
+
+  // 컬럼이 없으면 새로 만들어줌
+  if (existCategory.rows.length === 0) {
+    const { rows } = await client.query(
+      `
+      INSERT INTO shop_category
+      (shop_id, category_id)
+      VALUES
+      ($1, $2)
+      `,
+      [shopId, categoryId],
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+  }
+}
+
+const deleteShopImageByShopId = async(client, shopId) =>{
+  const { rows } = await client.query(
+    `
+    UPDATE shop_image 
+    SET is_deleted = true
+    WHERE shop_id = $1
+    `,
+    [shopId],
+  )
+}
+
 
 module.exports = {
   getReviewCountByShopId,
@@ -532,6 +711,7 @@ module.exports = {
   getThemeByShopId,
   getImageByShopId,
   getShopByName,
+  getShopBySameName,
   getShopByShopId,
   getShopBookmarkByUserId,
   getSavedShopList,
@@ -551,4 +731,15 @@ module.exports = {
   getShopAreaCount,
   getAllShopNameAndShopId,
   insertShopImage,
+  insertNewShopData,
+  insertShopTheme,
+  insertShopCategory,
+  updateShopData,
+  getThemeIdByShopId,
+  deleteThemeByShopIdAndThemeId,
+  postThemeByShopIdAndThemeId,
+  getCategoryIdByShopId,
+  deleteCategoryByShopIdAndCategoryId,
+  postCategoryByShopIdAndCategoryId,
+  deleteShopImageByShopId,
 };
