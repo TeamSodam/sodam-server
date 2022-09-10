@@ -577,7 +577,7 @@ const updateShopData = async(client, shopId, subway, roadAddress, landAddress, t
   const {rows} = await client.query(
     `
       UPDATE shop s
-      SET subway = $2, road_address = $3, land_address = $4, time = $5, close = $6, phone = $7, homepage = $8, instagram = $9, blog = $10, store = $11, area = $12
+      SET subway = $2, road_address = $3, land_address = $4, time = $5, close = $6, phone = $7, homepage = $8, instagram = $9, blog = $10, store = $11, area = $12, updated_at = now()
       WHERE s.id = $1
       RETURNING *
     `,
