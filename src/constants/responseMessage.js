@@ -52,6 +52,8 @@ module.exports = {
   SHOP_BY_CATEGORY_SUCCESS: '카테고리별 소품샵 리스트 가져오기 성공',
   POST_NEW_SHOP_DATA: '새로운 소품샵 데이터 추가 성공',
   UPDATE_SHOP_DATA: '소품샵 데이터 수정 성공',
+  DELETE_SHOP_SUCCESS: '소품샵 삭제 성공',
+  
   // 리뷰
   GET_REVIEW_OF_SHOP_SUCCESS: '소품샵 리뷰 목록 가져오기 성공',
   GET_ALL_REVIEW_SUCCESS: '전체 리뷰 목록 가져오기 성공',

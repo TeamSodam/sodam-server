@@ -699,6 +699,19 @@ const deleteShopImageByShopId = async(client, shopId) =>{
   )
 }
 
+const deleteShopByShopId = async (client, shopId) => {
+  const { rows } = await client.query(
+    `
+      UPDATE shop
+      SET is_deleted = true
+      WHERE shop.id = $1
+      RETURNING is_deleted
+      `,
+    [shopId],
+  );
+  console.log(rows);
+  return convertSnakeToCamel.keysToCamel(rows);
+};
 
 module.exports = {
   getReviewCountByShopId,
@@ -742,4 +755,5 @@ module.exports = {
   deleteCategoryByShopIdAndCategoryId,
   postCategoryByShopIdAndCategoryId,
   deleteShopImageByShopId,
+  deleteShopByShopId,
 };
