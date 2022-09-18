@@ -58,28 +58,26 @@ async function gsrun(client) {
         responseArray[i][8],
         responseArray[i][11],
         responseArray[i][12],
-        responseArray[i][13],
-        responseArray[i][14],
-        responseArray[i][7],
-        responseArray[i][16],
-      ];
-      const { rows } = await client2.query(
-        `
+      responseArray[i][13],
+      responseArray[i][14],
+      responseArray[i][7],
+      // responseArray[i][16], // note
+    ];
+    const { rows } = await client2.query(
+      `
                 INSERT INTO shop 
-                (id, shop_name, subway, road_address, land_address, time, close, phone, homepage, instagram, blog, store, area, note)
+                (id, shop_name, subway, road_address, land_address, time, close, phone, homepage, instagram, blog, store, area)
                 VALUES
-                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
                 RETURNING *
                 `,
-        values,
-      );
-      console.log(rows);
+      values,
+    );
+    console.log(rows);
   }
-    */
 
-  /*
   //<shop_category 테이블 채우는 코드>
-    const sql2 = `
+  const sql2 = `
         INSERT INTO shop_category 
         (shop_id, category_id)
         VALUES
