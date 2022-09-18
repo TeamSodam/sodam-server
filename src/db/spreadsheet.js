@@ -112,8 +112,29 @@ const insertShopImageData = async (client, shop_id, image, is_preview) => {
   console.log('rows', rows);
 };
 
-const updateShopReviewCount = async (client, shopId, reviewCount) => {
-  // 나중에 소품샵 테이블의 리뷰카운트 올리는 로직 필요하면 추가
+const updateShopReviewCount = async (client, shopId) => {
+  const { rows: existingRows } = await client.query(
+    `
+    SELECT review_count
+    FROM shop s
+    WHERE s.id = $1
+    `,
+    [shopId],
+  );
+
+  console.log();
+  const originalReviewCount = existingRows[0].review_count;
+
+  const { rows } = await client.query(
+    `
+    UPDATE shop
+    SET review_count = $1, updated_at = now()
+    WHERE id = $2    
+    RETURNING *
+    `,
+    [originalReviewCount + 1, shopId],
+  );
+  console.log('rows', rows);
 };
 module.exports = {
   postShopSheet,
