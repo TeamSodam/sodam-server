@@ -713,7 +713,20 @@ const deleteShopByShopId = async (client, shopId) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+const getShopByRandom = async(client) =>{
+  const { rows } = await client.query(
+    `
+    SELECT s.id as shop_id
+    FROM shop s
+    WHERE is_deleted = false
+    ORDER BY random()
+    LIMIT 20;
+          `,
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+  }
 module.exports = {
+  getShopByRandom,
   getReviewCountByShopId,
   getShopCounts,
   getShopByArea,
