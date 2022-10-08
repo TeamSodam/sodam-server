@@ -109,7 +109,7 @@ const insertShopImageData = async (client, shop_id, image, is_preview) => {
     `,
     [shop_id, image, is_preview],
   );
-  console.log('rows', rows);
+  console.log('inserted shop_id:', rows[0].shop_id);
 };
 
 const updateShopReviewCount = async (client, shopId) => {
