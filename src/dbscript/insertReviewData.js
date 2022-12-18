@@ -29,15 +29,15 @@ const readSheet = async () => {
       const content = item._rawData[3];
       return sheetDB.insertReviewData(client, id, shop_id, user_id, content);
     });
-    // 나중에 카운트 올리는 로직 필요하면 추가
-    // const updateCount = rows.map((item) => {
-    //   console.log('review', item._rawData[0], item._rawData[1], item._rawData[2], item._rawData[3]);
-    //   const id = item._rawData[0];
-    //   const shop_id = item._rawData[1];
-    //   const user_id = item._rawData[2];
-    //   const content = item._rawData[3];
-    //   return sheetDB.updateShopReviewCount(client, id, shop_id, user_id, content);
-    // });
+    // 리뷰 카운트 올리는 로직
+    const updateCount = rows.map((item) => {
+      console.log('review', item._rawData[0], item._rawData[1], item._rawData[2], item._rawData[3]);
+      const id = item._rawData[0];
+      const shop_id = item._rawData[1];
+      const user_id = item._rawData[2];
+      const content = item._rawData[3];
+      return sheetDB.updateShopReviewCount(client, shop_id);
+    });
   } catch (e) {
     console.log('>>>>>>>>e', e);
   }

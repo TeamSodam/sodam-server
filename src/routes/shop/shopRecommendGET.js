@@ -20,18 +20,13 @@ module.exports = async (req, res) => {
     client = await db.connect(req);
     const shopCount = await shopDB.getShopCounts(client);
     const numArr = [];
-
-    let selectRandom = (range) =>{
-      for (i = 0; i < range; i++) {
-        randomNum = Math.floor(Math.random() * shopCount[0].count);
-        numArr.push(randomNum);
-      }
-      return numArr;
-    }
-
+    const randomIdList = await shopDB.getShopByRandom(client);
+    randomIdList.map((shop) => {
+      numArr.push(shop.shopId);
+    })
     if (type === 'random') {
-      shopArr = await Promise.all(
-        selectRandom(20).map(async (value) => {
+        shopArr = await Promise.all(
+        numArr.map(async (value) => {
             const shop = await shopDB.getShopByShopId(client, value);
             if (shop.length === 0) {
               return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_SHOP));

@@ -15,18 +15,19 @@ const postShopSheet = async (client, shopId, shopName, subway, roadAddress, land
   console.log(rows);
   return convertSnakeToCamel.keysToCamel(rows);
 };
-const insertUserData = async (client, user_id, name, email, nickname, image, password, preference_theme) => {
+const insertUserData = async (client, user_id, name, email, nickname, image, password, salt) => {
   const { rows } = await client.query(
     `
     INSERT INTO "user"
-    (id, name, email, nickname, image, password, preference_theme)
+    (id, name, email, nickname, image, password, salt)
     VALUES
-    ($1, $2, $3, $4, $5, $6,$7 )
+    ($1, $2, $3, $4, $5, $6, $7 )
     RETURNING *
     `,
-    [user_id, name, email, nickname, image, password, preference_theme],
+    [user_id, name, email, nickname, image, password, salt],
   );
   console.log('rows', rows);
+  return convertSnakeToCamel.keysToCamel(rows);
 };
 
 const inserttagData = async (client, id, name) => {
@@ -108,11 +109,32 @@ const insertShopImageData = async (client, shop_id, image, is_preview) => {
     `,
     [shop_id, image, is_preview],
   );
-  console.log('rows', rows);
+  console.log('inserted shop_id:', rows[0].shop_id);
 };
 
-const updateShopReviewCount = async (client, shopId, reviewCount) => {
-  // 나중에 소품샵 테이블의 리뷰카운트 올리는 로직 필요하면 추가
+const updateShopReviewCount = async (client, shopId) => {
+  const { rows: existingRows } = await client.query(
+    `
+    SELECT review_count
+    FROM shop s
+    WHERE s.id = $1
+    `,
+    [shopId],
+  );
+
+  console.log();
+  const originalReviewCount = existingRows[0].review_count;
+
+  const { rows } = await client.query(
+    `
+    UPDATE shop
+    SET review_count = $1, updated_at = now()
+    WHERE id = $2    
+    RETURNING *
+    `,
+    [originalReviewCount + 1, shopId],
+  );
+  console.log('rows', rows);
 };
 module.exports = {
   postShopSheet,
